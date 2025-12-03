@@ -2,536 +2,135 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>STARLOG LIVE — No Man's Sky Stream</title>
+  <title>STARLOG — Galactic Exploration Archive</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 
   <style>
-    :root {
-      --bg: #02040a;
-      --bg2: #050815;
-      --accent: #27e0ff;
-      --accent-soft: rgba(39, 224, 255, 0.4);
-      --accent-strong: rgba(39, 224, 255, 0.85);
-      --text-main: #e5f7ff;
-      --text-soft: #96b2c9;
-      --danger: #ff4c7c;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Orbitron', system-ui, sans-serif;
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
       background: radial-gradient(circle at top, #081737 0, #02040a 55%, #000000 100%);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      color: #cdeaff;
     }
 
-    /* ---- NAVBAR ---- */
-
-    .nav {
-      width: 100%;
-      padding: 18px 6vw;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: linear-gradient(to bottom, rgba(3, 10, 25, 0.96), rgba(2, 4, 10, 0.9));
-      border-bottom: 1px solid rgba(39, 224, 255, 0.08);
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.9);
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-
-    .logo {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-shadow: 0 0 12px rgba(39, 224, 255, 0.8);
-    }
-
-    .logo span {
-      color: #ffffff;
-      text-shadow: 0 0 18px rgba(255, 255, 255, 0.85);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      font-size: 16px;
-    }
-
-    .nav-links a {
-      color: var(--accent);
-      text-decoration: none;
-      letter-spacing: 0.14em;
-      position: relative;
-      padding-bottom: 4px;
-      text-transform: uppercase;
-      transition: color 0.2s ease, text-shadow 0.2s ease;
-    }
-
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 0;
-      height: 2px;
-      background: var(--accent);
-      box-shadow: 0 0 10px var(--accent-soft);
-      transition: width 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: #ffffff;
-      text-shadow: 0 0 12px var(--accent-soft);
-    }
-
-    .nav-links a:hover::after {
-      width: 100%;
-    }
-
-    .nav-links a.active {
-      color: #ffffff;
-      text-shadow: 0 0 18px var(--accent-strong);
-    }
-
-    .nav-links a.active::after {
-      width: 100%;
-    }
-
-    /* ---- MAIN LAYOUT ---- */
-
-    .page {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-      padding: 40px 6vw 60px;
-    }
-
-    .live-wrap {
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(260px, 1.2fr);
-      gap: 32px;
-      width: 100%;
-      max-width: 1400px;
-    }
-
-    .panel {
-      background: radial-gradient(circle at top left, #101b33 0, #050712 45%, #020308 100%);
-      border-radius: 18px;
-      border: 1px solid rgba(39, 224, 255, 0.15);
-      box-shadow:
-        0 0 25px rgba(0, 0, 0, 0.7),
-        0 0 35px rgba(39, 224, 255, 0.08);
-      padding: 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 15% 0, rgba(39, 224, 255, 0.14), transparent 60%),
-        radial-gradient(circle at 85% 100%, rgba(255, 76, 124, 0.18), transparent 60%);
-      mix-blend-mode: screen;
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .panel-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    /* ---- LIVE PLAYER ---- */
-
-    .live-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 12px;
-      gap: 16px;
-    }
-
-    .live-title {
-      font-size: 20px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #ffffff;
-    }
-
-    .live-sub {
-      font-size: 11px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-soft);
-    }
-
-    .status-pill {
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      padding: 5px 12px 4px;
-      border-radius: 999px;
-      border: 1px solid rgba(39, 224, 255, 0.3);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(3, 10, 25, 0.85);
-    }
-
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--danger);
-      box-shadow: 0 0 10px rgba(255, 76, 124, 0.9);
-    }
-
-    .status-pill.online .status-dot {
-      background: #36ff9b;
-      box-shadow: 0 0 12px rgba(54, 255, 155, 0.9);
-    }
-
-    .status-pill.offline {
-      border-color: rgba(255, 76, 124, 0.5);
-    }
-
-    .status-pill span {
-      text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
-    }
-
-    .player-shell {
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid rgba(0, 0, 0, 0.9);
-      box-shadow:
-        0 0 32px rgba(0, 0, 0, 0.8),
-        0 0 26px rgba(39, 224, 255, 0.12);
-      position: relative;
-      background: #000000;
-      margin-top: 8px;
-      aspect-ratio: 16 / 9;
-    }
-
-    iframe.live-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: none; /* по подразбиране скрит, докато не кликнат бутона */
-    }
-
-    .offline-overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: radial-gradient(circle at top, rgba(4, 16, 40, 0.98), rgba(1, 3, 8, 0.98));
-      color: var(--text-main);
+    header {
       text-align: center;
-      padding: 24px;
+      padding: 40px 10px;
     }
 
-    .offline-title {
+    h1 {
+      font-size: 42px;
+      letter-spacing: 0.18em;
+      color: #27e0ff;
+      text-shadow: 0 0 20px rgba(39, 224, 255, 0.7);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #27e0ff;
       font-size: 18px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
+      transition: 0.2s;
     }
 
-    .offline-text {
-      font-size: 13px;
-      color: var(--text-soft);
-      max-width: 420px;
-      line-height: 1.7;
-    }
-
-    .btn-row {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 6px;
-    }
-
-    .btn {
-      border-radius: 999px;
-      padding: 9px 24px;
-      font-size: 12px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      border: 1px solid var(--accent);
-      background: radial-gradient(circle at 0 0, rgba(39, 224, 255, 0.35), rgba(7, 16, 36, 0.9));
+    nav a:hover {
       color: #ffffff;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      box-shadow: 0 0 16px rgba(39, 224, 255, 0.5);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      text-shadow: 0 0 10px #27e0ff;
     }
 
-    .btn span.dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #36ff9b;
-      box-shadow: 0 0 12px rgba(54, 255, 155, 0.9);
+    .content {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
     }
 
-    .btn.secondary {
-      border-color: rgba(150, 178, 201, 0.7);
-      background: radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.08), rgba(7, 16, 36, 0.9));
-      color: var(--text-soft);
-      box-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+    .card {
+      background: rgba(5, 10, 25, 0.7);
+      border: 1px solid rgba(39, 224, 255, 0.2);
+      padding: 20px;
+      border-radius: 14px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
     }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow:
-        0 0 20px rgba(39, 224, 255, 0.8),
-        0 0 26px rgba(39, 224, 255, 0.35);
-    }
-
-    .btn.secondary:hover {
-      box-shadow:
-        0 0 20px rgba(39, 224, 255, 0.45),
-        0 0 24px rgba(0, 0, 0, 0.95);
-      color: #ffffff;
-    }
-
-    /* ---- SIDE PANEL ---- */
-
-    .side-title {
-      font-size: 14px;
-      letter-spacing: 0.16em;
+    .card h2 {
+      color: #27e0ff;
       text-transform: uppercase;
+      letter-spacing: 0.16em;
       margin-bottom: 10px;
-      color: var(--accent);
-      text-shadow: 0 0 14px var(--accent-soft);
-    }
-
-    .side-text {
-      font-size: 12px;
-      color: var(--text-soft);
-      line-height: 1.8;
-      margin-bottom: 14px;
-    }
-
-    .meta-list {
-      list-style: none;
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-bottom: 10px;
-    }
-
-    .meta-list li {
-      margin-bottom: 4px;
-    }
-
-    .meta-label {
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      font-size: 10px;
-      margin-right: 4px;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .tag-pill {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      padding: 4px 10px 3px;
-      border-radius: 999px;
-      border: 1px solid rgba(39, 224, 255, 0.4);
-      color: var(--text-main);
-      background: rgba(3, 10, 25, 0.85);
+      font-size: 22px;
     }
 
     footer {
       text-align: center;
-      padding: 16px 12px 20px;
-      font-size: 10px;
-      letter-spacing: 0.2em;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 12px;
+      color: rgba(200, 220, 255, 0.5);
       text-transform: uppercase;
-      color: rgba(133, 167, 190, 0.6);
-    }
-
-    @media (max-width: 960px) {
-      .live-wrap {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    @media (max-width: 720px) {
-      .nav {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .nav-links {
-        gap: 18px;
-        font-size: 14px;
-        flex-wrap: wrap;
-      }
-
-      .page {
-        padding: 22px 4vw 36px;
-      }
+      letter-spacing: 0.16em;
     }
   </style>
 </head>
+
 <body>
 
-  <!-- NAVBAR -->
-  <header class="nav">
-    <div class="logo">STARLOG <span>LIVE</span></div>
-    <nav class="nav-links">
-      <a href="index.html">Star Map</a>
-      <a href="index.html#planets">Planets</a>
-      <a href="index.html#missions">Mission Log</a>
-      <a href="index.html#upload">Upload</a>
-      <a href="live.html" class="active">Live</a>
-    </nav>
-  </header>
+<header>
+  <h1>STARLOG — Galactic Exploration Archive</h1>
 
-  <!-- MAIN CONTENT -->
-  <main class="page">
-    <section class="live-wrap">
+  <nav>
+    <a href="starmap.html">Star Map</a>
+    <a href="planets.html">Planets</a>
+    <a href="missions.html">Mission Log</a>
+    <a href="upload.html">Upload</a>
+    <a href="live.html">Live</a>
+  </nav>
+</header>
 
-      <!-- LEFT: PLAYER -->
-      <div class="panel">
-        <div class="panel-content">
-          <div class="live-header">
-            <div>
-              <div class="live-title">No Man's Sky — Expedition Feed</div>
-              <div class="live-sub">Admiral Aleksandar Markov · Euclid Galaxy</div>
-            </div>
+<div class="content">
 
-            <!-- По подразбиране OFFLINE; ако искаш, можеш ръчно да смениш класа на 'online' когато пуснеш стрийма -->
-            <div id="statusPill" class="status-pill offline">
-              <div class="status-dot"></div>
-              <span id="statusText">OFFLINE</span>
-            </div>
-          </div>
+  <div class="card">
+    <h2>Welcome, Admiral Aleksandar Markov</h2>
+    <p>Your intergalactic journeys will be recorded here. Upload planet photos, generate descriptions, and explore your personal galaxy archive.</p>
+  </div>
 
-          <div class="player-shell">
-            <!-- OFFLINE OVERLAY -->
-            <div id="offlineOverlay" class="offline-overlay">
-              <div class="offline-title">Stream is currently offline</div>
-              <p class="offline-text">
-                Admiral Markov is not broadcasting at the moment. When the jump-drives warm up and the visor goes live,
-                this window will show the expedition in real time.
-              </p>
-              <div class="btn-row">
-                <button class="btn" id="btnTryLive">
-                  <span class="dot"></span>
-                  GO LIVE VIEW
-                </button>
-                <a class="btn secondary" id="btnVisitChannel" target="_blank" rel="noopener">
-                  WATCH ON YOUTUBE
-                </a>
-              </div>
-            </div>
+  <div class="card">
+    <h2>Star Map Explorer</h2>
+    <p>Coming soon — interactive map of discovered star systems.</p>
+  </div>
 
-            <!-- YOUTUBE LIVE IFRAME -->
-            <iframe
-              id="liveFrame"
-              class="live-frame"
-              src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID&autoplay=1"
-              allow="autoplay; encrypted-media"
-              allowfullscreen>
-            </iframe>
-          </div>
-        </div>
-      </div>
+  <div class="card">
+    <h2>Planet Archives</h2>
+    <p>Each discovered planet will appear here with story logs, images, and data.</p>
+  </div>
 
-      <!-- RIGHT: INFO -->
-      <aside class="panel">
-        <div class="panel-content">
-          <div class="side-title">Current Expedition</div>
-          <p class="side-text">
-            Live visual link from the command deck of the freighter. Planetary landings, storm crossings, alien fauna,
-            cargo runs, black-hole dives — everything is recorded here as it happens.
-          </p>
+  <div class="card">
+    <h2>Mission Log</h2>
+    <p>Your chronological mission records will be placed here.</p>
+  </div>
 
-          <ul class="meta-list">
-            <li><span class="meta-label">Commander</span> Aleksandar Markov (Markov69)</li>
-            <li><span class="meta-label">Game</span> No Man's Sky</li>
-            <li><span class="meta-label">Mode</span> Survival / Exploration</li>
-            <li><span class="meta-label">Audience</span> Family &amp; Friends</li>
-          </ul>
+  <div class="card">
+    <h2>Upload Section</h2>
+    <p>Submit expedition screenshots and automatically generate story entries.</p>
+  </div>
 
-          <p class="side-text">
-            When the stream is offline, you can still open the YouTube channel and watch previous recordings —
-            planetary journals, first contacts, and anomaly research.
-          </p>
+</div>
 
-          <div class="side-title" style="margin-top: 18px;">Tags</div>
-          <div class="pill-row">
-            <div class="tag-pill">No Man's Sky</div>
-            <div class="tag-pill">Euclid Galaxy</div>
-            <div class="tag-pill">Survival</div>
-            <div class="tag-pill">Family Voyage</div>
-            <div class="tag-pill">Galactic Archive</div>
-          </div>
-        </div>
-      </aside>
+<footer>
+  STARLOG — PERSONAL GALACTIC LOGBOOK
+</footer>
 
-    </section>
-  </main>
-
-  <footer>
-    STARLOG · PERSONAL GALACTIC LOGBOOK
-  </footer>
-
-  <script>
-    // 👉 СМЕНИ това с истинския адрес на канала ти в YouTube
-    const YT_CHANNEL_URL = "https://www.youtube.com/@YOUR_CHANNEL_NAME";
-
-    const liveFrame = document.getElementById("liveFrame");
-    const offlineOverlay = document.getElementById("offlineOverlay");
-    const statusPill = document.getElementById("statusPill");
-    const statusText = document.getElementById("statusText");
-    const btnTryLive = document.getElementById("btnTryLive");
-    const btnVisitChannel = document.getElementById("btnVisitChannel");
-
-    // Слагаме линк към канала на бутона
-    btnVisitChannel.href = YT_CHANNEL_URL;
-
-    // Когато натиснеш "GO LIVE VIEW" – показваме iframe-а и сменяме статуса на ONLINE.
-    btnTryLive.addEventListener("click", () => {
-      offlineOverlay.style.display = "none";
-      liveFrame.style.display = "block";
-      statusPill.classList.remove("offline");
-      statusPill.classList.add("online");
-      statusText.textContent = "ONLINE";
-    });
-  </script>
 </body>
 </html>
