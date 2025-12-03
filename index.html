@@ -1,135 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>STARLOG — Galactic Exploration Archive</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>STARLOG — Galactic Exploration Command</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Orbitron', sans-serif;
-      background: radial-gradient(circle at top, #081737 0, #02040a 55%, #000000 100%);
-      color: #cdeaff;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: radial-gradient(circle at top, #0a1228 0%, #04060b 80%, #000000 100%);
+  color: #d8f1ff;
+  overflow-x: hidden;
+}
 
-    header {
-      text-align: center;
-      padding: 40px 10px;
-    }
+/* Анимирани звезди */
+.starfield {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  background-image: url("https://raw.githubusercontent.com/markov69/NMS-assets/main/stars.png");
+  opacity: 0.25;
+  animation: drift 240s linear infinite;
+  z-index: -1;
+}
 
-    h1 {
-      font-size: 42px;
-      letter-spacing: 0.18em;
-      color: #27e0ff;
-      text-shadow: 0 0 20px rgba(39, 224, 255, 0.7);
-      margin-bottom: 10px;
-      text-transform: uppercase;
-    }
+@keyframes drift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-2000px); }
+}
 
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-bottom: 40px;
-    }
+/* Header */
+header {
+  text-align: center;
+  padding: 40px 10px;
+}
+h1 {
+  font-size: 46px;
+  text-transform: uppercase;
+  color: #2fe3ff;
+  text-shadow: 0 0 18px #2fe3ff;
+  letter-spacing: 0.18em;
+}
 
-    nav a {
-      text-decoration: none;
-      color: #27e0ff;
-      font-size: 18px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      transition: 0.2s;
-    }
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 35px;
+}
+nav a {
+  text-decoration: none;
+  color: #49eaff;
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  transition: 0.25s;
+}
+nav a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 10px #49eaff;
+}
 
-    nav a:hover {
-      color: #ffffff;
-      text-shadow: 0 0 10px #27e0ff;
-    }
+/* Cards */
+.container {
+  max-width: 960px;
+  margin: auto;
+  padding: 20px;
+}
 
-    .content {
-      max-width: 900px;
-      margin: auto;
-      padding: 20px;
-    }
+.card {
+  background: rgba(10, 20, 35, 0.6);
+  border: 1px solid rgba(41, 224, 255, 0.25);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  margin-bottom: 25px;
+}
 
-    .card {
-      background: rgba(5, 10, 25, 0.7);
-      border: 1px solid rgba(39, 224, 255, 0.2);
-      padding: 20px;
-      border-radius: 14px;
-      margin-bottom: 30px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-    }
+.card h2 {
+  color: #2fe3ff;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
 
-    .card h2 {
-      color: #27e0ff;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 10px;
-      font-size: 22px;
-    }
+/* Latest Logs */
+.log-box {
+  background: rgba(0,0,0,0.35);
+  border-left: 4px solid #2fe3ff;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
 
-    footer {
-      text-align: center;
-      padding: 20px;
-      margin-top: 40px;
-      font-size: 12px;
-      color: rgba(200, 220, 255, 0.5);
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-    }
-  </style>
+footer {
+  text-align: center;
+  padding: 25px;
+  font-size: 12px;
+  opacity: 0.4;
+  letter-spacing: 0.14em;
+}
+</style>
 </head>
 
 <body>
 
+<div class="starfield"></div>
+
 <header>
-  <h1>STARLOG — Galactic Exploration Archive</h1>
+  <h1>STARLOG — GALACTIC COMMAND</h1>
 
   <nav>
     <a href="starmap.html">Star Map</a>
     <a href="planets.html">Planets</a>
     <a href="missions.html">Mission Log</a>
     <a href="upload.html">Upload</a>
-    <a href="live.html">Live</a>
+    <a href="live.html">LIVE</a>
   </nav>
 </header>
 
-<div class="content">
+<div class="container">
 
   <div class="card">
     <h2>Welcome, Admiral Aleksandar Markov</h2>
-    <p>Your intergalactic journeys will be recorded here. Upload planet photos, generate descriptions, and explore your personal galaxy archive.</p>
+    <p>Galactic command online. Your exploration history is being synchronized.</p>
+  </div>
+
+  <!-- Latest Logs Section -->
+  <div class="card">
+    <h2>Latest Logs</h2>
+
+    <div class="log-box">
+      <strong>Gubri-H30</strong> — Nuclear-decay world scanned. Radiation 6.2 Rad. Flora abundance confirmed.
+    </div>
+
+    <div class="log-box">
+      <strong>Ewelly Prime</strong> — Temperature stable 28.5°C. Toxicity spikes during storms 101°C.
+    </div>
+
+    <div class="log-box">
+      <strong>Alkalu H16</strong> — First Contact achieved. Atmospheric anomalies detected in orbital relay.
+    </div>
+
+    <p style="opacity:0.6; margin-top:10px;">(Your three most recent discoveries)</p>
   </div>
 
   <div class="card">
-    <h2>Star Map Explorer</h2>
-    <p>Coming soon — interactive map of discovered star systems.</p>
-  </div>
-
-  <div class="card">
-    <h2>Planet Archives</h2>
-    <p>Each discovered planet will appear here with story logs, images, and data.</p>
-  </div>
-
-  <div class="card">
-    <h2>Mission Log</h2>
-    <p>Your chronological mission records will be placed here.</p>
-  </div>
-
-  <div class="card">
-    <h2>Upload Section</h2>
-    <p>Submit expedition screenshots and automatically generate story entries.</p>
+    <h2>System Status</h2>
+    <p>All modules operational. Awaiting next expedition upload…</p>
   </div>
 
 </div>
 
 <footer>
-  STARLOG — PERSONAL GALACTIC LOGBOOK
+  STARLOG — YOUR PERSONAL NO MAN'S SKY DATABASE
 </footer>
 
 </body>
