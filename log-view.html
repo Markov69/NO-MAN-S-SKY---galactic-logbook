@@ -1,1 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Log Entry</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+<style>
+    body {
+        margin: 0;
+        font-family: "Rajdhani", sans-serif;
+        background: #020818;
+        color: white;
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 26px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        margin-bottom: 10px;
+    }
+
+    .meta {
+        opacity: 0.7;
+        margin-bottom: 20px;
+    }
+
+    .content {
+        white-space: pre-line;
+        font-size: 16px;
+        line-height: 1.6;
+        border-left: 3px solid #33ffe6;
+        padding-left: 12px;
+    }
+
+    .controls {
+        margin-top: 25px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: 1px solid white;
+        color: white;
+        margin-right: 10px;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+    }
+
+    .btn:hover {
+        background: white;
+        color: #020818;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="title" id="logTitle">Log Entry</div>
+
+<div class="meta" id="logMeta"></div>
+
+<div class="content" id="logContent"></div>
+
+<div class="controls">
+    <a href="logs.html" class="btn">Back</a>
+    <a href="#" id="deleteBtn" class="btn">Delete</a>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const index = parseInt(params.get("entry"), 10);
+
+    const logs = JSON.parse(localStorage.getItem("logs") || "[]");
+    const entry = logs[index];
+
+    if (!entry) {
+        document.body.innerHTML = "<p>Log not found.</p>";
+    } else {
+        document.getElementById("logTitle").textContent = entry.title;
+        document.getElementById("logMeta").innerHTML = `
+            Stardate: ${entry.stardate}<br>
+            System: ${entry.system}<br>
+            Planet: ${entry.planet}<br>
+            Coordinates: ${entry.coords}
+        `;
+        document.getElementById("logContent").textContent = entry.content;
+    }
+
+    document.getElementById("deleteBtn").onclick = function() {
+        logs.splice(index, 1);
+        localStorage.setItem("logs", JSON.stringify(logs));
+        window.location.href = "logs.html";
+    };
+</script>
+
+</body>
+</html>
