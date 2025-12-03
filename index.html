@@ -1,903 +1,305 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8" />
-  <title>NO MEAN'S SKY – Bordovi Dnevnik</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Футуристичен шрифт -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg-color: #02030b;
-      --accent: #34d2ff;
-      --accent-soft: rgba(52, 210, 255, 0.4);
-      --danger: #ff3b6c;
-      --text-main: #f4f7ff;
-      --text-dim: #7f8aa5;
-      --panel-bg: rgba(5, 8, 20, 0.78);
-      --hud-border: rgba(123, 217, 255, 0.8);
-      --hud-glow: 0 0 20px rgba(52, 210, 255, 0.65);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #101634 0%, #02030b 55%, #000000 100%);
-      color: var(--text-main);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow: hidden;
-    }
-
-    /* ЗВЕЗДЕН ФОН */
-    .stars,
-    .stars2 {
-      position: fixed;
-      inset: 0;
-      background-repeat: repeat;
-      pointer-events: none;
-      z-index: -3;
-    }
-
-    .stars {
-      background-image:
-        radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.7) 0, transparent 40%),
-        radial-gradient(1.5px 1.5px at 70% 80%, rgba(156,200,255,0.9) 0, transparent 40%),
-        radial-gradient(1.5px 1.5px at 30% 60%, rgba(255,255,255,0.8) 0, transparent 40%),
-        radial-gradient(1px 1px at 90% 30%, rgba(186,226,255,0.8) 0, transparent 40%);
-      background-size: 500px 500px;
-      animation: driftStars 55s linear infinite;
-      opacity: 0.9;
-    }
-
-    .stars2 {
-      background-image:
-        radial-gradient(2.5px 2.5px at 20% 70%, rgba(255,255,255,0.9) 0, transparent 45%),
-        radial-gradient(2px 2px at 80% 20%, rgba(120,190,255,0.9) 0, transparent 45%);
-      background-size: 700px 700px;
-      animation: driftStars2 75s linear infinite;
-      opacity: 0.6;
-    }
-
-    @keyframes driftStars {
-      from { transform: translate3d(0,0,0); }
-      to   { transform: translate3d(-200px,-300px,0); }
-    }
-
-    @keyframes driftStars2 {
-      from { transform: translate3d(0,0,0); }
-      to   { transform: translate3d(250px,150px,0); }
-    }
-
-    .nebula {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(61, 180, 255, 0.35), transparent 60%),
-        radial-gradient(circle at 80% 70%, rgba(200, 60, 255, 0.25), transparent 60%);
-      mix-blend-mode: screen;
-      opacity: 0.8;
-      pointer-events: none;
-      z-index: -2;
-      filter: blur(2px);
-    }
-
-    .vignette {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.7) 70%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    .cockpit {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    /* ГОРЕН HUD */
-    .top-hud {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .logo-block {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .logo-mark {
-      width: 46px;
-      height: 46px;
-      border-radius: 999px;
-      border: 2px solid var(--accent);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-size: 18px;
-      letter-spacing: 2px;
-      box-shadow: var(--hud-glow);
-      background: radial-gradient(circle at 30% 30%, rgba(76, 230, 255, 0.6), transparent 60%);
-    }
-
-    .logo-texts {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .logo-main {
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-
-    .logo-sub {
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    .top-status {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-size: 10px;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    .top-status span strong {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* ЦЕНТРАЛЕН ПАНЕЛ */
-    .main-panel {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 0 18px;
-    }
-
-    .panel-frame {
-      position: relative;
-      width: min(1040px, 100%);
-      height: min(540px, 65vh);
-      border-radius: 24px;
-      padding: 18px 20px;
-      background: linear-gradient(
-        135deg,
-        rgba(5, 10, 25, 0.96),
-        rgba(6, 18, 40, 0.96)
-      );
-      border: 1px solid var(--hud-border);
-      box-shadow: var(--hud-glow);
-      overflow: hidden;
-      backdrop-filter: blur(12px);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-
-    .panel-frame::before,
-    .panel-frame::after {
-      content: "";
-      position: absolute;
-      inset: 12px;
-      border-radius: 18px;
-      border: 1px dashed rgba(123, 217, 255, 0.2);
-      pointer-events: none;
-    }
-
-    .panel-frame::after {
-      inset: 0;
-      border-radius: 24px;
-      border: 1px solid rgba(8, 220, 255, 0.22);
-      mix-blend-mode: screen;
-    }
-
-    .panel-notch {
-      position: absolute;
-      width: 54px;
-      height: 4px;
-      border-radius: 999px;
-      background: radial-gradient(circle, rgba(144, 228, 255, 0.9), transparent 70%);
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0.9;
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      font-family: "Orbitron", system-ui, sans-serif;
-      text-transform: uppercase;
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    .panel-header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .panel-pill {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(71, 194, 255, 0.7);
-      background: radial-gradient(circle at 30% 10%, rgba(71, 194, 255, 0.6), transparent 70%);
-      color: var(--accent);
-      font-size: 10px;
-      letter-spacing: 0.15em;
-    }
-
-    .panel-header-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(
-        to right,
-        rgba(71, 194, 255, 0.9),
-        rgba(71, 194, 255, 0.0)
-      );
-      opacity: 0.8;
-    }
-
-    .panel-header-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .panel-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--accent), transparent 65%);
-      box-shadow: 0 0 8px rgba(71, 194, 255, 0.9);
-      animation: pulseDot 2.8s ease-in-out infinite;
-    }
-
-    .panel-header-right span {
-      letter-spacing: 0.18em;
-    }
-
-    @keyframes pulseDot {
-      0%, 100% { transform: scale(1); opacity: 0.9; }
-      50% { transform: scale(1.8); opacity: 0.3; }
-    }
-
-    .panel-body {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 2.1fr 1.4fr;
-      gap: 20px;
-      padding-top: 8px;
-    }
-
-    @media (max-width: 800px) {
-      .panel-body {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* ЛЯВО – ЛОГ БЛОК */
-    .log-block {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .log-title-main {
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-size: clamp(20px, 3vw, 26px);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-
-    .log-title-sub {
-      font-size: 13px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .log-text {
-      margin-top: 6px;
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-dim);
-      max-width: 520px;
-    }
-
-    .log-text strong {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* БУТОН – минимален sci-fi стил */
-    .enter-log-button {
-      margin-top: 18px;
-      display: inline-block;
-    }
-
-    .enter-log-button a {
-      display: inline-block;
-      padding: 10px 28px;
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-size: 14px;
-      letter-spacing: 0.28em;
-      color: #7cdfff;
-      text-decoration: none;
-      text-transform: uppercase;
-      border: 1px solid rgba(124, 223, 255, 0.55);
-      border-radius: 12px;
-      background: rgba(12, 25, 40, 0.55);
-      backdrop-filter: blur(4px);
-      transition: 0.22s ease-in-out;
-    }
-
-    .enter-log-button a:hover {
-      color: #ffffff;
-      border-color: rgba(160, 240, 255, 0.9);
-      box-shadow: 0 0 14px rgba(80, 220, 255, 0.6);
-      transform: translateY(-2px);
-    }
-
-    .enter-log-button a:active {
-      transform: translateY(0px) scale(0.97);
-      box-shadow: 0 0 8px rgba(80, 220, 255, 0.3);
-    }
-
-    /* ДЯСНО – HOLO / РАДАР БЛОК */
-    .holo-block {
-      position: relative;
-      border-radius: 18px;
-      padding: 14px;
-      background: radial-gradient(circle at 20% 0%, rgba(71, 194, 255, 0.35), transparent 70%),
-                  radial-gradient(circle at 80% 100%, rgba(255, 90, 156, 0.28), transparent 65%),
-                  rgba(4, 9, 24, 0.95);
-      border: 1px solid rgba(123, 217, 255, 0.6);
-      overflow: hidden;
-    }
-
-    .holo-grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(120, 190, 255, 0.12) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(120, 190, 255, 0.10) 1px, transparent 1px);
-      background-size: 24px 24px;
-      opacity: 0.7;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    .holo-inner {
-      position: relative;
-      z-index: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .holo-header {
-      display: flex;
-      justify-content: space между;
-      align-items: center;
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-size: 10px;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    .holo-title {
-      letter-spacing: 0.16em;
-    }
-
-    .holo-badge {
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      font-size: 9px;
-    }
-
-    .radar {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .radar-circle {
-      position: relative;
-      width: 180px;
-      height: 180px;
-      max-width: 60%;
-      max-height: 60%;
-      border-radius: 50%;
-      border: 1px solid rgba(123, 217, 255, 0.7);
-      box-shadow: 0 0 40px rgba(71, 194, 255, 0.8);
-      overflow: hidden;
-    }
-
-    .radar-circle::before,
-    .radar-circle::after {
-      content: "";
-      position: absolute;
-      inset: 50%;
-      border-radius: 50%;
-      border: 1px solid rgba(123, 217, 255, 0.5);
-      transform: translate(-50%, -50%);
-    }
-
-    .radar-circle::before {
-      width: 70%;
-      height: 70%;
-    }
-
-    .radar-circle::after {
-      width: 40%;
-      height: 40%;
-    }
-
-    .radar-line {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 50%;
-      height: 2px;
-      background: linear-gradient(
-        to right,
-        rgba(71, 194, 255, 0),
-        rgba(71, 194, 255, 0.9)
-      );
-      transform-origin: 0% 50%;
-      animation: radarSweep 6s linear infinite;
-    }
-
-    @keyframes radarSweep {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
-    .radar-dot {
-      position: absolute;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: radial-gradient(circle, var(--danger), transparent 70%);
-      box-shadow: 0 0 18px rgba(255, 59, 108, 0.95);
-      animation: dotBlink 1.4s ease-in-out infinite;
-    }
-
-    .radar-dot.dot1 { top: 18%; left: 62%; }
-    .radar-dot.dot2 { top: 65%; left: 30%; animation-delay: 0.4s; }
-    .radar-dot.dot3 { top: 40%; left: 78%; animation-delay: 0.8s; }
-
-    @keyframes dotBlink {
-      0%, 100% { transform: scale(0.7); opacity: 0.4; }
-      40% { transform: scale(1.1); opacity: 1; }
-      60% { transform: scale(0.8); opacity: 0.6; }
-    }
-
-    .holo-footer {
-      font-size: 10px;
-      color: var(--text-dim);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .holo-footer strong {
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    /* ДОЛЕН СТАТУС БАР */
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: linear-gradient(
-        to right,
-        rgba(5, 10, 30, 0.9),
-        rgba(5, 10, 30, 0.7)
-      );
-      border: 1px solid rgba(71, 194, 255, 0.5);
-      font-family: "Orbitron", system-ui, sans-serif;
-      font-size: 10px;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      letter-spacing: 0.22em;
-    }
-
-    .status-bar span strong {
-      color: var(--accent);
-    }
-
-    @media (max-width: 640px) {
-      .cockpit {
-        padding: 14px;
-      }
-      .status-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        letter-spacing: 0.13em;
-      }
-      .top-hud {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-    }
-
-    /* LOADING OVERLAY */
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(5, 10, 20, 0.85);
-      backdrop-filter: blur(6px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .loading-box {
-      text-align: center;
-      color: #7cdfff;
-      font-family: "Orbitron", sans-serif;
-    }
-
-    .loading-logo {
-      font-size: 24px;
-      letter-spacing: 0.25em;
-      margin-bottom: 20px;
-      opacity: 0.9;
-    }
-
-    .loading-bar-outer {
-      width: 260px;
-      height: 10px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(124,223,255,0.3);
-      border-radius: 6px;
-      overflow: hidden;
-      margin: 0 auto;
-    }
-
-    .loading-bar-inner {
-      width: 0%;
-      height: 100%;
-      background: #34d2ff;
-      box-shadow: 0 0 12px #34d2ff;
-      transition: width 0.3s linear;
-    }
-
-    .loading-percent {
-      margin-top: 12px;
-      font-size: 14px;
-      letter-spacing: 0.2em;
-    }
-
-    /* ЛОГ ЕКРАН */
-    .log-screen {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 8, 16, 0.88);
-      backdrop-filter: blur(12px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.1s linear;
-      z-index: 9998;
-    }
-
-    .log-content {
-      text-align: center;
-      font-family: "Orbitron", sans-serif;
-      color: #b7eaff;
-    }
-
-    .log-content h1 {
-      font-size: 32px;
-      letter-spacing: 0.3em;
-      margin-bottom: 20px;
-    }
-
-    .log-content p {
-      font-size: 14px;
-      letter-spacing: 0.2em;
-      opacity: 0.7;
-      margin-bottom: 6px;
-      text-transform: uppercase;
-    }
-
-    .log-back-btn {
-      display: inline-block;
-      margin-top: 24px;
-      padding: 8px 22px;
-      font-size: 12px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      border: 1px solid rgba(180, 230, 255, 0.7);
-      color: #b7eaff;
-      text-decoration: none;
-      cursor: pointer;
-      background: rgba(10, 25, 40, 0.7);
-      box-shadow: 0 0 12px rgba(80, 220, 255, 0.5);
-      transition: 0.18s ease-in-out;
-    }
-
-    .log-back-btn:hover {
-      color: #ffffff;
-      border-color: rgba(210, 245, 255, 0.9);
-      box-shadow: 0 0 18px rgba(100, 230, 255, 0.8);
-      transform: translateY(-1px);
-    }
-
-    .log-back-btn:active {
-      transform: translateY(0) scale(0.97);
-      box-shadow: 0 0 8px rgba(80, 200, 255, 0.4);
-    }
-  </style>
+<meta charset="UTF-8">
+<title>NO MEAN'S SKY – SHIP LOG</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0; padding: 0;
+  background: #02030b;
+  font-family: Orbitron, sans-serif;
+  color: #b7eaff;
+  overflow: hidden;
+}
+
+/* --- STARFIELD --- */
+.stars, .stars2 {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: -3;
+}
+.stars {
+  background-image:
+    radial-gradient(2px 2px at 20% 30%, #fff 0, transparent 40%),
+    radial-gradient(1.5px 1.5px at 70% 80%, #cce8ff 0, transparent 40%);
+  background-size: 500px 500px;
+  animation: drift1 60s linear infinite;
+}
+.stars2 {
+  background-image:
+    radial-gradient(2px 2px at 50% 60%, #fff 0, transparent 40%),
+    radial-gradient(1.5px 1.5px at 10% 20%, #b8eaff 0, transparent 40%);
+  background-size: 600px 600px;
+  animation: drift2 85s linear infinite;
+}
+@keyframes drift1 { from{transform:translate(0,0)} to{transform:translate(-300px,-300px)} }
+@keyframes drift2 { from{transform:translate(0,0)} to{transform:translate(300px,200px)} }
+
+/* --- HOME PANEL --- */
+.home {
+  padding: 40px;
+  text-align: center;
+}
+h1 {
+  font-size: 28px; letter-spacing: 0.25em;
+  color: #9fe7ff;
+  margin-bottom: 12px;
+}
+.sub {
+  font-size: 13px; opacity: 0.6;
+  letter-spacing: 0.14em;
+  margin-bottom: 20px;
+}
+
+/* --- ENTER LOG BUTTON --- */
+.enter-log-button a {
+  display: inline-block;
+  padding: 12px 32px;
+  border-radius: 10px;
+  border: 1px solid rgba(120,220,255,0.5);
+  background: rgba(10,25,40,0.55);
+  letter-spacing: 0.25em;
+  color: #9fe7ff;
+  text-decoration: none;
+  transition: 0.25s;
+}
+.enter-log-button a:hover {
+  color: #fff;
+  border-color: #d7f8ff;
+  box-shadow: 0 0 12px #81eaff;
+  transform: translateY(-2px);
+}
+
+/* --- RADAR (не го барам) --- */
+.radar {
+  width: 200px; height: 200px;
+  margin: 50px auto;
+  position: relative;
+  border-radius: 50%;
+  border: 1px solid rgba(120,210,255,0.7);
+  box-shadow: 0 0 25px rgba(120,210,255,0.5);
+}
+.radar .line {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 50%; height: 2px;
+  background: linear-gradient(to right, transparent, #5ad6ff);
+  transform-origin: 0% 50%;
+  animation: sweep 4s linear infinite;
+}
+@keyframes sweep { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+.radar .dot {
+  position: absolute; width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #ff3b6c;
+  box-shadow: 0 0 12px #ff3b6c;
+  animation: pulse 1.5s infinite;
+}
+.dot1 { top:20%; left: 60%; }
+.dot2 { top:65%; left:30%; animation-delay:0.3s; }
+.dot3 { top:40%; left:80%; animation-delay:0.6s; }
+@keyframes pulse {
+  0%,100% {opacity:0.3; transform:scale(0.6);}
+  50% {opacity:1; transform:scale(1.2);}
+}
+
+/* --- LOADING OVERLAY --- */
+.loading-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9998;
+}
+.loading-box { text-align:center; color:#9fe7ff; }
+.loading-bar-outer {
+  width: 240px; height: 9px;
+  border: 1px solid rgba(140,230,255,0.4);
+  border-radius: 6px;
+  margin: 12px auto;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.loading-bar-inner {
+  width: 0%; height:100%;
+  background: #34d2ff;
+  box-shadow: 0 0 12px #34d2ff;
+  transition: 0.25s linear;
+}
+.loading-percent {
+  font-size: 12px;
+  opacity: 0.7;
+  letter-spacing: 0.14em;
+}
+
+/* --- FLOATING LOG WINDOW --- */
+.log-screen {
+  position: fixed; inset: 0;
+  display:flex; align-items:center; justify-content:center;
+  background: rgba(0,10,20,0.35);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  transition: transform 0.1s linear;
+}
+
+.log-window {
+  width: 700px; max-width: 90%;
+  height: 420px; max-height: 75%;
+  padding: 22px;
+  background: rgba(5,12,25,0.85);
+  border-radius: 16px;
+  border: 1px solid rgba(120,210,255,0.45);
+  box-shadow: 0 0 22px rgba(120,210,255,0.45);
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.log-close {
+  position: absolute; top: 12px; right: 16px;
+  font-size: 20px; cursor: pointer;
+  opacity: 0.7; transition:0.2s;
+}
+.log-close:hover { opacity:1; text-shadow:0 0 10px #bff3ff; }
+
+.log-content {
+  text-align: center;
+  color: #b7eaff;
+  margin-top: 50px;
+}
+.log-content h2 {
+  font-size: 22px;
+  letter-spacing: 0.25em;
+  margin-bottom: 16px;
+}
+.log-content p {
+  font-size: 12px; opacity:0.7; letter-spacing:0.15em;
+  text-transform: uppercase;
+}
+</style>
 </head>
+
 <body>
-  <!-- космически фон -->
-  <div class="stars"></div>
-  <div class="stars2"></div>
-  <div class="nebula"></div>
-  <div class="vignette"></div>
 
-  <main class="cockpit">
-    <!-- ГОРЕН HUD -->
-    <div class="top-hud">
-      <div class="logo-block">
-        <div class="logo-mark">N⭑S</div>
-        <div class="logo-texts">
-          <div class="logo-main">NO MEAN'S SKY</div>
-          <div class="logo-sub">bordovi dnevnik / ship log</div>
+<div class="stars"></div>
+<div class="stars2"></div>
+
+<!-- HOME UI -->
+<div class="home">
+  <h1>NO MEAN'S SKY</h1>
+  <div class="sub">BORDOVI DNEVNIK / SHIP LOG</div>
+
+  <div class="enter-log-button">
+    <a href="#">ENTER LOG</a>
+  </div>
+
+  <div class="radar">
+    <div class="line"></div>
+    <div class="dot dot1"></div>
+    <div class="dot dot2"></div>
+    <div class="dot dot3"></div>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", ()=>{
+
+  const btn = document.querySelector(".enter-log-button a");
+  let logShown = false;
+  let moveHandler = null;
+
+  history.replaceState({screen:"home"},"");
+
+  btn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    if (logShown) return;
+    startLoading();
+  });
+
+  function startLoading(){
+    const ov = document.createElement("div");
+    ov.className = "loading-overlay";
+    ov.innerHTML = `
+      <div class="loading-box">
+        <div>LOADING...</div>
+        <div class="loading-bar-outer">
+          <div class="loading-bar-inner"></div>
+        </div>
+        <div class="loading-percent">0%</div>
+      </div>
+    `;
+    document.body.appendChild(ov);
+
+    let p = 0;
+    function step(){
+      p += Math.floor(Math.random()*18)+5;
+      if(p>100)p=100;
+
+      ov.querySelector(".loading-bar-inner").style.width=p+"%";
+      ov.querySelector(".loading-percent").textContent=p+"%";
+
+      if(p<100){
+        setTimeout(step,150+Math.random()*250);
+      } else {
+        setTimeout(()=>{
+          ov.remove();
+          openLog();
+        },300);
+      }
+    }
+    step();
+  }
+
+  function openLog(){
+    logShown = true;
+    history.pushState({screen:"log"},"","#log");
+
+    const scr = document.createElement("div");
+    scr.className = "log-screen";
+    scr.innerHTML = `
+      <div class="log-window">
+        <div class="log-close">✕</div>
+        <div class="log-content">
+          <h2>SHIP LOG</h2>
+          <p>INTERFACE ACTIVE</p>
+          <p>WELCOME COMMANDER</p>
         </div>
       </div>
+    `;
+    document.body.appendChild(scr);
 
-      <div class="top-status">
-        <span>sector: <strong>Ω–13 / OFF-GRID</strong></span>
-        <span>stardate: <strong>2215-12-03</strong></span>
-        <span>cmdr: <strong>CLASSIFIED</strong></span>
-      </div>
-    </div>
+    // PARALLAX
+    moveHandler = (ev)=>{
+      let x=(window.innerWidth/2-ev.clientX)/40;
+      let y=(window.innerHeight/2-ev.clientY)/40;
+      scr.style.transform=`translate(${x}px,${y}px)`;
+    };
+    document.addEventListener("mousemove", moveHandler);
 
-    <!-- ЦЕНТРАЛЕН ПАНЕЛ -->
-    <section class="main-panel">
-      <div class="panel-frame">
-        <div class="panel-notch"></div>
+    // X button
+    scr.querySelector(".log-close").addEventListener("click", ()=>history.back());
+  }
 
-        <div class="panel-header">
-          <div class="panel-header-left">
-            <div class="panel-pill">
-              BORDOVI DNEVNIK
-            </div>
-            <div class="panel-header-line"></div>
-          </div>
+  function closeLog(){
+    const scr=document.querySelector(".log-screen");
+    if(scr) scr.remove();
+    if(moveHandler) document.removeEventListener("mousemove",moveHandler);
+    moveHandler=null;
+    logShown=false;
+  }
 
-          <div class="panel-header-right">
-            <div class="panel-dot"></div>
-            <span>CORE LOG / 01</span>
-          </div>
-        </div>
+  // Browser / mouse back
+  window.addEventListener("popstate",(e)=>{
+    const s=e.state||{};
+    if(s.screen==="home") closeLog();
+  });
 
-        <div class="panel-body">
-          <!-- ЛЯВО – ТЕКСТ -->
-          <div class="log-block">
-            <div class="log-title-main">ДНЕВНИК НА КОРАБА</div>
-            <div class="log-title-sub">NMS-AVM / PERSONAL ARCHIVE</div>
+});
+</script>
 
-            <p class="log-text">
-              Това е бордовият дневник на кораба <strong>NO MEAN'S SKY</strong>.
-              Тук ще записваме <strong>мисии</strong>, <strong>срещи</strong>,
-              <strong>луди открития</strong> и всички
-              <strong>мръсни трикове</strong>, с които чупим икономиката на
-              галактиката.
-            </p>
-
-            <p class="log-text">
-              По-късно тук ще добавим бутони за:
-              <strong>дневни мисии</strong>, <strong>карта</strong>,
-              <strong>инвентар</strong>, <strong>търговски цикли</strong> и
-              каквото още решим.
-            </p>
-
-            <!-- БУТОН – стартира loading + log екран -->
-            <div class="enter-log-button">
-              <a href="#">ENTER LOG</a>
-            </div>
-          </div>
-
-          <!-- ДЯСНО – HOLO / РАДАР -->
-          <div class="holo-block">
-            <div class="holo-grid"></div>
-            <div class="holo-inner">
-              <div class="holo-header">
-                <span class="holo-title">nav / local system scan</span>
-                <span class="holo-badge">NO MEAN'S SKY – OFFLINE MODE</span>
-              </div>
-
-              <div class="radar">
-                <div class="radar-circle">
-                  <div class="radar-line"></div>
-                  <div class="radar-dot dot1"></div>
-                  <div class="radar-dot dot2"></div>
-                  <div class="radar-dot dot3"></div>
-                </div>
-              </div>
-
-              <div class="holo-footer">
-                <span>warp drive: <strong>STAND-BY</strong></span>
-                <span>credits: <strong>∞ FUSION IGNITORS</strong></span>
-                <span>mood: <strong>NO MEAN / FULL TROLL</strong></span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ДОЛЕН HUD -->
-    <footer class="status-bar">
-      <span>systems: <strong>online</strong></span>
-      <span>log channel: <strong>SECURE / ENCRYPTED</strong></span>
-      <span>waiting for next entry...</span>
-    </footer>
-  </main>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.querySelector(".enter-log-button a");
-      let logScreenShown = false;
-      let logMouseHandler = null;
-      let lastStateWasLog = false;
-
-      if (!btn) return;
-
-      // начално състояние – home
-      history.replaceState({ screen: "home" }, "");
-
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (logScreenShown) return;
-        logScreenShown = true;
-        btn.style.pointerEvents = "none";
-        startLoadingSequence();
-      });
-
-      function startLoadingSequence() {
-        const overlay = document.createElement("div");
-        overlay.classList.add("loading-overlay");
-        overlay.innerHTML = `
-          <div class="loading-box">
-            <div class="loading-logo">LOADING...</div>
-            <div class="loading-bar-outer">
-              <div class="loading-bar-inner"></div>
-            </div>
-            <div class="loading-percent">0%</div>
-          </div>
-        `;
-        document.body.appendChild(overlay);
-
-        let percent = 0;
-
-        function step() {
-          const jump = Math.floor(Math.random() * 18) + 3; // 3–20%
-          percent += jump;
-          if (percent > 100) percent = 100;
-
-          overlay.querySelector(".loading-bar-inner").style.width = percent + "%";
-          overlay.querySelector(".loading-percent").textContent = percent + "%";
-
-          if (percent < 100) {
-            const delay = 150 + Math.random() * 350; // 150–500 ms
-            setTimeout(step, delay);
-          } else {
-            setTimeout(() => {
-              overlay.remove();
-              // push в history – вече сме в LOG екран
-              history.pushState({ screen: "log" }, "", "#log");
-              lastStateWasLog = true;
-              showLogScreen();
-            }, 400);
-          }
-        }
-
-        step();
-      }
-
-      function showLogScreen() {
-        const screen = document.createElement("div");
-        screen.classList.add("log-screen");
-        screen.innerHTML = `
-          <div class="log-content">
-            <h1>SHIP LOG INTERFACE</h1>
-            <p>Добре дошъл, командире.</p>
-            <p>Тук после ще подредим мисии, карти, панели и всичко останало.</p>
-            <button class="log-back-btn">BACK</button>
-          </div>
-        `;
-        document.body.appendChild(screen);
-
-        // parallax
-        logMouseHandler = (ev) => {
-          const x = (window.innerWidth / 2 - ev.clientX) / 30;
-          const y = (window.innerHeight / 2 - ev.clientY) / 30;
-          screen.style.transform = `translate(${x}px, ${y}px)`;
-        };
-        document.addEventListener("mousemove", logMouseHandler);
-
-        // вътрешния BACK бутон
-        const backBtn = screen.querySelector(".log-back-btn");
-        backBtn.addEventListener("click", () => {
-          // симулираме натискане на браузър Back
-          history.back();
-        });
-      }
-
-      function hideLogScreen() {
-        const screen = document.querySelector(".log-screen");
-        if (screen) screen.remove();
-
-        if (logMouseHandler) {
-          document.removeEventListener("mousemove", logMouseHandler);
-          logMouseHandler = null;
-        }
-
-        logScreenShown = false;
-        lastStateWasLog = false;
-        btn.style.pointerEvents = "auto";
-      }
-
-      // Реакция при BACK (браузър, мишка, жестове)
-      window.addEventListener("popstate", (event) => {
-        const state = event.state || {};
-        if (state.screen === "home" && lastStateWasLog) {
-          hideLogScreen();
-        }
-      });
-    });
-  </script>
 </body>
 </html>
