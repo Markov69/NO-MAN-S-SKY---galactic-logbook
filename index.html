@@ -1,133 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>STARLOG — Galactic Exploration Archive</title>
+  <meta charset="UTF-8" />
+  <title>LIVE Stream – StarLog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at top, #0b1b33 0%, #02040a 60%, #000000 100%);
+      color: #e6f5ff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto&display=swap" rel="stylesheet">
+    header {
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(2, 6, 23, 0.92);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.4);
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);
+    }
 
-<style>
-body {
-    margin: 0;
-    padding: 0;
-    background: radial-gradient(ellipse at top, #081019, #000000 90%);
-    font-family: 'Roboto', sans-serif;
-    color: #d0e7ff;
-    overflow-x: hidden;
-}
+    .logo {
+      font-size: 20px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #7dd3fc;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+    }
 
-/* Animated stars background */
-body::before {
-    content: "";
-    position: fixed;
-    width: 200%;
-    height: 200%;
-    background: url('https://raw.githubusercontent.com/markov69/assets/main/stars.png');
-    animation: drift 120s linear infinite;
-    opacity: 0.25;
-}
-@keyframes drift {
-    from { transform: translate(0,0); }
-    to { transform: translate(-500px,-500px); }
-}
+    nav a {
+      margin-left: 16px;
+      text-decoration: none;
+      color: #e0f2fe;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      padding-bottom: 4px;
+      border-bottom: 2px solid transparent;
+      transition: 0.25s ease;
+    }
 
-h1 {
-    font-family: 'Orbitron', sans-serif;
-    text-align: center;
-    font-size: 32px;
-    margin-top: 40px;
-    letter-spacing: 3px;
-    color: #6ef2ff;
-    text-shadow: 0 0 12px #00eaff;
-}
+    nav a:hover {
+      color: #7dd3fc;
+      border-bottom-color: #7dd3fc;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+    }
 
-/* Central container */
-.container {
-    width: 70%;
-    margin: auto;
-    padding-top: 40px;
-}
+    nav a.live {
+      color: #f97316;
+      border-bottom-color: #f97316;
+      text-shadow: 0 0 12px rgba(249, 115, 22, 0.95);
+    }
 
-/* NMS styled cards */
-.card {
-    background: rgba(20, 35, 50, 0.7);
-    border: 1px solid #0bd3ff;
-    border-radius: 12px;
-    padding: 25px;
-    margin: 25px 0;
-    transition: 0.3s;
-    box-shadow: 0 0 20px #002b36 inset, 0 0 12px #0091c2;
-}
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 48px;
+      gap: 16px;
+    }
 
-.card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 25px #00eaff, 0 0 40px #006d94 inset;
-}
+    h1 {
+      font-size: 26px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: #f9fafb;
+      text-align: center;
+      text-shadow: 0 0 18px rgba(56, 189, 248, 0.9);
+    }
 
-/* Navigation bar */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-    margin-bottom: 40px;
-}
+    .sub {
+      font-size: 14px;
+      color: #9ca3af;
+      max-width: 640px;
+      text-align: center;
+    }
 
-nav a {
-    font-family: 'Orbitron', sans-serif;
-    text-decoration: none;
-    color: #74d7ff;
-    font-size: 18px;
-    text-shadow: 0 0 8px #00c3ff;
-    transition: 0.3s;
-}
+    .player-wrapper {
+      margin-top: 16px;
+      width: 100%;
+      max-width: 1100px;
+      aspect-ratio: 16 / 9;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow:
+        0 0 30px rgba(56, 189, 248, 0.35),
+        0 0 80px rgba(15, 23, 42, 1);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      background: radial-gradient(circle at top, #082f49, #020617);
+    }
 
-nav a:hover {
-    color: #ffffff;
-    text-shadow: 0 0 14px #37e6ff;
-}
-</style>
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 12px;
+      color: #64748b;
+      background: #020617;
+      border-top: 1px solid rgba(30, 64, 175, 0.7);
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <div class="logo">STARLOG // LIVE FEED</div>
+    <nav>
+      <a href="index.html#starmap">Star Map</a>
+      <a href="index.html#planets">Planets</a>
+      <a href="index.html#missions">Mission Log</a>
+      <a href="index.html#upload">Upload</a>
+      <a href="live.html" class="live">Live</a>
+    </nav>
+  </header>
 
-<h1>STARLOG — GALACTIC EXPLORATION ARCHIVE</h1>
+  <main>
+    <h1>NO MAN'S SKY – LIVE EXPLORATION</h1>
+    <p class="sub">
+      When the Admiral goes live, the stream will appear below.
+      Share this page with your crew so they can watch the journey in real time.
+    </p>
 
-<nav>
-    <a href="#">Star Map</a>
-    <a href="#">Planets</a>
-    <a href="#">Mission Log</a>
-    <a href="#">Upload</a>
-</nav>
+    <div class="player-wrapper">
+      <!-- ТУК СМЕНИ YOUR_CHANNEL_ID С ТВОЕТО YOUTUBE CHANNEL ID -->
+      <iframe
+        src="https://www.youtube.com/embed/live_stream?channel=YOUR_CHANNEL_ID&autoplay=1"
+        title="YouTube live stream"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
+    </div>
+  </main>
 
-<div class="container">
-
-<div class="card">
-<h2>Welcome, Admiral Aleksandar Markov</h2>
-<p>Your galactic voyages are now stored inside this Atlas-linked terminal. Upload images, generate logs, and expand your personal archive.</p>
-</div>
-
-<div class="card">
-<h2>Star Map Explorer</h2>
-<p>Interactive galaxy navigation — coming soon.</p>
-</div>
-
-<div class="card">
-<h2>Planet Archives</h2>
-<p>Every discovered planet will appear here with data, imagery, and mission reports.</p>
-</div>
-
-<div class="card">
-<h2>Mission Log</h2>
-<p>Your chronological expedition entries will appear here.</p>
-</div>
-
-<div class="card">
-<h2>Upload Page</h2>
-<p>Upload photos and automatically generate exploration entries.</p>
-</div>
-
-</div>
-
+  <footer>
+    STARLOG // Galactic Exploration Archive – LIVE uplink
+  </footer>
 </body>
 </html>
