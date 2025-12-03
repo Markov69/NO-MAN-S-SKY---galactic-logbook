@@ -36,6 +36,8 @@ body::before {
       radial-gradient(1px 1px at 70% 90%, rgba(255,120,150,0.8), transparent 60%);
     animation: drift 80s linear infinite;
     opacity: 0.25;
+    pointer-events: none;
+    z-index: -1;
 }
 
 @keyframes drift {
@@ -43,14 +45,13 @@ body::before {
     to   { transform: translate(-200px,-120px); }
 }
 
-/* CENTRAL FRAME */
+/* CENTRAL FRAME – FULLSCREEN */
 .frame {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: min(1100px, 90vw);
-    height: min(700px, 90vh);
-    border-radius: 28px;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0; /* ако искаш меки ръбове – сложи 20px */
     border: 1px solid rgba(255,255,255,0.12);
     background: linear-gradient(135deg, rgba(4,12,35,0.85), rgba(10,30,70,0.92));
     box-shadow: 0 0 40px rgba(0,0,0,0.8);
@@ -162,9 +163,13 @@ body::before {
 .planet {
     position: absolute;
     left: 6%;
-    top: 50%;
-    width: 220px;
-    height: 220px;
+    top: 55%;
+    width: 27vmin;
+    height: 27vmin;
+    min-width: 160px;
+    min-height: 160px;
+    max-width: 260px;
+    max-height: 260px;
     transform: translateY(-50%);
     border-radius: 50%;
     background:
@@ -186,9 +191,13 @@ body::before {
 .ship {
     position: absolute;
     right: 10%;
-    top: 32%;
-    width: 150px;
-    height: 75px;
+    top: 40%;
+    width: 18vmin;
+    height: 9vmin;
+    min-width: 130px;
+    min-height: 65px;
+    max-width: 180px;
+    max-height: 90px;
     border-radius: 60px;
     border: 1px solid rgba(51,255,230,0.4);
     background: linear-gradient(120deg, rgba(0,20,30,0.8), black);
