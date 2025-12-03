@@ -2,180 +2,66 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>STARLOG — Galactic Command Center</title>
+<title>LIVE Transmission</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-/* ---------- GLOBAL ---------- */
 body {
   margin: 0;
   font-family: 'Orbitron', sans-serif;
   background: #000;
-  color: #d7ecff;
-  overflow-x: hidden;
-}
-
-/* ---------- BACKGROUND (OUR SHIP SILHOUETTE) ---------- */
-.bg {
-  position: fixed;
-  inset: 0;
-  background-image: url("https://i.imgur.com/HcJ4mVZ.jpeg");
-  background-size: cover;
-  background-position: center;
-  opacity: 0.32;
-  z-index: -2;
-  filter: brightness(0.75);
-}
-
-.bg-gradient {
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at 40% 30%, rgba(0, 153, 255, 0.25), transparent 60%),
-              radial-gradient(circle at 80% 90%, rgba(255, 0, 80, 0.16), transparent 70%);
-  z-index: -1;
-  animation: pulse 12s ease-in-out infinite alternate;
-}
-
-@keyframes pulse {
-  from { opacity: 0.20; }
-  to   { opacity: 0.45; }
-}
-
-/* ---------- HEADER ---------- */
-header {
+  color: white;
   text-align: center;
-  padding: 42px 10px 30px;
+  padding: 40px;
 }
 
 h1 {
-  font-size: 48px;
+  font-size: 42px;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
   color: #29d7ff;
-  text-shadow: 0 0 20px rgba(41, 215, 255, 0.9);
+  text-shadow: 0 0 20px #29d7ff;
 }
 
-/* ---------- MENU ---------- */
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 16px;
+.offline-box {
+  margin-top: 50px;
+  padding: 30px;
+  background: rgba(20,20,30,0.7);
+  border: 2px solid #29d7ff;
+  border-radius: 14px;
+  display: inline-block;
 }
 
-nav a {
-  color: #46eaff;
+.msg {
+  font-size: 22px;
+  margin-top: 10px;
+}
+
+a {
+  color: #29d7ff;
   text-decoration: none;
   font-size: 18px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  transition: 0.25s;
+  display: block;
+  margin-top: 30px;
 }
-
-nav a:hover {
-  color: #ffffff;
-  text-shadow: 0 0 12px #46eaff;
-}
-
-/* ---------- CONTENT ---------- */
-.container {
-  max-width: 960px;
-  margin: auto;
-  padding: 25px;
-}
-
-/* ---------- CARD ---------- */
-.card {
-  background: rgba(5, 12, 25, 0.7);
-  border: 1px solid rgba(45, 215, 255, 0.25);
-  padding: 22px;
-  border-radius: 14px;
-  margin-bottom: 28px;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 0 25px rgba(0,0,0,0.4);
-}
-
-.card h2 {
-  color: #2fe3ff;
-  text-transform: uppercase;
-  font-size: 20px;
-  letter-spacing: 0.15em;
-}
-
-/* ---------- LATEST LOGS ---------- */
-.log-box {
-  background: rgba(0,0,0,0.38);
-  border-left: 4px solid #2fe3ff;
-  padding: 12px 16px;
-  margin-bottom: 12px;
-  backdrop-filter: blur(3px);
-}
-
-footer {
-  text-align: center;
-  padding: 25px;
-  font-size: 12px;
-  opacity: 0.45;
-  letter-spacing: 0.16em;
+a:hover {
+  text-shadow: 0 0 10px #29d7ff;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
-<div class="bg-gradient"></div>
+<h1>LIVE STATUS</h1>
 
-<header>
-  <h1>STARLOG — GALACTIC COMMAND</h1>
-
-  <nav>
-    <a href="starmap.html">Star Map</a>
-    <a href="planets.html">Planets</a>
-    <a href="missions.html">Mission Log</a>
-    <a href="upload.html">Upload</a>
-    <a href="live.html">LIVE</a>
-  </nav>
-</header>
-
-<div class="container">
-
-  <div class="card">
-    <h2>Welcome, Admiral Aleksandar Markov</h2>
-    <p>Command center online. Latest expedition data synchronized.</p>
-  </div>
-
-  <!-- ---------- LATEST LOGS SECTION ---------- -->
-  <div class="card">
-    <h2>Latest Logs</h2>
-
-    <div class="log-box">
-      <strong>Gubri-H30</strong> — Nuclear decay world. Radiation 6.2 Rad. Flora abundance confirmed.
-    </div>
-
-    <div class="log-box">
-      <strong>Ewelly Prime</strong> — Stable 28.5°C. Toxic storm peaks at 101°C.
-    </div>
-
-    <div class="log-box">
-      <strong>Frozen Delta-9</strong> — Survival probability: 11%. Storm reading −121.6°C.
-    </div>
-
-    <p style="opacity:0.6; margin-top:10px;">(Your last recorded expeditions)</p>
-  </div>
-
-  <div class="card">
-    <h2>System Status</h2>
-    <p>Awaiting next mission upload. All scanning systems active…</p>
-  </div>
-
+<div class="offline-box">
+  <img src="https://i.imgur.com/2w6F8HY.png" width="220">
+  <div class="msg">🔴 The Admiral is currently OFFLINE</div>
+  <div class="msg" style="opacity:0.7; margin-top:8px;">Waiting for broadcast signal...</div>
 </div>
 
-<footer>
-  STARLOG — PERSONAL GALACTIC LOGBOOK
-</footer>
+<a href="index.html">⬅ Return to Home</a>
 
 </body>
 </html>
