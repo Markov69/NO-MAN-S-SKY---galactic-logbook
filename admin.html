@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<title>ADMIN PANEL · Galactic Logbook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        margin: 0;
+        background: #020818;
+        color: white;
+        font-family: "Rajdhani", sans-serif;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        letter-spacing: .25em;
+        margin-bottom: 25px;
+        text-transform: uppercase;
+    }
+
+    .panel {
+        max-width: 850px;
+        margin: auto;
+        background: rgba(255,255,255,0.06);
+        padding: 20px;
+        border-radius: 18px;
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    label {
+        display: block;
+        margin-top: 12px;
+        font-size: 14px;
+        opacity: 0.85;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.1);
+        color: white;
+        margin-top: 4px;
+    }
+
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    button {
+        margin-top: 20px;
+        width: 100%;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(51,255,230,0.4);
+        background: linear-gradient(135deg, #081829, #05101d);
+        color: #33ffe6;
+        font-size: 16px;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #092033;
+    }
+
+    .success {
+        margin-top: 20px;
+        padding: 10px;
+        background: rgba(51,255,230,0.2);
+        border: 1px solid rgba(51,255,230,0.5);
+        color: #33ffe6;
+        border-radius: 10px;
+        display: none;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>ADMIN PANEL · Planet Entry</h1>
+
+<div class="panel">
+
+    <label>Planet Name</label>
+    <input id="planetName">
+
+    <label>Star System</label>
+    <input id="systemName">
+
+    <label>Coordinates</label>
+    <input id="coords">
+
+    <label>Biome</label>
+    <input id="biome">
+
+    <label>Climate</label>
+    <input id="climate">
+
+    <label>Gravity</label>
+    <input id="gravity">
+
+    <label>Atmosphere</label>
+    <input id="atmosphere">
+
+    <label>Sentinel Activity</label>
+    <select id="sentinels">
+        <option>None</option>
+        <option>Low</option>
+        <option>Medium</option>
+        <option>High</option>
+        <option>Aggressive</option>
+    </select>
+
+    <label>Resources (comma separated)</label>
+    <input id="resources">
+
+    <label>Flora</label>
+    <input id="flora">
+
+    <label>Fauna</label>
+    <input id="fauna">
+
+    <label>Hazards</label>
+    <input id="hazards">
+
+    <label>Planet Description</label>
+    <textarea id="desc"></textarea>
+
+    <label>Upload Image</label>
+    <input type="file" id="imageUpload" accept="image/*">
+
+    <button onclick="savePlanet()">SAVE PLANET</button>
+
+    <div class="success" id="successMsg">Planet Saved ✔</div>
+
+</div>
+
+<script>
+function getPlanets() {
+    return JSON.parse(localStorage.getItem("planets") || "{}");
+}
+
+function savePlanets(data) {
+    localStorage.setItem("planets", JSON.stringify(data));
+}
+
+function savePlanet() {
+    const planets = getPlanets();
+
+    const fileInput = document.getElementById("imageUpload");
+    const file = fileInput.files[0];
+
+    if (!document.getElementById("planetName").value) {
+        alert("Planet name is required!");
+        return;
+    }
+
+    // Read image (if provided)
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            storePlanet(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    } else {
+        storePlanet(null);
+    }
+}
+
+function storePlanet(imageData) {
+    const planets = getPlanets();
+
+    const name = document.getElementById("planetName").value;
+
+    planets[name] = {
+        name,
+        system: document.getElementById("systemName").value,
+        coords: document.getElementById("coords").value,
+        biome: document.getElementById("biome").value,
+        climate: document.getElementById("climate").value,
+        gravity: document.getElementById("gravity").value,
+        atmosphere: document.getElementById("atmosphere").value,
+        sentinels: document.getElementById("sentinels").value,
+        resources: document.getElementById("resources").value.split(",").map(s => s.trim()),
+        flora: document.getElementById("flora").value,
+        fauna: document.getElementById("fauna").value,
+        hazards: document.getElementById("hazards").value,
+        description: document.getElementById("desc").value,
+        image: imageData,
+        logs: []
+    };
+
+    savePlanets(planets);
+
+    document.getElementById("successMsg").style.display = "block";
+
+    setTimeout(() => {
+        document.getElementById("successMsg").style.display = "none";
+    }, 2000);
+
+    clearFields();
+}
+
+function clearFields() {
+    document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+}
+
+</script>
+
+</body>
+</html>
