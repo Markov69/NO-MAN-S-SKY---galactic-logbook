@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Planet Profile · Galactic Logbook</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        margin: 0;
+        background: #020818;
+        color: white;
+        font-family: "Rajdhani", sans-serif;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 900px;
+        margin: auto;
+        background: rgba(255,255,255,0.06);
+        border-radius: 18px;
+        padding: 20px;
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    h1 {
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        text-align: center;
+    }
+
+    .planet-img {
+        width: 100%;
+        border-radius: 18px;
+        margin-top: 20px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .info-block {
+        margin-top: 25px;
+        padding: 15px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+    }
+
+    .label {
+        opacity: 0.7;
+        font-size: 13px;
+        text-transform: uppercase;
+    }
+
+    .value {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .back-btn {
+        margin-top: 20px;
+        padding: 10px;
+        width: 100%;
+        background: rgba(51,255,230,0.15);
+        border: 1px solid rgba(51,255,230,0.4);
+        color: #33ffe6;
+        border-radius: 14px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: .2em;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1 id="planetName">Planet</h1>
+
+    <img id="planetImage" class="planet-img" style="display:none">
+
+    <div class="info-block">
+        <div class="label">Star System</div>
+        <div class="value" id="systemName"></div>
+
+        <div class="label">Coordinates</div>
+        <div class="value" id="coords"></div>
+
+        <div class="label">Biome</div>
+        <div class="value" id="biome"></div>
+
+        <div class="label">Climate</div>
+        <div class="value" id="climate"></div>
+
+        <div class="label">Gravity</div>
+        <div class="value" id="gravity"></div>
+
+        <div class="label">Atmosphere</div>
+        <div class="value" id="atmosphere"></div>
+
+        <div class="label">Sentinel Activity</div>
+        <div class="value" id="sentinels"></div>
+
+        <div class="label">Resources</div>
+        <div class="value" id="resources"></div>
+
+        <div class="label">Flora</div>
+        <div class="value" id="flora"></div>
+
+        <div class="label">Fauna</div>
+        <div class="value" id="fauna"></div>
+
+        <div class="label">Hazards</div>
+        <div class="value" id="hazards"></div>
+
+        <div class="label">Description</div>
+        <div class="value" id="description"></div>
+    </div>
+
+    <button class="back-btn" onclick="goBack()">Back to Logbook</button>
+</div>
+
+<script>
+function getPlanetData() {
+    const url = new URL(window.location.href);
+    const planetName = url.searchParams.get("planet");
+
+    if (!planetName) {
+        alert("Planet not found.");
+        return;
+    }
+
+    const planets = JSON.parse(localStorage.getItem("planets") || "{}");
+    
+    if (!planets[planetName]) {
+        alert("Planet not found in database.");
+        return;
+    }
+
+    return planets[planetName];
+}
+
+function populatePlanetPage() {
+    const data = getPlanetData();
+    if (!data) return;
+
+    document.getElementById("planetName").innerText = data.name;
+    document.getElementById("systemName").innerText = data.system;
+    document.getElementById("coords").innerText = data.coords;
+    document.getElementById("biome").innerText = data.biome;
+    document.getElementById("climate").innerText = data.climate;
+    document.getElementById("gravity").innerText = data.gravity;
+    document.getElementById("atmosphere").innerText = data.atmosphere;
+    document.getElementById("sentinels").innerText = data.sentinels;
+    document.getElementById("resources").innerText = data.resources.join(", ");
+    document.getElementById("flora").innerText = data.flora;
+    document.getElementById("fauna").innerText = data.fauna;
+    document.getElementById("hazards").innerText = data.hazards;
+    document.getElementById("description").innerText = data.description;
+
+    if (data.image) {
+        const img = document.getElementById("planetImage");
+        img.src = data.image;
+        img.style.display = "block";
+    }
+}
+
+function goBack() {
+    window.location.href = "index.html";
+}
+
+populatePlanetPage();
+</script>
+
+</body>
+</html>
