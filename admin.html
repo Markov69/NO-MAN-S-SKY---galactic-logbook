@@ -57,7 +57,7 @@
     button {
         margin-top: 20px;
         width: 100%;
-        padding: 12px;
+        padding: 14px;
         border-radius: 14px;
         border: 1px solid rgba(51,255,230,0.4);
         background: linear-gradient(135deg, #081829, #05101d);
@@ -80,6 +80,7 @@
         color: #33ffe6;
         border-radius: 10px;
         display: none;
+        text-align: center;
     }
 </style>
 
@@ -140,13 +141,17 @@
 
     <button onclick="savePlanet()">SAVE PLANET</button>
 
-    <div class="success" id="successMsg">Planet Saved ✔</div>
+    <div class="success" id="successMsg">PLANET SAVED ✔</div>
 
 </div>
 
 <script>
 function getPlanets() {
-    return JSON.parse(localStorage.getItem("planets") || "{}");
+    try { 
+        return JSON.parse(localStorage.getItem("planets") || "{}");
+    } catch {
+        return {};
+    }
 }
 
 function savePlanets(data) {
@@ -154,17 +159,16 @@ function savePlanets(data) {
 }
 
 function savePlanet() {
-    const planets = getPlanets();
+    const name = document.getElementById("planetName").value.trim();
 
-    const fileInput = document.getElementById("imageUpload");
-    const file = fileInput.files[0];
-
-    if (!document.getElementById("planetName").value) {
+    if (!name) {
         alert("Planet name is required!");
         return;
     }
 
-    // Read image (if provided)
+    const fileInput = document.getElementById("imageUpload");
+    const file = fileInput.files[0];
+
     if (file) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -179,7 +183,7 @@ function savePlanet() {
 function storePlanet(imageData) {
     const planets = getPlanets();
 
-    const name = document.getElementById("planetName").value;
+    const name = document.getElementById("planetName").value.trim();
 
     planets[name] = {
         name,
@@ -196,24 +200,23 @@ function storePlanet(imageData) {
         hazards: document.getElementById("hazards").value,
         description: document.getElementById("desc").value,
         image: imageData,
-        logs: []
+        logs: planets[name]?.logs || []
     };
 
     savePlanets(planets);
 
-    document.getElementById("successMsg").style.display = "block";
+    const msg = document.getElementById("successMsg");
+    msg.style.display = "block";
 
-    setTimeout(() => {
-        document.getElementById("successMsg").style.display = "none";
-    }, 2000);
+    setTimeout(() => { msg.style.display = "none"; }, 3000);
 
     clearFields();
 }
 
 function clearFields() {
     document.querySelectorAll("input, textarea").forEach(el => el.value = "");
+    document.getElementById("sentinels").selectedIndex = 0;
 }
-
 </script>
 
 </body>
