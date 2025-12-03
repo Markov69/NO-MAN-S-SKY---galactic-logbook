@@ -344,7 +344,7 @@
       font-weight: 600;
     }
 
-    /* ТУК Е БУТОНЪТ – СТИЛ 2 (МИНИМАЛЕН NMS) */
+    /* БУТОН – минимален sci-fi стил */
     .enter-log-button {
       margin-top: 18px;
       display: inline-block;
@@ -359,13 +359,10 @@
       color: #7cdfff;
       text-decoration: none;
       text-transform: uppercase;
-
       border: 1px solid rgba(124, 223, 255, 0.55);
       border-radius: 12px;
-
       background: rgba(12, 25, 40, 0.55);
       backdrop-filter: blur(4px);
-
       transition: 0.22s ease-in-out;
     }
 
@@ -442,7 +439,6 @@
       justify-content: center;
     }
 
-    /* ИСТИНСКИ РАДАР – ЛЪЧ ОТ ЦЕНТЪРА, ВЪРТИ СЕ ПО ЧАСОВНИКА */
     .radar-circle {
       position: relative;
       width: 180px;
@@ -486,13 +482,13 @@
         rgba(71, 194, 255, 0),
         rgba(71, 194, 255, 0.9)
       );
-      transform-origin: 0% 50%; /* започва от центъра */
+      transform-origin: 0% 50%;
       animation: radarSweep 6s linear infinite;
     }
 
     @keyframes radarSweep {
       from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); } /* по часовника */
+      to   { transform: rotate(360deg); }
     }
 
     .radar-dot {
@@ -568,6 +564,88 @@
         align-items: flex-start;
       }
     }
+
+    /* LOADING OVERLAY */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 20, 0.85);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .loading-box {
+      text-align: center;
+      color: #7cdfff;
+      font-family: "Orbitron", sans-serif;
+    }
+
+    .loading-logo {
+      font-size: 24px;
+      letter-spacing: 0.25em;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    .loading-bar-outer {
+      width: 260px;
+      height: 10px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(124,223,255,0.3);
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .loading-bar-inner {
+      width: 0%;
+      height: 100%;
+      background: #34d2ff;
+      box-shadow: 0 0 12px #34d2ff;
+      transition: width 0.3s linear;
+    }
+
+    .loading-percent {
+      margin-top: 12px;
+      font-size: 14px;
+      letter-spacing: 0.2em;
+    }
+
+    /* ЛОГ ЕКРАН */
+    .log-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 8, 16, 0.88);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s linear;
+      z-index: 9998;
+    }
+
+    .log-content {
+      text-align: center;
+      font-family: "Orbitron", sans-serif;
+      color: #b7eaff;
+    }
+
+    .log-content h1 {
+      font-size: 32px;
+      letter-spacing: 0.3em;
+      margin-bottom: 20px;
+    }
+
+    .log-content p {
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      opacity: 0.7;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
   </style>
 </head>
 <body>
@@ -635,9 +713,9 @@
               каквото още решим.
             </p>
 
-            <!-- БУТОНЪТ – ОТВАРЯ log-view.html В НОВ ТАБ -->
+            <!-- БУТОН – стартира loading + log екран -->
             <div class="enter-log-button">
-              <a href="log-view.html" target="_blank">ENTER LOG</a>
+              <a href="#">ENTER LOG</a>
             </div>
           </div>
 
@@ -678,5 +756,80 @@
       <span>waiting for next entry...</span>
     </footer>
   </main>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.querySelector(".enter-log-button a");
+      let logScreenShown = false;
+
+      if (!btn) return;
+
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (logScreenShown) return; // да не може втори път
+        logScreenShown = true;
+        btn.style.pointerEvents = "none";
+        startLoadingSequence();
+      });
+
+      function startLoadingSequence() {
+        const overlay = document.createElement("div");
+        overlay.classList.add("loading-overlay");
+        overlay.innerHTML = `
+          <div class="loading-box">
+            <div class="loading-logo">LOADING...</div>
+            <div class="loading-bar-outer">
+              <div class="loading-bar-inner"></div>
+            </div>
+            <div class="loading-percent">0%</div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+
+        let percent = 0;
+
+        function step() {
+          // нередовно покачване
+          const jump = Math.floor(Math.random() * 18) + 3; // 3–20%
+          percent += jump;
+          if (percent > 100) percent = 100;
+
+          overlay.querySelector(".loading-bar-inner").style.width = percent + "%";
+          overlay.querySelector(".loading-percent").textContent = percent + "%";
+
+          if (percent < 100) {
+            const delay = 150 + Math.random() * 350; // 150–500 ms
+            setTimeout(step, delay);
+          } else {
+            setTimeout(() => {
+              overlay.remove();
+              showLogScreen();
+            }, 400);
+          }
+        }
+
+        step();
+      }
+
+      function showLogScreen() {
+        const screen = document.createElement("div");
+        screen.classList.add("log-screen");
+        screen.innerHTML = `
+          <div class="log-content">
+            <h1>SHIP LOG INTERFACE</h1>
+            <p>Добре дошъл, командире.</p>
+            <p>Тук после ще подредим мисии, карти, панели и всичко останало.</p>
+          </div>
+        `;
+        document.body.appendChild(screen);
+
+        document.addEventListener("mousemove", (ev) => {
+          const x = (window.innerWidth / 2 - ev.clientX) / 30;
+          const y = (window.innerHeight / 2 - ev.clientY) / 30;
+          screen.style.transform = `translate(${x}px, ${y}px)`;
+        });
+      }
+    });
+  </script>
 </body>
 </html>
