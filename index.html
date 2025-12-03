@@ -2,112 +2,131 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>STARLOG — Galactic Exploration Command</title>
+<title>STARLOG — Galactic Command Center</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
+/* ---------- GLOBAL ---------- */
 body {
   margin: 0;
   font-family: 'Orbitron', sans-serif;
-  background: radial-gradient(circle at top, #0a1228 0%, #04060b 80%, #000000 100%);
-  color: #d8f1ff;
+  background: #000;
+  color: #d7ecff;
   overflow-x: hidden;
 }
 
-/* Анимирани звезди */
-.starfield {
+/* ---------- BACKGROUND (OUR SHIP SILHOUETTE) ---------- */
+.bg {
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background: transparent;
-  background-image: url("https://raw.githubusercontent.com/markov69/NMS-assets/main/stars.png");
-  opacity: 0.25;
-  animation: drift 240s linear infinite;
+  inset: 0;
+  background-image: url("https://i.imgur.com/HcJ4mVZ.jpeg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.32;
+  z-index: -2;
+  filter: brightness(0.75);
+}
+
+.bg-gradient {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 40% 30%, rgba(0, 153, 255, 0.25), transparent 60%),
+              radial-gradient(circle at 80% 90%, rgba(255, 0, 80, 0.16), transparent 70%);
   z-index: -1;
+  animation: pulse 12s ease-in-out infinite alternate;
 }
 
-@keyframes drift {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-2000px); }
+@keyframes pulse {
+  from { opacity: 0.20; }
+  to   { opacity: 0.45; }
 }
 
-/* Header */
+/* ---------- HEADER ---------- */
 header {
   text-align: center;
-  padding: 40px 10px;
-}
-h1 {
-  font-size: 46px;
-  text-transform: uppercase;
-  color: #2fe3ff;
-  text-shadow: 0 0 18px #2fe3ff;
-  letter-spacing: 0.18em;
+  padding: 42px 10px 30px;
 }
 
-/* Navigation */
+h1 {
+  font-size: 48px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #29d7ff;
+  text-shadow: 0 0 20px rgba(41, 215, 255, 0.9);
+}
+
+/* ---------- MENU ---------- */
 nav {
   display: flex;
   justify-content: center;
   gap: 40px;
-  margin-bottom: 35px;
-}
-nav a {
-  text-decoration: none;
-  color: #49eaff;
-  font-size: 20px;
-  letter-spacing: 0.14em;
-  transition: 0.25s;
-}
-nav a:hover {
-  color: #ffffff;
-  text-shadow: 0 0 10px #49eaff;
+  margin-top: 16px;
 }
 
-/* Cards */
+nav a {
+  color: #46eaff;
+  text-decoration: none;
+  font-size: 18px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: 0.25s;
+}
+
+nav a:hover {
+  color: #ffffff;
+  text-shadow: 0 0 12px #46eaff;
+}
+
+/* ---------- CONTENT ---------- */
 .container {
   max-width: 960px;
   margin: auto;
-  padding: 20px;
+  padding: 25px;
 }
 
+/* ---------- CARD ---------- */
 .card {
-  background: rgba(10, 20, 35, 0.6);
-  border: 1px solid rgba(41, 224, 255, 0.25);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.4);
-  margin-bottom: 25px;
+  background: rgba(5, 12, 25, 0.7);
+  border: 1px solid rgba(45, 215, 255, 0.25);
+  padding: 22px;
+  border-radius: 14px;
+  margin-bottom: 28px;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 25px rgba(0,0,0,0.4);
 }
 
 .card h2 {
   color: #2fe3ff;
   text-transform: uppercase;
+  font-size: 20px;
   letter-spacing: 0.15em;
 }
 
-/* Latest Logs */
+/* ---------- LATEST LOGS ---------- */
 .log-box {
-  background: rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.38);
   border-left: 4px solid #2fe3ff;
   padding: 12px 16px;
   margin-bottom: 12px;
+  backdrop-filter: blur(3px);
 }
 
 footer {
   text-align: center;
   padding: 25px;
   font-size: 12px;
-  opacity: 0.4;
-  letter-spacing: 0.14em;
+  opacity: 0.45;
+  letter-spacing: 0.16em;
 }
 </style>
 </head>
 
 <body>
 
-<div class="starfield"></div>
+<div class="bg"></div>
+<div class="bg-gradient"></div>
 
 <header>
   <h1>STARLOG — GALACTIC COMMAND</h1>
@@ -125,37 +144,37 @@ footer {
 
   <div class="card">
     <h2>Welcome, Admiral Aleksandar Markov</h2>
-    <p>Galactic command online. Your exploration history is being synchronized.</p>
+    <p>Command center online. Latest expedition data synchronized.</p>
   </div>
 
-  <!-- Latest Logs Section -->
+  <!-- ---------- LATEST LOGS SECTION ---------- -->
   <div class="card">
     <h2>Latest Logs</h2>
 
     <div class="log-box">
-      <strong>Gubri-H30</strong> — Nuclear-decay world scanned. Radiation 6.2 Rad. Flora abundance confirmed.
+      <strong>Gubri-H30</strong> — Nuclear decay world. Radiation 6.2 Rad. Flora abundance confirmed.
     </div>
 
     <div class="log-box">
-      <strong>Ewelly Prime</strong> — Temperature stable 28.5°C. Toxicity spikes during storms 101°C.
+      <strong>Ewelly Prime</strong> — Stable 28.5°C. Toxic storm peaks at 101°C.
     </div>
 
     <div class="log-box">
-      <strong>Alkalu H16</strong> — First Contact achieved. Atmospheric anomalies detected in orbital relay.
+      <strong>Frozen Delta-9</strong> — Survival probability: 11%. Storm reading −121.6°C.
     </div>
 
-    <p style="opacity:0.6; margin-top:10px;">(Your three most recent discoveries)</p>
+    <p style="opacity:0.6; margin-top:10px;">(Your last recorded expeditions)</p>
   </div>
 
   <div class="card">
     <h2>System Status</h2>
-    <p>All modules operational. Awaiting next expedition upload…</p>
+    <p>Awaiting next mission upload. All scanning systems active…</p>
   </div>
 
 </div>
 
 <footer>
-  STARLOG — YOUR PERSONAL NO MAN'S SKY DATABASE
+  STARLOG — PERSONAL GALACTIC LOGBOOK
 </footer>
 
 </body>
