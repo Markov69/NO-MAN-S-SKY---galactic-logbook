@@ -413,7 +413,7 @@
 
     .holo-header {
       display: flex;
-      justify-content: space-between;
+      justify-content: space между;
       align-items: center;
       font-family: "Orbitron", system-ui, sans-serif;
       font-size: 10px;
@@ -646,6 +646,35 @@
       margin-bottom: 6px;
       text-transform: uppercase;
     }
+
+    .log-back-btn {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 8px 22px;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      border: 1px solid rgba(180, 230, 255, 0.7);
+      color: #b7eaff;
+      text-decoration: none;
+      cursor: pointer;
+      background: rgba(10, 25, 40, 0.7);
+      box-shadow: 0 0 12px rgba(80, 220, 255, 0.5);
+      transition: 0.18s ease-in-out;
+    }
+
+    .log-back-btn:hover {
+      color: #ffffff;
+      border-color: rgba(210, 245, 255, 0.9);
+      box-shadow: 0 0 18px rgba(100, 230, 255, 0.8);
+      transform: translateY(-1px);
+    }
+
+    .log-back-btn:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: 0 0 8px rgba(80, 200, 255, 0.4);
+    }
   </style>
 </head>
 <body>
@@ -761,12 +790,17 @@
     document.addEventListener("DOMContentLoaded", () => {
       const btn = document.querySelector(".enter-log-button a");
       let logScreenShown = false;
+      let logMouseHandler = null;
+      let lastStateWasLog = false;
 
       if (!btn) return;
 
+      // начално състояние – home
+      history.replaceState({ screen: "home" }, "");
+
       btn.addEventListener("click", (e) => {
         e.preventDefault();
-        if (logScreenShown) return; // да не може втори път
+        if (logScreenShown) return;
         logScreenShown = true;
         btn.style.pointerEvents = "none";
         startLoadingSequence();
@@ -789,7 +823,6 @@
         let percent = 0;
 
         function step() {
-          // нередовно покачване
           const jump = Math.floor(Math.random() * 18) + 3; // 3–20%
           percent += jump;
           if (percent > 100) percent = 100;
@@ -803,6 +836,9 @@
           } else {
             setTimeout(() => {
               overlay.remove();
+              // push в history – вече сме в LOG екран
+              history.pushState({ screen: "log" }, "", "#log");
+              lastStateWasLog = true;
               showLogScreen();
             }, 400);
           }
@@ -819,16 +855,48 @@
             <h1>SHIP LOG INTERFACE</h1>
             <p>Добре дошъл, командире.</p>
             <p>Тук после ще подредим мисии, карти, панели и всичко останало.</p>
+            <button class="log-back-btn">BACK</button>
           </div>
         `;
         document.body.appendChild(screen);
 
-        document.addEventListener("mousemove", (ev) => {
+        // parallax
+        logMouseHandler = (ev) => {
           const x = (window.innerWidth / 2 - ev.clientX) / 30;
           const y = (window.innerHeight / 2 - ev.clientY) / 30;
           screen.style.transform = `translate(${x}px, ${y}px)`;
+        };
+        document.addEventListener("mousemove", logMouseHandler);
+
+        // вътрешния BACK бутон
+        const backBtn = screen.querySelector(".log-back-btn");
+        backBtn.addEventListener("click", () => {
+          // симулираме натискане на браузър Back
+          history.back();
         });
       }
+
+      function hideLogScreen() {
+        const screen = document.querySelector(".log-screen");
+        if (screen) screen.remove();
+
+        if (logMouseHandler) {
+          document.removeEventListener("mousemove", logMouseHandler);
+          logMouseHandler = null;
+        }
+
+        logScreenShown = false;
+        lastStateWasLog = false;
+        btn.style.pointerEvents = "auto";
+      }
+
+      // Реакция при BACK (браузър, мишка, жестове)
+      window.addEventListener("popstate", (event) => {
+        const state = event.state || {};
+        if (state.screen === "home" && lastStateWasLog) {
+          hideLogScreen();
+        }
+      });
     });
   </script>
 </body>
