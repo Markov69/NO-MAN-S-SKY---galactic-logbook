@@ -874,13 +874,13 @@
         <div class="controls-panel">
           <div class="section-label">Captain controls</div>
           <div class="buttons-grid">
-            <button class="btn-main" id="btnNewLog">
-              <div class="btn-label">
-                <span class="primary">New log entry</span>
-                <span class="secondary">Start fresh stardate note</span>
-              </div>
-              <div class="btn-code">LOG-N</div>
-            </button>
+        <button class="btn-main" id="btnNewLog" onclick="openLatestPlanet()">
+  <div class="btn-label">
+    <span class="primary">New log entry</span>
+    <span class="secondary">Start fresh stardate note</span>
+  </div>
+  <div class="btn-code">LOG-N</div>
+</button>
 
             <button class="btn-main btn-ghost" id="btnContinue">
               <div class="btn-label">
@@ -937,270 +937,249 @@
   </div>
 
   <script>
-    // ---------- helpers ----------
-    function randInt(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+   <script>
+// ---------- helpers ----------
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
-    const systemFragmentsA = ["Erya", "Xol", "Vara", "Nocto", "Astra", "Qevi", "Ryla", "Thale", "Ith"];
-    const systemFragmentsB = ["nari", "mora", "xis", "thes", "kara", "drin", "vex", "then", "riel"];
-    const climateDescriptors = [
-      "Gentle climate","Toxic rain","Frozen storms","High sentinel activity",
-      "Radioactive squalls","Scorched surface","Lush paradise","Low gravity"
+const systemFragmentsA = ["Erya", "Xol", "Vara", "Nocto", "Astra", "Qevi", "Ryla", "Thale", "Ith"];
+const systemFragmentsB = ["nari", "mora", "xis", "thes", "kara", "drin", "vex", "then", "riel"];
+const climateDescriptors = [
+  "Gentle climate","Toxic rain","Frozen storms","High sentinel activity",
+  "Radioactive squalls","Scorched surface","Lush paradise","Low gravity"
+];
+const planetDescriptors = [
+  "Lush world","Barren moon","Toxic jungle","Icy plateau",
+  "Volcanic ridge","Desert orb","Crystal fields","Submerged islands"
+];
+
+function generateSystemName() {
+  const a = systemFragmentsA[randInt(0, systemFragmentsA.length - 1)];
+  const b = systemFragmentsB[randInt(0, systemFragmentsB.length - 1)];
+  const suffix = "-" + String(randInt(10, 999)).padStart(3, "0");
+  return (a + b + " SYSTEM " + suffix).toUpperCase();
+}
+
+function generatePlanetName() {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const part = letters[randInt(0, letters.length - 1)] + letters[randInt(0, letters.length - 1)];
+  const num = randInt(1, 9);
+  return "PLANET " + part + "-" + num;
+}
+
+function generateClimate() {
+  return climateDescriptors[randInt(0, climateDescriptors.length - 1)];
+}
+
+function generateCoords() {
+  const galX = randInt(-4096, 4096);
+  const galY = randInt(-4096, 4096);
+  const galZ = randInt(-4096, 4096);
+  const region = randInt(0, 255).toString(16).toUpperCase().padStart(2, "0");
+  return `X:${galX} · Y:${galY} · Z:${galZ} · REG:${region}`;
+}
+
+function updateStardate() {
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const dayOfYear = Math.floor((Date.UTC(year, now.getUTCMonth(), now.getUTCDate()) - Date.UTC(year, 0, 0)) / 86400000);
+  const stardate = `${year}.${String(dayOfYear).padStart(3, "0")}`;
+  const time = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} UTC`;
+
+  document.getElementById("stardateLabel").textContent = `Stardate ${stardate}`;
+  document.getElementById("timeValue").textContent = `${time} · SD ${stardate}`;
+  return stardate;
+}
+
+function randomizeScene() {
+  document.getElementById("systemName").textContent = generateSystemName();
+  document.getElementById("planetName").textContent = planetDescriptors[randInt(0, planetDescriptors.length - 1)];
+  document.getElementById("climateName").textContent = generateClimate();
+  document.getElementById("coordsValue").textContent = generateCoords();
+
+  const integrity = randInt(82, 100) / 100;
+  const shield = randInt(65, 100) / 100;
+  document.getElementById("integrityValue").textContent = Math.round(integrity * 100) + "%";
+  document.getElementById("shieldValue").textContent = Math.round(shield * 100) + "%";
+
+  const fills = document.querySelectorAll(".status-bar-fill");
+  fills[0].style.transform = `scaleX(${integrity.toFixed(2)})`;
+  fills[1].style.transform = `scaleX(${shield.toFixed(2)})`;
+
+  const hazardIndex = randInt(0, 2);
+  let hazardText = "Mild";
+  let hazardScale = 0.35;
+  if (hazardIndex === 1) { hazardText = "Moderate"; hazardScale = 0.55; }
+  if (hazardIndex === 2) { hazardText = "Extreme"; hazardScale = 0.85; }
+
+  document.getElementById("hazardValue").textContent = hazardText;
+  fills[2].style.transform = `scaleX(${hazardScale})`;
+}
+
+// ---------- typewriter ----------
+const typewriterText = "INITIALIZING GALACTIC CAPTAIN'S LOG SHELL...";
+const typewriterElement = document.getElementById("typewriter");
+let typeIndex = 0;
+
+function runTypewriter() {
+  typeIndex = 0;
+  typewriterElement.textContent = "";
+  const interval = setInterval(() => {
+    if (typeIndex >= typewriterText.length) {
+      clearInterval(interval);
+      setTimeout(runTypewriter, 5000);
+      return;
+    }
+    typewriterElement.textContent += typewriterText[typeIndex];
+    typeIndex++;
+  }, 35);
+}
+
+// ---------- localStorage for logs ----------
+function loadLogs() {
+  try {
+    return JSON.parse(localStorage.getItem("logs") || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveLogs(logs) {
+  localStorage.setItem("logs", JSON.stringify(logs));
+}
+
+function ensureSampleLogs() {
+  let logs = loadLogs();
+  if (logs.length === 0) {
+    const stardate = updateStardate();
+    logs = [
+      {
+        title: "ENTRY 01 · first awakening",
+        stardate,
+        system: "ERYANARI SYSTEM -001",
+        planet: "PLANET AV-1",
+        coords: "X:12 · Y:-341 · Z:88 · REG:0A",
+        content: "Woke up next to a crashed ship."
+      }
     ];
-    const planetDescriptors = [
-      "Lush world","Barren moon","Toxic jungle","Icy plateau",
-      "Volcanic ridge","Desert orb","Crystal fields","Submerged islands"
-    ];
+    saveLogs(logs);
+  }
+}
 
-    function generateSystemName() {
-      const a = systemFragmentsA[randInt(0, systemFragmentsA.length - 1)];
-      const b = systemFragmentsB[randInt(0, systemFragmentsB.length - 1)];
-      const suffix = "-" + String(randInt(10, 999)).padStart(3, "0");
-      return (a + b + " System " + suffix).toUpperCase();
-    }
+function updateRecentLogsUI() {
+  const logsPanel = document.getElementById("logsPanel");
+  logsPanel.innerHTML = "";
 
-    function generatePlanetName() {
-      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      const part = letters[randInt(0, letters.length - 1)] + letters[randInt(0, letters.length - 1)];
-      const num = randInt(1, 9);
-      return "PLANET " + part + "-" + num;
-    }
+  const logs = loadLogs();
+  if (logs.length === 0) {
+    logsPanel.innerHTML = "<div style='opacity:0.65'>No logs yet. Create a new entry.</div>";
+    return;
+  }
 
-    function generateClimate() {
-      return climateDescriptors[randInt(0, climateDescriptors.length - 1)];
-    }
+  const start = Math.max(0, logs.length - 3);
+  const recent = logs.slice(start).reverse();
 
-    function generateCoords() {
-      const galX = randInt(-4096, 4096);
-      const galY = randInt(-4096, 4096);
-      const galZ = randInt(-4096, 4096);
-      const region = randInt(0, 255).toString(16).toUpperCase().padStart(2, "0");
-      return `X:${galX} · Y:${galY} · Z:${galZ} · REG:${region}`;
-    }
+  recent.forEach((entry, idx) => {
+    const row = document.createElement("div");
+    row.className = "logs-row";
 
-    function updateStardate() {
-      const now = new Date();
-      const year = now.getUTCFullYear();
-      const dayOfYear = Math.floor((Date.UTC(year, now.getUTCMonth(), now.getUTCDate()) - Date.UTC(year, 0, 0)) / 86400000);
-      const stardate = `${year}.${String(dayOfYear).padStart(3, "0")}`;
-      const time = `${String(now.getUTCHours()).padStart(2, "0")}:${String(now.getUTCMinutes()).padStart(2, "0")} UTC`;
+    const left = document.createElement("div");
+    left.className = "logs-left";
 
-      document.getElementById("stardateLabel").textContent = `Stardate ${stardate}`;
-      document.getElementById("timeValue").textContent = `${time} · SD ${stardate}`;
-      return stardate;
-    }
+    const title = document.createElement("div");
+    title.className = "logs-title";
+    title.textContent = entry.title;
 
-    function randomizeScene() {
-      document.getElementById("systemName").textContent = generateSystemName();
-      document.getElementById("planetName").textContent = planetDescriptors[randInt(0, planetDescriptors.length - 1)];
-      document.getElementById("climateName").textContent = generateClimate();
-      document.getElementById("coordsValue").textContent = generateCoords();
+    const meta = document.createElement("div");
+    meta.className = "logs-meta";
+    meta.textContent = `System: ${entry.system} · SD ${entry.stardate}`;
 
-      const integrity = randInt(82, 100) / 100;
-      const shield = randInt(65, 100) / 100;
-      document.getElementById("integrityValue").textContent = Math.round(integrity * 100) + "%";
-      document.getElementById("shieldValue").textContent = Math.round(shield * 100) + "%";
+    left.appendChild(title);
+    left.appendChild(meta);
 
-      const fills = document.querySelectorAll(".status-bar-fill");
-      fills[0].style.transform = `scaleX(${integrity.toFixed(2)})`;
-      fills[1].style.transform = `scaleX(${shield.toFixed(2)})`;
+    const tag = document.createElement("div");
+    tag.className = "logs-tag";
+    tag.textContent = idx === 0 ? "LATEST" : "LOG";
 
-      const hazardIndex = randInt(0, 2);
-      let hazardText = "Mild";
-      let hazardScale = 0.35;
-      if (hazardIndex === 1) { hazardText = "Moderate"; hazardScale = 0.55; }
-      if (hazardIndex === 2) { hazardText = "Extreme"; hazardScale = 0.85; }
+    row.appendChild(left);
+    row.appendChild(tag);
 
-      document.getElementById("hazardValue").textContent = hazardText;
-      fills[2].style.transform = `scaleX(${hazardScale})`;
-    }
-
-    // ---------- typewriter ----------
-    const typewriterText = "INITIALIZING GALACTIC CAPTAIN'S LOG SHELL...";
-    const typewriterElement = document.getElementById("typewriter");
-    let typeIndex = 0;
-
-    function runTypewriter() {
-      typeIndex = 0;
-      typewriterElement.textContent = "";
-      const interval = setInterval(() => {
-        if (typeIndex >= typewriterText.length) {
-          clearInterval(interval);
-          setTimeout(runTypewriter, 5000);
-          return;
-        }
-        typewriterElement.textContent += typewriterText[typeIndex];
-        typeIndex++;
-      }, 35);
-    }
-
-    // ---------- localStorage for logs ----------
-    function loadLogs() {
-      try {
-        return JSON.parse(localStorage.getItem("logs") || "[]");
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function saveLogs(logs) {
-      localStorage.setItem("logs", JSON.stringify(logs));
-    }
-
-    function ensureSampleLogs() {
-      let logs = loadLogs();
-      if (logs.length === 0) {
-        const stardate = updateStardate();
-        logs = [
-          {
-            title: "ENTRY 01 · first awakening",
-            stardate,
-            system: "ERYANARI SYSTEM -001",
-            planet: "PLANET AV-1",
-            coords: "X:12 · Y:-341 · Z:88 · REG:0A",
-            content: "Woke up next to a crashed ship. Systems damaged, suit online. First steps into an unknown sky."
-          },
-          {
-            title: "ENTRY 02 · signal traced",
-            stardate,
-            system: "ERYANARI SYSTEM -001",
-            planet: "PLANET AV-1",
-            coords: "X:44 · Y:-290 · Z:120 · REG:0A",
-            content: "Picked up a faint distress signal. Abandoned outpost found, archives corrupted, something watching."
-          },
-          {
-            title: "ENTRY 03 · atlas whisper",
-            stardate,
-            system: "NOCTOXIS SYSTEM -021",
-            planet: "PLANET NX-4",
-            coords: "X:-512 · Y:92 · Z:401 · REG:1F",
-            content: "Atlas interface reached. Data incomprehensible, but the pull to continue is stronger than ever."
-          }
-        ];
-        saveLogs(logs);
-      }
-    }
-
-    function updateRecentLogsUI() {
-      const logsPanel = document.getElementById("logsPanel");
-      logsPanel.innerHTML = "";
-
-      const logs = loadLogs();
-      if (logs.length === 0) {
-        logsPanel.innerHTML = "<div style='opacity:0.65'>No logs yet. Create a new entry.</div>";
-        return;
-      }
-
-      const start = Math.max(0, logs.length - 3);
-      const recent = logs.slice(start).reverse();
-
-      recent.forEach((entry, idx) => {
-        const row = document.createElement("div");
-        row.className = "logs-row";
-
-        const left = document.createElement("div");
-        left.className = "logs-left";
-
-        const title = document.createElement("div");
-        title.className = "logs-title";
-        title.textContent = entry.title;
-
-        const meta = document.createElement("div");
-        meta.className = "logs-meta";
-        meta.textContent = `System: ${entry.system} · SD ${entry.stardate}`;
-
-        left.appendChild(title);
-        left.appendChild(meta);
-
-        const tag = document.createElement("div");
-        tag.className = "logs-tag";
-        tag.textContent = idx === 0 ? "LATEST" : "LOG";
-
-        row.appendChild(left);
-        row.appendChild(tag);
-
-        row.addEventListener("click", () => {
-          const globalIndex = logs.length - 1 - idx;
-          window.location.href = "log-view.html?entry=" + globalIndex;
-        });
-
-        logsPanel.appendChild(row);
-      });
-    }
-
-    function generateSessionId() {
-      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      const part = letters[randInt(0, letters.length - 1)];
-      const num = String(randInt(0, 9999)).padStart(4, "0");
-      return `AVM-${part}${num}`;
-    }
-
-    function toast(msg) {
-      const footerLeft = document.getElementById("footerLeft");
-      const original = footerLeft.textContent;
-      footerLeft.textContent = msg;
-      setTimeout(() => { footerLeft.textContent = original; }, 3000);
-    }
-
-    // ---------- events ----------
-    document.getElementById("btnNewLog").addEventListener("click", () => {
-      const logs = loadLogs();
-      const defaultTitle = `ENTRY ${String(logs.length + 1).padStart(2, "0")} · new discovery`;
-      const title = prompt("Log title:", defaultTitle);
-      if (!title) return;
-      const content = prompt("Log content:", "");
-      if (!content) return;
-
-      const stardate = updateStardate();
-      const system = document.getElementById("systemName").textContent;
-      const planet = document.getElementById("planetName").textContent;
-      const coords = document.getElementById("coordsValue").textContent;
-
-      logs.push({ title, stardate, system, planet, coords, content });
-      saveLogs(logs);
-      updateRecentLogsUI();
-      toast("NEW LOG SAVED TO ATLAS STORAGE");
+    row.addEventListener("click", () => {
+      const globalIndex = logs.length - 1 - idx;
+      window.location.href = "log-view.html?entry=" + globalIndex;
     });
 
-    document.getElementById("btnContinue").addEventListener("click", () => {
-      const logs = loadLogs();
-      if (logs.length === 0) {
-        toast("NO LOGS YET · CREATE NEW FIRST");
-        return;
-      }
-      const lastIndex = logs.length - 1;
-      window.location.href = "log-view.html?entry=" + lastIndex;
-    });
+    logsPanel.appendChild(row);
+  });
+}
 
-    document.getElementById("btnAtlas").addEventListener("click", () => {
-      window.location.href = "logs.html";
-    });
+function generateSessionId() {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const part = letters[randInt(0, letters.length - 1)];
+  const num = String(randInt(0, 9999)).padStart(4, "0");
+  return `AVM-${part}${num}`;
+}
 
-    document.getElementById("btnRandomSystem").addEventListener("click", () => {
-      randomizeScene();
-      updateStardate();
-      toast("NEW RANDOM SYSTEM GENERATED");
-    });
+function toast(msg) {
+  const footerLeft = document.getElementById("footerLeft");
+  const original = footerLeft.textContent;
+  footerLeft.textContent = msg;
+  setTimeout(() => { footerLeft.textContent = original; }, 3000);
+}
 
-    document.getElementById("settingsLink").addEventListener("click", () => {
-      toast("SETTINGS PANEL NOT IMPLEMENTED YET");
-    });
+// ---------- NEW FUNCTION: OPEN LATEST PLANET ----------
+function openLatestPlanet() {
+  const planets = JSON.parse(localStorage.getItem("planets") || "{}");
+  const names = Object.keys(planets);
 
-    document.getElementById("aboutLink").addEventListener("click", () => {
-      toast("NO MAN'S SKY STYLE GALACTIC LOGBOOK · AVM EXPERIMENT");
-    });
+  if (names.length === 0) {
+    alert("No planets found yet!");
+    return;
+  }
 
-    // ---------- init ----------
-    (function init() {
-      document.getElementById("sessionId").textContent = generateSessionId();
-      updateStardate();
-      randomizeScene();
-      ensureSampleLogs();
-      updateRecentLogsUI();
-      runTypewriter();
-      document.getElementById("shipStatusText").textContent = "All systems nominal";
-    })();
-  </script>
-</body>
-</html>
+  const lastPlanetName = names[names.length - 1];
+
+  window.location.href = `planet.html?planet=${encodeURIComponent(lastPlanetName)}`;
+}
+
+// ---------- events ----------
+document.getElementById("btnContinue").addEventListener("click", () => {
+  const logs = loadLogs();
+  if (logs.length === 0) {
+    toast("NO LOGS YET · CREATE NEW FIRST");
+    return;
+  }
+  const lastIndex = logs.length - 1;
+  window.location.href = "log-view.html?entry=" + lastIndex;
+});
+
+document.getElementById("btnAtlas").addEventListener("click", () => {
+  window.location.href = "logs.html";
+});
+
+document.getElementById("btnRandomSystem").addEventListener("click", () => {
+  randomizeScene();
+  updateStardate();
+  toast("NEW RANDOM SYSTEM GENERATED");
+});
+
+document.getElementById("settingsLink").addEventListener("click", () => {
+  toast("SETTINGS PANEL NOT IMPLEMENTED YET");
+});
+
+document.getElementById("aboutLink").addEventListener("click", () => {
+  toast("NO MAN'S SKY STYLE GALACTIC LOGBOOK · AVM EXPERIMENT");
+});
+
+// ---------- init ----------
+(function init() {
+  document.getElementById("sessionId").textContent = generateSessionId();
+  updateStardate();
+  randomizeScene();
+  ensureSampleLogs();
+  updateRecentLogsUI();
+  runTypewriter();
+  document.getElementById("shipStatusText").textContent = "All systems nominal";
+})();
+</script>
