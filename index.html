@@ -24,7 +24,7 @@ h1 {
   text-shadow: 0 0 20px #29d7ff;
 }
 
-.offline-box {
+.box {
   margin-top: 50px;
   padding: 30px;
   background: rgba(20,20,30,0.7);
@@ -38,6 +38,13 @@ h1 {
   margin-top: 10px;
 }
 
+iframe {
+  width: 90%;
+  height: 500px;
+  border: none;
+  margin-top: 20px;
+}
+
 a {
   color: #29d7ff;
   text-decoration: none;
@@ -49,19 +56,42 @@ a:hover {
   text-shadow: 0 0 10px #29d7ff;
 }
 </style>
+
 </head>
 
 <body>
 
 <h1>LIVE STATUS</h1>
 
-<div class="offline-box">
+<div id="offline" class="box">
   <img src="https://i.imgur.com/2w6F8HY.png" width="220">
   <div class="msg">🔴 The Admiral is currently OFFLINE</div>
-  <div class="msg" style="opacity:0.7; margin-top:8px;">Waiting for broadcast signal...</div>
+  <div class="msg" style="opacity:0.7">Waiting for broadcast signal…</div>
+</div>
+
+<div id="online" style="display:none;">
+  <iframe id="streamFrame" src=""></iframe>
 </div>
 
 <a href="index.html">⬅ Return to Home</a>
+
+<script>
+// ---- CONFIG ----
+const STREAM_URL = "YOUR_STREAM_URL"; // <-- ти го сменяш когато решиш
+const CHECK_INTERVAL = 5000;
+
+// ---- SIMULATED ONLINE CHECK ----
+// Работи винаги без грешки.
+// Когато има реален линк, просто сменяш STREAM_URL.
+function checkLive() {
+    if (STREAM_URL.includes("http")) {
+        document.getElementById("offline").style.display = "none";
+        document.getElementById("online").style.display = "block";
+        document.getElementById("streamFrame").src = STREAM_URL;
+    }
+}
+checkLive();
+</script>
 
 </body>
 </html>
