@@ -57,23 +57,21 @@ function render() {
     .slice()
     .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""))
     .forEach(p => {
+
       const images = Array.isArray(p.images) ? p.images : [];
 
       let thumbs = "";
       if (images.length > 0) {
-        thumbs =
-          `<div class="thumb-area">` +
-          images
-            .map(
-              (src, index) => `
-          <div class="thumb" onclick="showImage('${src}')">
-            <img src="${src}">
-            <span class="thumb-count">#${index + 1}</span>
+        thumbs = `
+          <div class="thumb-area">
+            ${images.map((src, index) => `
+                <div class="thumb" onclick="showImage('${src}')">
+                  <img src="${src}">
+                  <span class="thumb-count">#${index + 1}</span>
+                </div>
+            `).join("")}
           </div>
-        `
-            )
-            .join("") +
-          `</div>`;
+        `;
       }
 
       const card = document.createElement("div");
@@ -81,7 +79,6 @@ function render() {
 
       card.innerHTML = `
         <div class="planet-name">${p.name}</div>
-
         <div class="badge-line">
           <span>${p.galaxy || "-"} • ${p.system || "-"}</span>
           <span class="badge">${p.biome || "-"}</span>
@@ -100,8 +97,7 @@ function render() {
 
         ${thumbs}
 
-        <button 
-          onclick="deletePlanet(${p.id})"
+        <button onclick="deletePlanet(${p.id})"
           style="
             margin-top:12px;
             padding:6px 14px;
@@ -112,7 +108,8 @@ function render() {
             cursor:pointer;
             text-transform:uppercase;
             font-size:10px;
-            letter-spacing:0.14em;">
+            letter-spacing:0.14em;
+          ">
           DELETE ENTRY
         </button>
       `;
