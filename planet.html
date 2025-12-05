@@ -32,6 +32,10 @@
       border-bottom:1px dashed rgba(127,220,255,0.7);
       padding-bottom:2px;
     }
+    .back-link:hover {
+      color:#fff;
+      border-color:#fff;
+    }
     .title {
       text-align:center;
       font-size:22px;
@@ -102,7 +106,6 @@
       border-radius:18px;
       border:1px solid #00c8ff;
     }
-
   </style>
 </head>
 
@@ -123,6 +126,9 @@
 
 <script>
 const STORAGE_KEY = "nms_planets_archive_v1";
+
+// 🔐 само тук проверяваме дали сме админ
+const IS_ADMIN = localStorage.getItem("isAdmin") === "true";
 
 function loadPlanets() {
   try {
@@ -165,49 +171,57 @@ function render(){
   }
   emptyEl.style.display = "none";
 
-  planets.slice().sort((a,b)=> (b.createdAt||"").localeCompare(a.createdAt||"")).forEach(p=>{
-    const images = Array.isArray(p.images) ? p.images : [];
+  planets
+    .slice()
+    .sort((a,b)=> (b.createdAt||"").localeCompare(a.createdAt||""))
+    .forEach(p=>{
+      const images = Array.isArray(p.images) ? p.images : [];
 
-    let thumbsHTML = "";
-    if(images.length){
-      thumbsHTML =
-      `<div class="thumb-area">
-        ${images.map((src,i)=>`
-          <div class="thumb" onclick="showImage('${src}')">
-            <img src="${src}">
-            <span class="thumb-count">#${i+1}</span>
-          </div>
-        `).join("")}
-      </div>`;
-    }
+      let thumbsHTML = "";
+      if(images.length){
+        thumbsHTML =
+        `<div class="thumb-area">
+          ${images.map((src,i)=>`
+            <div class="thumb" onclick="showImage('${src}')">
+              <img src="${src}">
+              <span class="thumb-count">#${i+1}</span>
+            </div>
+          `).join("")}
+        </div>`;
+      }
 
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <div class="planet-name">${p.name}</div>
-      <div class="badge-line">
-        <span>${p.galaxy || "-"} • ${p.system || "-"}</span>
-        <span class="badge">${p.biome || "-"}</span>
-      </div>
+      // бутонът се показва само ако сме логнати (IS_ADMIN === true)
+      const deleteButtonHTML = IS_ADMIN
+        ? `<button class="delete-btn" onclick="deletePlanet(${p.id})">DELETE ENTRY</button>`
+        : "";
 
-      <div class="row">Weather: ${p.weather||"-"}</div>
-      <div class="row">Temp: ${p.temp||"-"}</div>
-      <div class="row">Hazards: ${p.hazard||"-"}</div>
-      <div class="row">Sentinels: ${p.sentinels||"-"}</div>
-      <div class="row">Fauna: ${p.fauna||"-"}</div>
-      <div class="row">Flora: ${p.flora||"-"}</div>
-      <div class="row">Resources: ${p.resources||"-"}</div>
-      <div class="row">Log date: ${new Date(p.createdAt).toLocaleString("bg-BG")}</div>
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="planet-name">${p.name}</div>
+        <div class="badge-line">
+          <span>${p.galaxy || "-"} • ${p.system || "-"}</span>
+          <span class="badge">${p.biome || "-"}</span>
+        </div>
 
-      <div class="desc">${(p.desc||"").replace(/\n/g,"<br>")}</div>
+        <div class="row">Weather: ${p.weather||"-"}</div>
+        <div class="row">Temp: ${p.temp||"-"}</div>
+        <div class="row">Hazards: ${p.hazard||"-"}</div>
+        <div class="row">Sentinels: ${p.sentinels||"-"}</div>
+        <div class="row">Fauna: ${p.fauna||"-"}</div>
+        <div class="row">Flora: ${p.flora||"-"}</div>
+        <div class="row">Resources: ${p.resources||"-"}</div>
+        <div class="row">Log date: ${new Date(p.createdAt).toLocaleString("bg-BG")}</div>
 
-      ${thumbsHTML}
+        <div class="desc">${(p.desc||"").replace(/\n/g,"<br>")}</div>
 
-      <button class="delete-btn" onclick="deletePlanet(${p.id})">DELETE ENTRY</button>
-    `;
+        ${thumbsHTML}
 
-    cardsEl.appendChild(card);
-  });
+        ${deleteButtonHTML}
+      `;
+
+      cardsEl.appendChild(card);
+    });
 }
 
 render();
