@@ -2,220 +2,172 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
-<title>ADMIN PANEL · Galactic Logbook</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admiral Panel – Add Planet</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
     body {
         margin: 0;
-        background: #020818;
-        color: white;
-        font-family: "Rajdhani", sans-serif;
         padding: 20px;
+        background: #050d18;
+        color: #b6e2ff;
+        font-family: Orbitron, sans-serif;
     }
 
     h1 {
         text-align: center;
-        letter-spacing: .25em;
-        margin-bottom: 25px;
-        text-transform: uppercase;
+        color: #71dfff;
+        margin-bottom: 30px;
+        text-shadow: 0 0 12px #41b0ff;
     }
 
-    .panel {
-        max-width: 850px;
+    .container {
+        width: min(800px, 95%);
         margin: auto;
-        background: rgba(255,255,255,0.06);
         padding: 20px;
-        border-radius: 18px;
-        border: 1px solid rgba(255,255,255,0.2);
+        background: rgba(10,20,35,0.7);
+        border: 1px solid #2ea8ff;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0,150,255,0.4);
+        backdrop-filter: blur(8px);
     }
 
     label {
         display: block;
-        margin-top: 12px;
+        margin-top: 14px;
         font-size: 14px;
-        opacity: 0.85;
-        text-transform: uppercase;
-        letter-spacing: 0.15em;
+        letter-spacing: 0.1em;
     }
 
-    input, textarea, select {
+    input, select, textarea {
         width: 100%;
-        padding: 8px;
-        border-radius: 10px;
-        border: 1px solid rgba(255,255,255,0.2);
-        background: rgba(255,255,255,0.1);
-        color: white;
-        margin-top: 4px;
+        padding: 10px;
+        margin-top: 6px;
+        background: #0b1829;
+        border: 1px solid #3ac7ff;
+        color: #d9f5ff;
+        border-radius: 6px;
     }
 
     textarea {
-        min-height: 120px;
-        resize: vertical;
+        height: 90px;
     }
 
     button {
         margin-top: 20px;
         width: 100%;
         padding: 14px;
-        border-radius: 14px;
-        border: 1px solid rgba(51,255,230,0.4);
-        background: linear-gradient(135deg, #081829, #05101d);
-        color: #33ffe6;
-        font-size: 16px;
-        letter-spacing: .2em;
-        text-transform: uppercase;
+        background: #0d263d;
+        border: 2px solid #4cd4ff;
+        color: #9fe7ff;
         cursor: pointer;
+        border-radius: 10px;
+        transition: 0.25s;
+        font-size: 16px;
+        letter-spacing: 0.15em;
     }
 
     button:hover {
-        background: #092033;
-    }
-
-    .success {
-        margin-top: 20px;
-        padding: 10px;
-        background: rgba(51,255,230,0.2);
-        border: 1px solid rgba(51,255,230,0.5);
-        color: #33ffe6;
-        border-radius: 10px;
-        display: none;
-        text-align: center;
+        background: #143d61;
+        box-shadow: 0 0 14px #4cd4ff;
     }
 </style>
-
 </head>
+
 <body>
 
-<h1>ADMIN PANEL · Planet Entry</h1>
+<h1>🛰️ ADMIRAL PLANET LOG ENTRY</h1>
 
-<div class="panel">
+<div class="container">
 
-    <label>Planet Name</label>
-    <input id="planetName">
+    <label>Име на планета:</label>
+    <input id="pName">
 
-    <label>Star System</label>
-    <input id="systemName">
+    <label>Галактика:</label>
+    <input id="pGalaxy">
 
-    <label>Coordinates</label>
-    <input id="coords">
+    <label>Звездна система:</label>
+    <input id="pSystem">
 
-    <label>Biome</label>
-    <input id="biome">
-
-    <label>Climate</label>
-    <input id="climate">
-
-    <label>Gravity</label>
-    <input id="gravity">
-
-    <label>Atmosphere</label>
-    <input id="atmosphere">
-
-    <label>Sentinel Activity</label>
-    <select id="sentinels">
-        <option>None</option>
-        <option>Low</option>
-        <option>Medium</option>
-        <option>High</option>
-        <option>Aggressive</option>
+    <label>Биом:</label>
+    <select id="pBiome">
+        <option value="Frozen">Frozen</option>
+        <option value="Toxic">Toxic</option>
+        <option value="Radiated">Radiated</option>
+        <option value="Lush">Lush</option>
+        <option value="Exotic">Exotic</option>
+        <option value="Volcanic">Volcanic</option>
+        <option value="Barren">Barren</option>
     </select>
 
-    <label>Resources (comma separated)</label>
-    <input id="resources">
+    <label>Време:</label>
+    <input id="pWeather">
 
-    <label>Flora</label>
-    <input id="flora">
+    <label>Температура:</label>
+    <input id="pTemp">
 
-    <label>Fauna</label>
-    <input id="fauna">
+    <label>Радиация:</label>
+    <input id="pRad">
 
-    <label>Hazards</label>
-    <input id="hazards">
+    <label>Токсичност:</label>
+    <input id="pTox">
 
-    <label>Planet Description</label>
-    <textarea id="desc"></textarea>
+    <label>Описание:</label>
+    <textarea id="pDesc"></textarea>
 
-    <label>Upload Image</label>
-    <input type="file" id="imageUpload" accept="image/*">
+    <label>Снимка на планета:</label>
+    <input type="file" id="planetImg">
+
+    <label>Портрет на адмирала:</label>
+    <input type="file" id="admiralImg">
+
+    <label>Галерия снимки (множество):</label>
+    <input type="file" id="gallery" multiple>
 
     <button onclick="savePlanet()">SAVE PLANET</button>
-
-    <div class="success" id="successMsg">PLANET SAVED ✔</div>
-
 </div>
 
+<script src="storage.js"></script>
+
 <script>
-function getPlanets() {
-    try { 
-        return JSON.parse(localStorage.getItem("planets") || "{}");
-    } catch {
-        return {};
-    }
-}
 
-function savePlanets(data) {
-    localStorage.setItem("planets", JSON.stringify(data));
-}
-
-function savePlanet() {
-    const name = document.getElementById("planetName").value.trim();
-
-    if (!name) {
-        alert("Planet name is required!");
-        return;
-    }
-
-    const fileInput = document.getElementById("imageUpload");
-    const file = fileInput.files[0];
-
-    if (file) {
+async function fileToBase64(file) {
+    if (!file) return null;
+    return new Promise(resolve => {
         const reader = new FileReader();
-        reader.onload = function(e) {
-            storePlanet(e.target.result);
-        };
+        reader.onload = () => resolve(reader.result);
         reader.readAsDataURL(file);
-    } else {
-        storePlanet(null);
-    }
+    });
 }
 
-function storePlanet(imageData) {
-    const planets = getPlanets();
+async function savePlanet() {
 
-    const name = document.getElementById("planetName").value.trim();
+    const name = pName.value.trim();
+    if (!name) return alert("Моля въведи име!");
 
-    planets[name] = {
+    const data = {
         name,
-        system: document.getElementById("systemName").value,
-        coords: document.getElementById("coords").value,
-        biome: document.getElementById("biome").value,
-        climate: document.getElementById("climate").value,
-        gravity: document.getElementById("gravity").value,
-        atmosphere: document.getElementById("atmosphere").value,
-        sentinels: document.getElementById("sentinels").value,
-        resources: document.getElementById("resources").value.split(",").map(s => s.trim()),
-        flora: document.getElementById("flora").value,
-        fauna: document.getElementById("fauna").value,
-        hazards: document.getElementById("hazards").value,
-        description: document.getElementById("desc").value,
-        image: imageData,
-        logs: planets[name]?.logs || []
+        galaxy: pGalaxy.value,
+        system: pSystem.value,
+        biome: pBiome.value,
+        weather: pWeather.value,
+        temperature: pTemp.value,
+        radiation: pRad.value,
+        toxicity: pTox.value,
+        description: pDesc.value,
+        planetImage: await fileToBase64(planetImg.files[0]),
+        admiralImage: await fileToBase64(admiralImg.files[0]),
+        gallery: []
     };
 
-    savePlanets(planets);
+    for (const f of gallery.files) {
+        data.gallery.push(await fileToBase64(f));
+    }
 
-    const msg = document.getElementById("successMsg");
-    msg.style.display = "block";
+    await saveBlob(`planets/${name.replaceAll(" ", "_")}.json`, JSON.stringify(data));
 
-    setTimeout(() => { msg.style.display = "none"; }, 3000);
-
-    clearFields();
-}
-
-function clearFields() {
-    document.querySelectorAll("input, textarea").forEach(el => el.value = "");
-    document.getElementById("sentinels").selectedIndex = 0;
+    alert("Планетата е запазена успешно!");
 }
 </script>
 
