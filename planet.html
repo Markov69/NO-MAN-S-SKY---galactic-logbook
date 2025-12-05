@@ -1,3 +1,126 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>NO MAN'S SKY – Planet Archive</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 30px 14px;
+      font-family: "Orbitron", system-ui, sans-serif;
+      background: radial-gradient(circle at 15% 0, #15233e, transparent 55%),
+                  radial-gradient(circle at 85% 100%, #091326, transparent 55%),
+                  #020513;
+      color: #e5f8ff;
+      display: flex;
+      justify-content: center;
+    }
+    .shell { width: min(1100px, 100%); }
+    .back-link {
+      display:inline-block;
+      margin-bottom:10px;
+      font-size:11px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:#7fdcff;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(127,220,255,0.7);
+      padding-bottom:2px;
+    }
+    .title {
+      text-align:center;
+      font-size:22px;
+      letter-spacing:0.24em;
+      margin-bottom:10px;
+    }
+    .subtitle {
+      text-align:center;
+      font-size:11px;
+      letter-spacing:0.18em;
+      margin-bottom:18px;
+    }
+    .cards {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
+      gap:18px;
+    }
+    .card {
+      background:rgba(4,10,26,0.95);
+      border-radius:18px;
+      border:1px solid rgba(0,200,255,0.55);
+      padding:14px;
+      position:relative;
+    }
+    .planet-name { font-size:15px; text-transform:uppercase; margin-bottom:4px; }
+    .badge-line { display:flex; justify-content:space-between; margin-bottom:6px; }
+    .badge { border:1px solid #ffb388; padding:2px 8px; border-radius:999px; }
+    .row { font-size:11px; margin-bottom:2px;}
+    .desc { margin-top:6px; font-size:11px; }
+
+    .thumb-area { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+    .thumb {
+      width:70px; height:70px;
+      border-radius:10px; border:1px solid #00c8ff;
+      overflow:hidden; cursor:pointer;
+      position:relative;
+    }
+    .thumb img { width:100%; height:100%; object-fit:cover; }
+    .thumb-count {
+      position:absolute; bottom:2px; right:4px;
+      font-size:9px; background:rgba(0,0,0,0.7);
+      padding:1px 4px; border-radius:999px;
+    }
+
+    .empty { margin-top:40px; text-align:center; font-size:12px; }
+    .delete-btn {
+      margin-top:12px;
+      padding:6px 14px;
+      border-radius:8px;
+      background:#380000;
+      color:#ffb3b3;
+      border:1px solid #ff6b6b;
+      cursor:pointer;
+      font-size:10px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+    }
+
+    /* overlay */
+    #imgOverlay {
+      position:fixed; inset:0; display:none;
+      align-items:center; justify-content:center;
+      background:rgba(0,0,0,0.85);
+      z-index:9999;
+    }
+    #overlayImg {
+      max-width:90vw; max-height:90vh;
+      border-radius:18px;
+      border:1px solid #00c8ff;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <a href="index.html" class="back-link">⟵ BACK</a>
+
+    <div class="title">PLANET ARCHIVE</div>
+    <div class="subtitle">Local log of explored planets</div>
+
+    <div id="cards" class="cards"></div>
+    <div id="empty" class="empty" style="display:none;">Няма записи.</div>
+  </div>
+
+  <div id="imgOverlay" onclick="closeOverlay()">
+    <img id="overlayImg">
+  </div>
+
 <script>
 const STORAGE_KEY = "nms_planets_archive_v1";
 
@@ -5,118 +128,90 @@ function loadPlanets() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    console.warn("Bad JSON:", e);
-    return [];
-  }
+  } catch(e) { return []; }
 }
 
-function savePlanets(list) {
+function savePlanets(list){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
-function formatDate(iso) {
-  if (!iso) return "";
-  return new Date(iso).toLocaleString("bg-BG");
-}
-
-// 🔥 DELETE FUNCTION
-function deletePlanet(id) {
-  if (!confirm("Сигурен ли си, че искаш да изтриеш този запис?")) return;
+function deletePlanet(id){
+  if(!confirm("Изтриване?")) return;
   let all = loadPlanets();
   all = all.filter(p => p.id !== id);
   savePlanets(all);
   render();
 }
 
-// 🔍 SHOW FULL IMAGE
-function showImage(src) {
+function showImage(src){
   document.getElementById("overlayImg").src = src;
   document.getElementById("imgOverlay").style.display = "flex";
 }
 
-function closeOverlay() {
+function closeOverlay(){
   document.getElementById("imgOverlay").style.display = "none";
 }
 
-// 🔵 RENDER ARCHIVE
-function render() {
+function render(){
   const cardsEl = document.getElementById("cards");
   const emptyEl = document.getElementById("empty");
   const planets = loadPlanets();
 
   cardsEl.innerHTML = "";
 
-  if (!planets.length) {
+  if(!planets.length){
     emptyEl.style.display = "block";
     return;
   }
   emptyEl.style.display = "none";
 
-  planets
-    .slice()
-    .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""))
-    .forEach(p => {
+  planets.slice().sort((a,b)=> (b.createdAt||"").localeCompare(a.createdAt||"")).forEach(p=>{
+    const images = Array.isArray(p.images) ? p.images : [];
 
-      const images = Array.isArray(p.images) ? p.images : [];
-
-      let thumbs = "";
-      if (images.length > 0) {
-        thumbs = `
-          <div class="thumb-area">
-            ${images.map((src, index) => `
-                <div class="thumb" onclick="showImage('${src}')">
-                  <img src="${src}">
-                  <span class="thumb-count">#${index + 1}</span>
-                </div>
-            `).join("")}
+    let thumbsHTML = "";
+    if(images.length){
+      thumbsHTML =
+      `<div class="thumb-area">
+        ${images.map((src,i)=>`
+          <div class="thumb" onclick="showImage('${src}')">
+            <img src="${src}">
+            <span class="thumb-count">#${i+1}</span>
           </div>
-        `;
-      }
+        `).join("")}
+      </div>`;
+    }
 
-      const card = document.createElement("div");
-      card.className = "card";
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="planet-name">${p.name}</div>
+      <div class="badge-line">
+        <span>${p.galaxy || "-"} • ${p.system || "-"}</span>
+        <span class="badge">${p.biome || "-"}</span>
+      </div>
 
-      card.innerHTML = `
-        <div class="planet-name">${p.name}</div>
-        <div class="badge-line">
-          <span>${p.galaxy || "-"} • ${p.system || "-"}</span>
-          <span class="badge">${p.biome || "-"}</span>
-        </div>
+      <div class="row">Weather: ${p.weather||"-"}</div>
+      <div class="row">Temp: ${p.temp||"-"}</div>
+      <div class="row">Hazards: ${p.hazard||"-"}</div>
+      <div class="row">Sentinels: ${p.sentinels||"-"}</div>
+      <div class="row">Fauna: ${p.fauna||"-"}</div>
+      <div class="row">Flora: ${p.flora||"-"}</div>
+      <div class="row">Resources: ${p.resources||"-"}</div>
+      <div class="row">Log date: ${new Date(p.createdAt).toLocaleString("bg-BG")}</div>
 
-        <div class="row">Weather: <span>${p.weather || "-"}</span></div>
-        <div class="row">Temperature: <span>${p.temp || "-"}</span></div>
-        <div class="row">Hazards: <span>${p.hazard || "-"}</span></div>
-        <div class="row">Sentinels: <span>${p.sentinels || "-"}</span></div>
-        <div class="row">Fauna: <span>${p.fauna || "-"}</span></div>
-        <div class="row">Flora: <span>${p.flora || "-"}</span></div>
-        <div class="row">Resources: <span>${p.resources || "-"}</span></div>
-        <div class="row">Log date: <span>${formatDate(p.createdAt)}</span></div>
+      <div class="desc">${(p.desc||"").replace(/\n/g,"<br>")}</div>
 
-        <div class="desc">${(p.desc || "").replace(/\n/g, "<br>")}</div>
+      ${thumbsHTML}
 
-        ${thumbs}
+      <button class="delete-btn" onclick="deletePlanet(${p.id})">DELETE ENTRY</button>
+    `;
 
-        <button onclick="deletePlanet(${p.id})"
-          style="
-            margin-top:12px;
-            padding:6px 14px;
-            border-radius:8px;
-            background:#380000;
-            color:#ffb3b3;
-            border:1px solid #ff6b6b;
-            cursor:pointer;
-            text-transform:uppercase;
-            font-size:10px;
-            letter-spacing:0.14em;
-          ">
-          DELETE ENTRY
-        </button>
-      `;
-
-      cardsEl.appendChild(card);
-    });
+    cardsEl.appendChild(card);
+  });
 }
 
 render();
 </script>
+
+</body>
+</html>
