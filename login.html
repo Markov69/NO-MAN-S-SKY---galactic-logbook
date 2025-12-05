@@ -2,98 +2,196 @@
 <html lang="bg">
 <head>
   <meta charset="UTF-8">
-  <title>Access Login</title>
+  <title>NMS Logbook • Command Access</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg: #020513;
+      --panel: rgba(4, 10, 26, 0.96);
+      --border: rgba(0, 200, 255, 0.7);
+      --accent: #4cd8ff;
+      --danger: #ff8080;
+      --text: #e5f8ff;
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      height: 100vh;
+      min-height: 100vh;
+      font-family: "Orbitron", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 0 0, #172747, transparent 60%),
+        radial-gradient(circle at 100% 100%, #061024, transparent 55%),
+        var(--bg);
+      color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #020513;
-      font-family: Arial, sans-serif;
-      color: white;
+      padding: 24px 8px;
     }
 
-    .box {
-      padding: 30px;
-      border: 1px solid #00c8ff;
-      border-radius: 14px;
-      background: rgba(0, 20, 40, 0.8);
-      width: 300px;
+    .panel {
+      width: min(420px, 100%);
+      background: var(--panel);
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 32px rgba(0, 200, 255, 0.5);
+      padding: 26px 24px 20px;
+      position: relative;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 18px;
+      border: 1px dashed rgba(0,200,255,0.35);
+      pointer-events: none;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 20px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--accent);
       text-align: center;
-      box-shadow: 0 0 20px rgba(0,200,255,0.4);
+      text-shadow: 0 0 14px rgba(80,220,255,0.8);
     }
 
-    input {
+    .subtitle {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(200,220,255,0.7);
+      margin-bottom: 22px;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      color: rgba(190,215,255,0.8);
+    }
+
+    input[type="password"] {
       width: 100%;
-      padding: 10px;
-      margin-top: 12px;
-      border-radius: 8px;
-      border: 1px solid #007799;
-      background: #02101f;
-      color: white;
-      text-align: center;
-      font-size: 14px;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(71,194,255,0.7);
+      background: rgba(3,10,30,0.95);
+      color: var(--text);
       outline: none;
+      font-family: inherit;
+      font-size: 13px;
+      letter-spacing: 0.18em;
     }
 
-    button {
-      margin-top: 16px;
-      padding: 10px 20px;
+    .btn-primary {
       width: 100%;
-      border-radius: 8px;
-      border: 1px solid #00aaff;
-      background: #003355;
-      color: white;
+      margin-top: 14px;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 2px solid rgba(71,194,255,0.85);
+      background: linear-gradient(135deg, #050c1a, #0c284c);
+      color: #34d2ff;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      font-size: 11px;
       cursor: pointer;
-      font-size: 14px;
     }
 
-    button:hover {
-      background: #005577;
+    .btn-primary:hover {
+      color: #ffffff;
+      box-shadow: 0 0 20px rgba(71,194,255,0.9);
     }
 
-    .error {
-      margin-top: 12px;
-      color: #ff8080;
-      font-size: 12px;
+    .status {
+      margin-top: 10px;
       min-height: 14px;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--danger);
+    }
+
+    .back-link {
+      display:inline-block;
+      margin-top: 18px;
+      font-size:10px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:#7fdcff;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(127,220,255,0.7);
+      padding-bottom:2px;
+      text-align:center;
+      width:100%;
+    }
+    .back-link:hover {
+      color:#fff;
+      border-color:#fff;
     }
   </style>
 </head>
 
 <body>
-  <div class="box">
-    <h2>ENTER ACCESS CODE</h2>
+  <div class="panel">
+    <h1>COMMAND ACCESS</h1>
+    <div class="subtitle">CAPTAIN LOGIN • NMS PERSONAL LOG</div>
 
-    <input type="password" id="code" placeholder="Password">
-    <button onclick="login()">ENTER</button>
+    <form id="loginForm">
+      <label for="password">ACCESS CODE</label>
+      <input type="password" id="password" autocomplete="off" autofocus>
 
-    <div id="err" class="error"></div>
+      <button type="submit" class="btn-primary">ENTER COMMAND</button>
+      <div id="status" class="status"></div>
+    </form>
+
+    <a href="index.html" class="back-link">⟵ BACK TO SHIP LOG</a>
   </div>
 
-<script>
-const PASS = "1234";  // <-- ТВОЯТА ПАРОЛА
+  <script>
+    // 💾 тук сменяш паролата ако някога пожелаеш
+    const ADMIN_PASSWORD = "8108246982Sk8#$%";
 
-function login() {
-  const val = document.getElementById("code").value.trim();
-  const err = document.getElementById("err");
+    const form   = document.getElementById("loginForm");
+    const passEl = document.getElementById("password");
+    const status = document.getElementById("status");
 
-  if (val !== PASS) {
-    err.textContent = "Грешна парола!";
-    return;
-  }
+    function setStatus(msg) {
+      status.textContent = msg || "";
+    }
 
-  // записваме логин състоянието
-  localStorage.setItem("isAdmin", "true");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-  // 👉 ПРАВИЛНИЯТ РЕДИРЕКТ (ТИ СЕГА ИЗПРАЩАШ КЪМ admin.html)
-  window.location.href = "log-view.html";
-}
-</script>
+      const value = passEl.value;
 
+      if (!value) {
+        setStatus("Въведи парола.");
+        return;
+      }
+
+      if (value === ADMIN_PASSWORD) {
+        // Успешен логин → маркираме че е админ и пращаме към admin.html
+        localStorage.setItem("isAdmin", "true");
+        setStatus("");
+        window.location.href = "admin.html";
+      } else {
+        setStatus("Грешна парола.");
+        passEl.value = "";
+        passEl.focus();
+      }
+    });
+  </script>
 </body>
 </html>
