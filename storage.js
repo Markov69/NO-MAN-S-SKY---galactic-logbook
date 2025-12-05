@@ -1,24 +1,25 @@
 // Netlify Blobs API Wrapper
+// This file must be loaded as a module via <script type="module">
 
-const site = "cheery-arithmetic-506327";  
-const base = `https://api.netlify.com/api/v1/badges/${site}/blobs`; 
-
-// SAVE FILE
-async function saveBlob(path, content){
-    await fetch(`/blob/${path}`, {
+// SAVE FILE TO BLOB STORAGE
+export async function saveBlob(path, content){
+    const r = await fetch(`/blob/${path}`, {
         method: "PUT",
         body: content
     });
+    if (!r.ok) throw new Error("Blob save failed: " + r.status);
 }
 
 // READ FILE
-async function readBlob(path){
+export async function readBlob(path){
     const r = await fetch(`/blob/${path}`);
+    if (!r.ok) throw new Error("Blob read failed: " + r.status);
     return await r.text();
 }
 
-// LIST FILES
-async function listBlobs(prefix){
+// LIST FILES BY PREFIX
+export async function listBlobs(prefix){
     const r = await fetch(`/blob/list?prefix=${prefix}`);
+    if (!r.ok) throw new Error("Blob list failed: " + r.status);
     return await r.json();
 }
