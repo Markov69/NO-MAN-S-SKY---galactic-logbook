@@ -1,4 +1,14 @@
+<script>
+const STORAGE_KEY = "nms_planets_archive_v1";
 
+function loadPlanets() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.warn("Bad JSON:", e);
+    return [];
+  }
 }
 
 function savePlanets(list) {
@@ -7,34 +17,29 @@ function savePlanets(list) {
 
 function formatDate(iso) {
   if (!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleString("bg-BG");
+  return new Date(iso).toLocaleString("bg-BG");
 }
 
 // 🔥 DELETE FUNCTION
 function deletePlanet(id) {
   if (!confirm("Сигурен ли си, че искаш да изтриеш този запис?")) return;
-
   let all = loadPlanets();
   all = all.filter(p => p.id !== id);
   savePlanets(all);
-  render(); // презарежда списъка след изтриване
+  render();
 }
 
-// 🔍 VIEW FULL IMAGE
+// 🔍 SHOW FULL IMAGE
 function showImage(src) {
-  const overlay = document.getElementById("imgOverlay");
-  const img = document.getElementById("overlayImg");
-  img.src = src;
-  overlay.style.display = "flex";
+  document.getElementById("overlayImg").src = src;
+  document.getElementById("imgOverlay").style.display = "flex";
 }
 
 function closeOverlay() {
-  const overlay = document.getElementById("imgOverlay");
-  overlay.style.display = "none";
+  document.getElementById("imgOverlay").style.display = "none";
 }
 
-// 🔵 RENDER PLANET ARCHIVE
+// 🔵 RENDER ARCHIVE
 function render() {
   const cardsEl = document.getElementById("cards");
   const emptyEl = document.getElementById("empty");
@@ -56,22 +61,24 @@ function render() {
 
       let thumbs = "";
       if (images.length > 0) {
-        thumbs = `
-          <div class="thumb-area">
-            ${images
-              .map((src, index) => `
-                <div class="thumb" onclick="showImage('${src}')">
-                  <img src="${src}">
-                  <span class="thumb-count">#${index + 1}</span>
-                </div>
-              `)
-              .join("")}
+        thumbs =
+          `<div class="thumb-area">` +
+          images
+            .map(
+              (src, index) => `
+          <div class="thumb" onclick="showImage('${src}')">
+            <img src="${src}">
+            <span class="thumb-count">#${index + 1}</span>
           </div>
-        `;
+        `
+            )
+            .join("") +
+          `</div>`;
       }
 
       const card = document.createElement("div");
       card.className = "card";
+
       card.innerHTML = `
         <div class="planet-name">${p.name}</div>
 
