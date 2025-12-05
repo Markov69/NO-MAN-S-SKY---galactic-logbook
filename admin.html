@@ -128,9 +128,8 @@
     <button onclick="savePlanet()">SAVE PLANET</button>
 </div>
 
-<script src="storage.js"></script>
-
-<script>
+<script type="module">
+import { saveBlob } from "./storage.js";
 
 async function fileToBase64(file) {
     if (!file) return null;
