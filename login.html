@@ -2,19 +2,24 @@
 <html lang="bg">
 <head>
   <meta charset="UTF-8">
-  <title>NMS Logbook • Command Access</title>
+  <title>NO MEAN'S SKY – Access Login</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- 💥 ЗАБРАНА НА КЕША ЗА LOGIN -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
 
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --bg: #020513;
-      --panel: rgba(4, 10, 26, 0.96);
-      --border: rgba(0, 200, 255, 0.7);
+      --panel: rgba(4, 12, 30, 0.96);
+      --border: rgba(0, 200, 255, 0.8);
       --accent: #4cd8ff;
-      --danger: #ff8080;
       --text: #e5f8ff;
+      --error: #ff7b7b;
     }
 
     * { box-sizing: border-box; }
@@ -31,16 +36,16 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 24px 8px;
+      padding: 20px 8px;
     }
 
     .panel {
       width: min(420px, 100%);
       background: var(--panel);
-      border-radius: 24px;
+      border-radius: 26px;
       border: 1px solid var(--border);
-      box-shadow: 0 0 32px rgba(0, 200, 255, 0.5);
-      padding: 26px 24px 20px;
+      box-shadow: 0 0 36px rgba(0, 200, 255, 0.55);
+      padding: 26px 28px 22px;
       position: relative;
     }
 
@@ -49,18 +54,18 @@
       position: absolute;
       inset: 12px;
       border-radius: 18px;
-      border: 1px dashed rgba(0,200,255,0.35);
+      border: 1px dashed rgba(0,200,255,0.3);
       pointer-events: none;
     }
 
     h1 {
-      margin: 0 0 6px;
+      margin: 0 0 8px;
       font-size: 20px;
-      letter-spacing: 0.26em;
+      text-align: center;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
       color: var(--accent);
-      text-align: center;
-      text-shadow: 0 0 14px rgba(80,220,255,0.8);
+      text-shadow: 0 0 16px rgba(80,220,255,0.9);
     }
 
     .subtitle {
@@ -69,63 +74,66 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: rgba(200,220,255,0.7);
-      margin-bottom: 22px;
+      margin-bottom: 20px;
     }
 
     label {
       display: block;
       font-size: 10px;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      margin-bottom: 4px;
-      color: rgba(190,215,255,0.8);
+      margin-bottom: 6px;
+      color: rgba(185,210,255,0.9);
     }
 
     input[type="password"] {
       width: 100%;
-      padding: 9px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(71,194,255,0.7);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(71,194,255,0.8);
       background: rgba(3,10,30,0.95);
       color: var(--text);
-      outline: none;
       font-family: inherit;
       font-size: 13px;
-      letter-spacing: 0.18em;
+      outline: none;
     }
 
-    .btn-primary {
+    input[type="password"]:focus {
+      box-shadow: 0 0 18px rgba(0,200,255,0.6);
+    }
+
+    .btn {
       width: 100%;
       margin-top: 14px;
-      padding: 11px 16px;
+      padding: 10px 0;
       border-radius: 999px;
-      border: 2px solid rgba(71,194,255,0.85);
+      border: 2px solid rgba(71,194,255,0.9);
       background: linear-gradient(135deg, #050c1a, #0c284c);
       color: #34d2ff;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
       font-size: 11px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
       cursor: pointer;
     }
 
-    .btn-primary:hover {
+    .btn:hover {
       color: #ffffff;
-      box-shadow: 0 0 20px rgba(71,194,255,0.9);
+      box-shadow: 0 0 22px rgba(71,194,255,0.95);
     }
 
     .status {
       margin-top: 10px;
       min-height: 14px;
+      text-align: center;
       font-size: 10px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      text-align: center;
-      color: var(--danger);
+      color: var(--error);
     }
 
     .back-link {
       display:inline-block;
-      margin-top: 18px;
+      margin-top:14px;
       font-size:10px;
       letter-spacing:0.16em;
       text-transform:uppercase;
@@ -133,65 +141,72 @@
       text-decoration:none;
       border-bottom:1px dashed rgba(127,220,255,0.7);
       padding-bottom:2px;
-      text-align:center;
-      width:100%;
     }
     .back-link:hover {
-      color:#fff;
-      border-color:#fff;
+      color:#ffffff;
+      border-color:#ffffff;
     }
   </style>
 </head>
 
 <body>
   <div class="panel">
-    <h1>COMMAND ACCESS</h1>
-    <div class="subtitle">CAPTAIN LOGIN • NMS PERSONAL LOG</div>
+    <h1>ENTER ACCESS CODE</h1>
+    <div class="subtitle">NO MEAN'S SKY • CAPTAIN ONLY</div>
 
     <form id="loginForm">
-      <label for="password">ACCESS CODE</label>
-      <input type="password" id="password" autocomplete="off" autofocus>
+      <label for="accessCode">ACCESS CODE</label>
+      <input type="password" id="accessCode" autocomplete="off" />
 
-      <button type="submit" class="btn-primary">ENTER COMMAND</button>
+      <button type="submit" class="btn">ENTER</button>
+
       <div id="status" class="status"></div>
     </form>
 
     <a href="index.html" class="back-link">⟵ BACK TO SHIP LOG</a>
   </div>
 
-  <script>
-    // 💾 тук сменяш паролата ако някога пожелаеш
-    const ADMIN_PASSWORD = "8108246982Sk8#$%";
+<script>
+  // 🔐 ТОВА Е ТВОЯТ КОД – ТУК СМЕНЯШ, АКО НЯКОГА ИСКАШ ДРУГ
+  const ACCESS_CODE = "8108246982Sk8#$%";
 
-    const form   = document.getElementById("loginForm");
-    const passEl = document.getElementById("password");
-    const status = document.getElementById("status");
+  const form   = document.getElementById("loginForm");
+  const input  = document.getElementById("accessCode");
+  const status = document.getElementById("status");
 
-    function setStatus(msg) {
-      status.textContent = msg || "";
+  function setStatus(msg) {
+    status.textContent = msg || "";
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const value = (input.value || "").trim();
+
+    if (!value) {
+      setStatus("Въведи код за достъп.");
+      return;
     }
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
+    if (value === ACCESS_CODE) {
+      // успешно логване
+      localStorage.setItem("isAdmin", "true");
+      setStatus("");
+      window.location.href = "admin.html";
+    } else {
+      setStatus("Грешна парола!");
+      input.value = "";
+      input.focus();
+      localStorage.removeItem("isAdmin");
+    }
+  });
 
-      const value = passEl.value;
+  // ако има стар флаг, го чистим при зареждане (по-сигурно)
+  window.addEventListener("load", () => {
+    // НЕ трия паролата, само флага за сесия
+    localStorage.removeItem("isAdmin");
+  });
+</script>
 
-      if (!value) {
-        setStatus("Въведи парола.");
-        return;
-      }
-
-      if (value === ADMIN_PASSWORD) {
-        // Успешен логин → маркираме че е админ и пращаме към admin.html
-        localStorage.setItem("isAdmin", "true");
-        setStatus("");
-        window.location.href = "admin.html";
-      } else {
-        setStatus("Грешна парола.");
-        passEl.value = "";
-        passEl.focus();
-      }
-    });
-  </script>
 </body>
 </html>
