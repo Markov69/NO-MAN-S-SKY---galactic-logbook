@@ -1,173 +1,90 @@
 <!DOCTYPE html>
-<html lang="bg">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Admiral Panel – Add Planet</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-    body {
-        margin: 0;
-        padding: 20px;
-        background: #050d18;
-        color: #b6e2ff;
-        font-family: Orbitron, sans-serif;
-    }
-
-    h1 {
-        text-align: center;
-        color: #71dfff;
-        margin-bottom: 30px;
-        text-shadow: 0 0 12px #41b0ff;
-    }
-
-    .container {
-        width: min(800px, 95%);
-        margin: auto;
-        padding: 20px;
-        background: rgba(10,20,35,0.7);
-        border: 1px solid #2ea8ff;
-        border-radius: 12px;
-        box-shadow: 0 0 20px rgba(0,150,255,0.4);
-        backdrop-filter: blur(8px);
-    }
-
-    label {
-        display: block;
-        margin-top: 14px;
-        font-size: 14px;
-        letter-spacing: 0.1em;
-    }
-
-    input, select, textarea {
-        width: 100%;
-        padding: 10px;
-        margin-top: 6px;
-        background: #0b1829;
-        border: 1px solid #3ac7ff;
-        color: #d9f5ff;
-        border-radius: 6px;
-    }
-
-    textarea {
-        height: 90px;
-    }
-
-    button {
-        margin-top: 20px;
-        width: 100%;
-        padding: 14px;
-        background: #0d263d;
-        border: 2px solid #4cd4ff;
-        color: #9fe7ff;
-        cursor: pointer;
-        border-radius: 10px;
-        transition: 0.25s;
-        font-size: 16px;
-        letter-spacing: 0.15em;
-    }
-
-    button:hover {
-        background: #143d61;
-        box-shadow: 0 0 14px #4cd4ff;
-    }
-</style>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <style>
+        body { background:#000; color:#0ff; font-family:Orbitron; padding:20px; }
+        input, textarea { width:100%; margin:5px 0; padding:10px; background:#111; color:#0ff; border:1px solid #0ff; }
+        button { padding:12px 20px; margin-top:10px; background:#0ff; color:#000; cursor:pointer; font-weight:bold; }
+    </style>
 </head>
 
 <body>
 
-<h1>🛰️ ADMIRAL PLANET LOG ENTRY</h1>
+<h1>ADD PLANET</h1>
 
-<div class="container">
+<label>Име на планета:</label>
+<input id="planetName">
 
-    <label>Име на планета:</label>
-    <input id="pName">
+<label>Галактика:</label>
+<input id="galaxy">
 
-    <label>Галактика:</label>
-    <input id="pGalaxy">
+<label>Система:</label>
+<input id="system">
 
-    <label>Звездна система:</label>
-    <input id="pSystem">
+<label>Биом:</label>
+<input id="biome">
 
-    <label>Биом:</label>
-    <select id="pBiome">
-        <option value="Frozen">Frozen</option>
-        <option value="Toxic">Toxic</option>
-        <option value="Radiated">Radiated</option>
-        <option value="Lush">Lush</option>
-        <option value="Exotic">Exotic</option>
-        <option value="Volcanic">Volcanic</option>
-        <option value="Barren">Barren</option>
-    </select>
+<label>Описание:</label>
+<textarea id="description"></textarea>
 
-    <label>Време:</label>
-    <input id="pWeather">
+<button onclick="savePlanet()">SAVE PLANET</button>
 
-    <label>Температура:</label>
-    <input id="pTemp">
+<script>
 
-    <label>Радиация:</label>
-    <input id="pRad">
+// URL КЪМ JSON ФАЙЛА В GITHUB RAW
+const planetsURL = "https://raw.githubusercontent.com/Markov69/NO-MAN-S-SKY---galactic-logbook/main/planets.json";
 
-    <label>Токсичност:</label>
-    <input id="pTox">
+// API URL за промяна на файла (GitHub API)
+const updateURL = "https://api.github.com/repos/Markov69/NO-MAN-S-SKY---galactic-logbook/contents/planets.json";
 
-    <label>Описание:</label>
-    <textarea id="pDesc"></textarea>
-
-    <label>Снимка на планета:</label>
-    <input type="file" id="planetImg">
-
-    <label>Портрет на адмирала:</label>
-    <input type="file" id="admiralImg">
-
-    <label>Галерия снимки (множество):</label>
-    <input type="file" id="gallery" multiple>
-
-    <button onclick="savePlanet()">SAVE PLANET</button>
-</div>
-
-<script type="module">
-import { saveBlob } from "./storage.js";
-
-async function fileToBase64(file) {
-    if (!file) return null;
-    return new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(file);
-    });
-}
+// ❗ ТУК ВЪВЕЖДАШ ЛИЧНИЯТ СИ GITHUB TOKEN
+// (ще ти кажа как да го вземеш)
+const TOKEN = "PUT-YOUR-GITHUB-TOKEN-HERE";
 
 async function savePlanet() {
+    const name = document.getElementById("planetName").value;
+    const galaxy = document.getElementById("galaxy").value;
+    const system = document.getElementById("system").value;
+    const biome = document.getElementById("biome").value;
+    const description = document.getElementById("description").value;
 
-    const name = pName.value.trim();
-    if (!name) return alert("Моля въведи име!");
+    if (!name) { alert("Въведи име!"); return; }
 
-    const data = {
+    // 1) ВЗИМАМЕ СТАРИТЕ ДАННИ
+    let planets = await fetch(planetsURL).then(r => r.json());
+
+    // 2) ДОБАВЯМЕ НОВАТА ПЛАНЕТА
+    planets.push({
         name,
-        galaxy: pGalaxy.value,
-        system: pSystem.value,
-        biome: pBiome.value,
-        weather: pWeather.value,
-        temperature: pTemp.value,
-        radiation: pRad.value,
-        toxicity: pTox.value,
-        description: pDesc.value,
-        planetImage: await fileToBase64(planetImg.files[0]),
-        admiralImage: await fileToBase64(admiralImg.files[0]),
-        gallery: []
-    };
+        galaxy,
+        system,
+        biome,
+        description
+    });
 
-    for (const f of gallery.files) {
-        data.gallery.push(await fileToBase64(f));
-    }
+    // 3) ВЗИМАМЕ SHA НА ФАЙЛА
+    const getInfo = await fetch(updateURL).then(r => r.json());
+    const sha = getInfo.sha;
 
-    await saveBlob(`planets/${name.replaceAll(" ", "_")}.json`, JSON.stringify(data));
+    // 4) КАЧВАМЕ АКТУАЛИЗИРАНИЯ JSON В GITHUB
+    await fetch(updateURL, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `token ${TOKEN}`
+        },
+        body: JSON.stringify({
+            message: "update planets",
+            content: btoa(JSON.stringify(planets, null, 2)),
+            sha: sha
+        })
+    });
 
-    alert("Планетата е запазена успешно!");
+    alert("Планетата е записана успешно! 🔥🚀");
 }
+
 </script>
 
 </body>
