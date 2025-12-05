@@ -2,7 +2,7 @@
 <html lang="bg">
 <head>
 <meta charset="UTF-8">
-<title>No Mean's Sky – Ship Log</title>
+<title>No Mean's Sky – Ship Log LIVE</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
@@ -46,6 +46,7 @@ body{
   justify-content:center;
   align-items:center;
   gap:20px;
+  text-align:center;
 }
 h1{
   font-size:28px;
@@ -113,7 +114,7 @@ h1{
 }
 .loading-percent{font-size:12px;opacity:0.7;letter-spacing:0.14em;}
 
-/* LOG WINDOW */
+/* LOG WINDOW (YOUTUBE LIVE) */
 .log-screen{
   position:fixed; inset:0;
   background:rgba(0,10,20,0.35);
@@ -123,27 +124,32 @@ h1{
   transition:transform .1s linear;
 }
 .log-window{
-  width:700px; max-width:90%;
-  height:420px; max-height:75%;
-  padding:22px;
-  background:rgba(5,12,25,0.85);
-  border:1px solid rgba(120,210,255,0.45);
+  width:900px; max-width:95%;
+  height:520px; max-height:85%;
   border-radius:16px;
+  border:1px solid rgba(120,210,255,0.45);
   box-shadow:0 0 22px rgba(120,210,255,0.45);
   position:relative;
-  backdrop-filter:blur(10px);
+  overflow:hidden;
+  background:rgba(5,12,25,0.9);
 }
 .log-close{
-  position:absolute; top:12px; right:16px;
+  position:absolute; top:10px; right:16px;
   font-size:20px; cursor:pointer;
-  opacity:.7; transition:.2s;
+  opacity:.8; transition:.2s;
+  z-index:10;
+  color:#e0f6ff;
+  text-shadow:0 0 8px #7fe2ff;
 }
-.log-close:hover{opacity:1;text-shadow:0 0 10px #bff3ff;}
+.log-close:hover{opacity:1;}
 
-.log-content{text-align:center; margin-top:50px;}
-.log-content h2{font-size:22px;letter-spacing:0.25em;margin-bottom:16px;}
-.log-content p{font-size:12px;opacity:.7;letter-spacing:0.15em;text-transform:uppercase;}
-
+/* iframe вътре да пълни прозореца */
+.log-window iframe{
+  width:100%;
+  height:100%;
+  border:0;
+  display:block;
+}
 </style>
 </head>
 
@@ -215,20 +221,20 @@ h1{
     ctx.save();
     ctx.translate(center.x,center.y);
 
-    // BACK
+    // background
     let bg=ctx.createRadialGradient(0,0,0,0,0,radius*1.4);
     bg.addColorStop(0,"#2b1500");
     bg.addColorStop(1,"#050308");
     ctx.fillStyle=bg;
     ctx.fillRect(-radius*1.3,-radius*1.3,radius*2.6,radius*2.6);
 
-    // MAIN CIRCLE
+    // main circle
     ctx.beginPath();
     ctx.arc(0,0,radius,0,Math.PI*2);
     ctx.fillStyle="#1a0702";
     ctx.fill();
 
-    // RINGS
+    // rings
     ctx.strokeStyle="rgba(255,160,40,0.3)";
     for(let i=1;i<=6;i++){
       ctx.beginPath();
@@ -236,7 +242,7 @@ h1{
       ctx.stroke();
     }
 
-    // SWEEP
+    // sweep
     ctx.save();
     ctx.globalCompositeOperation="lighter";
     let g=ctx.createRadialGradient(0,0,0,0,0,radius*1.1);
@@ -251,13 +257,13 @@ h1{
     ctx.fill();
     ctx.restore();
 
-    // CENTER DOT
+    // center dot
     ctx.beginPath();
     ctx.arc(0,0,4,0,Math.PI*2);
     ctx.fillStyle="#ffd8a0";
     ctx.fill();
 
-    // TARGETS
+    // targets
     ctx.globalCompositeOperation="lighter";
     for(const tr of targets){
       const r=radius*tr.rNorm;
@@ -299,7 +305,7 @@ h1{
   requestAnimationFrame(draw);
 })();
 
-/* -------------------- LOG SYSTEM -------------------- */
+/* -------------------- LOG + YOUTUBE LIVE -------------------- */
 document.addEventListener("DOMContentLoaded",()=>{
   const btn=document.querySelector(".enter-log-button a");
   let shown=false, move=null;
@@ -309,15 +315,15 @@ document.addEventListener("DOMContentLoaded",()=>{
   btn.addEventListener("click",e=>{
     e.preventDefault();
     if(shown) return;
-    load();
+    startLoading();
   });
 
-  function load(){
+  function startLoading(){
     const ov=document.createElement("div");
     ov.className="loading-overlay";
     ov.innerHTML=`
       <div class="loading-box">
-        <div>LOADING...</div>
+        <div>LOADING LIVE FEED...</div>
         <div class="loading-bar-outer"><div class="loading-bar-inner"></div></div>
         <div class="loading-percent">0%</div>
       </div>`;
@@ -330,12 +336,12 @@ document.addEventListener("DOMContentLoaded",()=>{
       ov.querySelector(".loading-bar-inner").style.width=p+"%";
       ov.querySelector(".loading-percent").textContent=p+"%";
       if(p<100) setTimeout(step,150+Math.random()*250);
-      else setTimeout(()=>{ov.remove();open();},300);
+      else setTimeout(()=>{ov.remove();openLog();},300);
     }
     step();
   }
 
-  function open(){
+  function openLog(){
     shown=true;
     history.pushState({screen:"log"},"","#log");
 
@@ -344,14 +350,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     scr.innerHTML=`
       <div class="log-window">
         <div class="log-close">✕</div>
-        <div class="log-content">
-          <h2>SHIP LOG</h2>
-          <p>INTERFACE ACTIVE</p>
-          <p>WELCOME COMMANDER</p>
-        </div>
+        <iframe
+          src="https://www.youtube.com/embed/live_stream?channel=UCUWj8BmiKxNBflpe-GnWUmw&autoplay=1"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
       </div>`;
     document.body.appendChild(scr);
 
+    // parallax
     move=e=>{
       const x=(window.innerWidth/2-e.clientX)/40;
       const y=(window.innerHeight/2-e.clientY)/40;
@@ -362,7 +369,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     scr.querySelector(".log-close").onclick=()=>history.back();
   }
 
-  function close(){
+  function closeLog(){
     const scr=document.querySelector(".log-screen");
     if(scr) scr.remove();
     if(move) document.removeEventListener("mousemove",move);
@@ -371,7 +378,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
   window.addEventListener("popstate",e=>{
     const s=e.state||{};
-    if(s.screen==="home") close();
+    if(s.screen==="home") closeLog();
   });
 });
 </script>
