@@ -57,33 +57,37 @@ h1 {
 
 <div id="list"></div>
 
-<script src="storage.js"></script>
-
-<script>
+<script type="module">
+import { listBlobs, readBlob } from "./storage.js";
 
 async function loadPlanets() {
     const files = await listBlobs("planets/");
     const html = [];
 
-    for (const f of files) {
-        const json = await readBlob(f);
+    for (const fileName of files) {
+        const json = await readBlob(fileName);
         const p = JSON.parse(json);
-        html.push(`<div class="card" onclick="openPlanet('${f}')">
+
+        html.push(`
+        <div class="card" onclick="openPlanet('${fileName}')">
             <b>${p.name}</b> — ${p.biome}
-        </div>`);
+        </div>
+        `);
     }
 
-    list.innerHTML = html.join("");
+    document.getElementById("list").innerHTML = html.join("");
 }
 
-async function openPlanet(file){
-    const json = await readBlob(file);
+window.openPlanet = async function(fileName) {
+    const json = await readBlob(fileName);
     const p = JSON.parse(json);
 
     const div = document.createElement("div");
     div.className = "viewer";
+
     div.innerHTML = `
         <div class="close-btn" onclick="this.parentElement.remove()">✕</div>
+        
         <h2>${p.name}</h2>
 
         <h3>Основна снимка:</h3>
@@ -105,10 +109,11 @@ async function openPlanet(file){
         <p>Токсичност: ${p.toxicity}</p>
 
         <h3>Галерия:</h3>
-        ${p.gallery.map(g=>`<img src="${g}" style="width:160px;margin:6px;border-radius:6px">`).join("")}
+        ${p.gallery.map(g => `<img src="${g}" style="width:160px;margin:6px;border-radius:6px">`).join("")}
     `;
+
     document.body.appendChild(div);
-}
+};
 
 loadPlanets();
 </script>
