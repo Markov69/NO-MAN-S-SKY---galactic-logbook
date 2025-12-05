@@ -99,16 +99,14 @@
   </div>
 
 <script>
-  // 🔐 ТВОЯТА ТАЙНА ПАРОЛА – СМЕНИ Я С КАКВОТО ИСКАШ
-  const SECRET = "STARCOMMANDER69";
+  // 🔐 ТВОЯТА ПАРОЛА
+  const SECRET = "085966911981#$%";
 
   function login() {
     const p = document.getElementById("pass").value.trim();
 
     if (p === SECRET) {
-      // Запомняме, че сме логнати като админ
       localStorage.setItem("isAdmin", "true");
-      // Влизаме в админ панела
       window.location.href = "admin.html";
     } else {
       document.getElementById("errBox").textContent = "ACCESS DENIED";
