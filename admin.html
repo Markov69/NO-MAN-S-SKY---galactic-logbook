@@ -8,9 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 40px 16px;
@@ -22,7 +20,6 @@
       display: flex;
       justify-content: center;
     }
-
     .panel {
       width: min(900px, 100%);
       border-radius: 26px;
@@ -32,7 +29,6 @@
       padding: 26px 26px 32px;
       backdrop-filter: blur(10px);
     }
-
     .panel-title {
       text-align: center;
       font-size: 22px;
@@ -42,17 +38,29 @@
       text-shadow: 0 0 14px rgba(80,220,255,0.8);
       margin-bottom: 24px;
     }
-
+    .back-link {
+      display:inline-block;
+      margin-bottom:10px;
+      font-size:11px;
+      letter-spacing:0.16em;
+      text-transform:uppercase;
+      color:#7fdcff;
+      text-decoration:none;
+      border-bottom:1px dashed rgba(127,220,255,0.7);
+      padding-bottom:2px;
+    }
+    .back-link:hover {
+      color:#fff;
+      border-color:#fff;
+    }
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px 22px;
     }
-
     .full-row {
       grid-column: 1 / -1;
     }
-
     label {
       font-size: 11px;
       letter-spacing: 0.14em;
@@ -61,8 +69,7 @@
       display: block;
       margin-bottom: 4px;
     }
-
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 8px 10px;
       border-radius: 10px;
@@ -73,24 +80,20 @@
       font-size: 13px;
       outline: none;
     }
-
     textarea {
       resize: vertical;
       min-height: 70px;
     }
-
-    input:focus, textarea:focus, select:focus {
+    input:focus, textarea:focus {
       border-color: #4cd8ff;
       box-shadow: 0 0 10px rgba(80,220,255,0.6);
     }
-
     .buttons {
       margin-top: 22px;
       display: flex;
       justify-content: space-between;
       gap: 10px;
     }
-
     .btn {
       flex: 1;
       padding: 10px 16px;
@@ -106,7 +109,6 @@
       cursor: pointer;
       transition: 0.2s ease-in-out;
     }
-
     .btn:hover {
       color: #fff;
       border-color: #98eaff;
@@ -114,21 +116,18 @@
                   inset 0 0 16px rgba(71, 194, 255, 0.35);
       transform: translateY(-1px);
     }
-
     .btn-secondary {
       border-color: rgba(255, 120, 90, 0.7);
       box-shadow: 0 0 14px rgba(255,140,110,0.5),
                   inset 0 0 8px rgba(255,140,110,0.25);
       color: #ffbda3;
     }
-
     .btn-secondary:hover {
       color: #fff3eb;
       border-color: #ffd0bd;
       box-shadow: 0 0 20px rgba(255,140,110,0.9),
                   inset 0 0 13px rgba(255,140,110,0.3);
     }
-
     .status {
       margin-top: 14px;
       font-size: 11px;
@@ -138,17 +137,15 @@
       text-align: center;
       min-height: 16px;
     }
-
     @media (max-width: 720px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
+      .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
   <div class="panel">
+    <a href="index.html" class="back-link">⟵ Back to Ship Log Home</a>
     <div class="panel-title">Planet Admin Console</div>
 
     <div class="grid">
@@ -156,34 +153,28 @@
         <label>Име на планета</label>
         <input id="pName" placeholder="Saturn Prime">
       </div>
-
       <div>
         <label>Галактика</label>
         <input id="pGalaxy" placeholder="Euclid">
       </div>
-
       <div>
         <label>Звездна система</label>
         <input id="pSystem" placeholder="Skotlian-12">
       </div>
-
       <div>
         <label>Биом</label>
         <input id="pBiome" placeholder="Exotic / Lush / Toxic...">
       </div>
-
       <div>
         <label>Температура</label>
         <input id="pTemp" placeholder="-90° до +45°">
       </div>
-
       <div>
         <label>Токсичност / Радиация</label>
         <input id="pHazard" placeholder="Low / High / Storms">
       </div>
-
       <div class="full-row">
-        <label>Кратко описание (лог)</label>
+        <label>Описание / бележки</label>
         <textarea id="pDesc" placeholder="Страхотна планета, обожавам я."></textarea>
       </div>
     </div>
@@ -197,7 +188,7 @@
   </div>
 
 <script>
-  // Ключът под който пазим всички планети в localStorage
+  // Всички планети се пазят тук в браузъра
   const STORAGE_KEY = "nms_planets_archive_v1";
 
   function loadPlanets() {
@@ -206,7 +197,7 @@
       if (!raw) return [];
       return JSON.parse(raw);
     } catch (e) {
-      console.warn("Грешка при четене на планети:", e);
+      console.warn("Грешка при четене:", e);
       return [];
     }
   }
@@ -225,44 +216,38 @@
     ["pName","pGalaxy","pSystem","pBiome","pTemp","pHazard","pDesc"].forEach(id => {
       document.getElementById(id).value = "";
     });
-    setStatus("Формата е изчистена.");
   }
 
-  document.getElementById("clearBtn").addEventListener("click", clearForm);
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    clearForm();
+    setStatus("Формата е изчистена.");
+  });
 
   document.getElementById("saveBtn").addEventListener("click", () => {
-    const name   = document.getElementById("pName").value.trim();
-    const galaxy = document.getElementById("pGalaxy").value.trim();
-    const system = document.getElementById("pSystem").value.trim();
-    const biome  = document.getElementById("pBiome").value.trim();
-    const temp   = document.getElementById("pTemp").value.trim();
-    const hazard = document.getElementById("pHazard").value.trim();
-    const desc   = document.getElementById("pDesc").value.trim();
-
+    const name   = pName.value.trim();
     if (!name) {
       setStatus("Въведи поне име на планета.", true);
       return;
     }
 
-    const planets = loadPlanets();
-
-    const newPlanet = {
-      id: Date.now(),        // прост уникален ID
+    const planet = {
+      id: Date.now(),
       name,
-      galaxy,
-      system,
-      biome,
-      temp,
-      hazard,
-      desc,
+      galaxy: pGalaxy.value.trim(),
+      system: pSystem.value.trim(),
+      biome: pBiome.value.trim(),
+      temp: pTemp.value.trim(),
+      hazard: pHazard.value.trim(),
+      desc: pDesc.value.trim(),
       createdAt: new Date().toISOString()
     };
 
-    planets.push(newPlanet);
-    savePlanets(planets);
-    setStatus("Планетата е записана локално в дневника. 🚀");
+    const list = loadPlanets();
+    list.push(planet);
+    savePlanets(list);
 
     clearForm();
+    setStatus("Планетата е записана локално в дневника. 🚀");
   });
 </script>
 </body>
