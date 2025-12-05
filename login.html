@@ -35,6 +35,15 @@
       font-size: 18px;
       color: #4cd8ff;
       text-shadow: 0 0 10px rgba(80,220,255,0.8);
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(200,230,255,0.7);
+      margin-bottom: 16px;
     }
     input {
       width: 100%;
@@ -78,21 +87,22 @@
 <body>
   <div class="box">
     <h2>ADMIN ACCESS</h2>
+    <p>ENTER SECRET COMMAND CODE</p>
 
-    <input type="password" id="pass" placeholder="Enter Code">
+    <input type="password" id="pass" placeholder="••••••••••••••">
     <button class="btn" onclick="login()">ENTER</button>
 
     <div class="err" id="errBox"></div>
   </div>
 
 <script>
-  // 🔐 ПАРОЛАТА Е 0000
-  const SECRET = "0000";
+  // 🔐 НОВАТА ТИ ПАРОЛА
+  const SECRET = "8108246982Sk8#$%";
 
   function login() {
-    const p = document.getElementById("pass").value.trim();
+    const entered = document.getElementById("pass").value.trim();
 
-    if (p === SECRET) {
+    if (entered === SECRET) {
       localStorage.setItem("isAdmin", "true");
       window.location.href = "admin.html";
     } else {
