@@ -35,7 +35,7 @@
     }
 
     .panel {
-      width: min(900px, 100%);
+      width: min(980px, 100%);
       background: var(--panel);
       border-radius: 26px;
       border: 1px solid var(--border);
@@ -73,6 +73,8 @@
       color: #ffc9c9;
       font-size: 10px;
       cursor: pointer;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
     }
 
     .logout-btn:hover {
@@ -91,6 +93,8 @@
       font-size: 10px;
       letter-spacing: 0.16em;
       margin-bottom: 4px;
+      text-transform: uppercase;
+      color: rgba(190,215,255,0.85);
     }
 
     input, textarea {
@@ -101,9 +105,14 @@
       background: rgba(3,10,30,0.9);
       color: var(--text);
       font-size: 12px;
+      font-family: inherit;
     }
 
-    textarea { min-height: 70px; }
+    textarea { min-height: 70px; resize: vertical; }
+
+    .full {
+      grid-column: 1 / -1;
+    }
 
     .btn-primary {
       width: 100%;
@@ -117,6 +126,7 @@
       letter-spacing:0.25em;
       text-transform:uppercase;
       cursor:pointer;
+      font-size: 11px;
     }
 
     .btn-primary:hover {
@@ -129,8 +139,49 @@
       text-align:center;
       font-size:11px;
       min-height:14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
+    .photo-preview {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:6px;
+    }
+
+    .photo-thumb {
+      width:70px;
+      height:70px;
+      border-radius:10px;
+      border:1px solid rgba(0,200,255,0.6);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .photo-thumb img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .photo-thumb span {
+      position:absolute;
+      bottom:2px;
+      right:4px;
+      font-size:9px;
+      background:rgba(0,0,0,0.6);
+      padding:1px 4px;
+      border-radius:6px;
+      color:#cdeeff;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 18px 6px; }
+      .panel { padding: 20px 18px 16px; }
+      h1 { font-size: 18px; }
+    }
   </style>
 </head>
 
@@ -140,47 +191,83 @@
     <button class="logout-btn" onclick="logout()">LOG OUT</button>
 
     <h1>PLANET ADMIN</h1>
-    <div class="subtitle">NO MAN'S SKY – PERSONAL SHIP LOG</div>
+    <div class="subtitle">NO MAN'S SKY – PERSONAL SHIP LOG • FULL PLANET RECORD</div>
 
     <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
 
+      <!-- ОСНОВНИ ДАННИ -->
       <div>
-        <label>Име на планетата</label>
-        <input id="name" required>
-      </div>
-
-      <div>
-        <label>Галактика</label>
-        <input id="galaxy">
+        <label>Planet Name</label>
+        <input id="name" required placeholder="Euclid-Prime / My Base World">
       </div>
 
       <div>
-        <label>Система</label>
-        <input id="system">
+        <label>Galaxy</label>
+        <input id="galaxy" placeholder="Euclid / Hilbert / Eissentam...">
       </div>
 
       <div>
-        <label>Биом</label>
-        <input id="biome">
+        <label>Star System</label>
+        <input id="system" placeholder="Skotlian-12">
       </div>
 
       <div>
-        <label>Температура</label>
-        <input id="temp">
+        <label>Biome / Planet Type</label>
+        <input id="biome" placeholder="Lush, Exotic, Toxic, Frozen...">
+      </div>
+
+      <!-- КЛИМАТ / ОПАСНОСТИ -->
+      <div>
+        <label>Weather / Climate</label>
+        <input id="weather" placeholder="Calm, Stormy, Extreme Heat...">
       </div>
 
       <div>
-        <label>Опасности</label>
-        <input id="hazard">
+        <label>Temperature Range</label>
+        <input id="temp" placeholder="-80°C / +45°C / etc.">
       </div>
 
-      <div style="grid-column:1/-1;">
-        <label>Описание / бележки</label>
-        <textarea id="desc"></textarea>
+      <div>
+        <label>Main Hazards</label>
+        <input id="hazard" placeholder="Toxic storms, Radiation, Heatwaves...">
       </div>
 
-      <div style="grid-column:1/-1;">
-        <button class="btn-primary">SAVE PLANET</button>
+      <div>
+        <label>Sentinels</label>
+        <input id="sentinels" placeholder="None, Low, Aggressive, Corrupted...">
+      </div>
+
+      <!-- ЖИВОТ / РЕСУРСИ -->
+      <div>
+        <label>Fauna</label>
+        <input id="fauna" placeholder="Rich, Sparse, Aggressive creatures...">
+      </div>
+
+      <div>
+        <label>Flora</label>
+        <input id="flora" placeholder="Dense forests, Rare plants...">
+      </div>
+
+      <div class="full">
+        <label>Key Resources</label>
+        <input id="resources" placeholder="Copper, Paraffinium, Activated Indium, etc.">
+      </div>
+
+      <!-- ОПИСАНИЕ -->
+      <div class="full">
+        <label>Mission / Story Description</label>
+        <textarea id="desc" placeholder="Тук описваш подробно какво сте правили, бази, мисии, срещи, впечатления, животни, биосфера и всичко останало."></textarea>
+      </div>
+
+      <!-- СНИМКОВ ЖУРНАЛ -->
+      <div class="full">
+        <label>Planet Journal Photos (click to choose JPG/PNG)</label>
+        <input id="photos" type="file" accept="image/*" multiple>
+        <div id="photoPreview" class="photo-preview"></div>
+      </div>
+
+      <div class="full">
+        <button class="btn-primary">SAVE PLANET ENTRY</button>
       </div>
 
       <div id="status" class="status"></div>
@@ -188,9 +275,8 @@
     </form>
   </div>
 
-
 <script>
-  // 🔐 ADMIN CHECK
+  // 🔐 ADMIN CHECK – ако не е логнат, връщаме към login
   if (localStorage.getItem("isAdmin") !== "true") {
     window.location.href = "login.html";
   }
@@ -200,37 +286,98 @@
     window.location.href = "login.html";
   }
 
-  // 🔥 ЕДИННИЯТ КЛЮЧ
+  // Единният ключ за архива
   const STORAGE_KEY = "nms_planets_archive_v1";
+
+  // Тук държим снимките за ТЕКУЩОТО вписване
+  let currentImages = [];
+
+  const photosInput = document.getElementById("photos");
+  const photoPreview = document.getElementById("photoPreview");
+  const statusEl = document.getElementById("status");
+  const formEl = document.getElementById("planetForm");
+
+  photosInput.addEventListener("change", () => {
+    const files = Array.from(photosInput.files || []);
+    currentImages = []; // наново за това вписване
+
+    if (!files.length) {
+      photoPreview.innerHTML = "";
+      return;
+    }
+
+    let loaded = 0;
+    photoPreview.innerHTML = "";
+
+    files.forEach((file, index) => {
+      if (!file.type.startsWith("image/")) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentImages.push(e.target.result);
+        addThumb(e.target.result, index + 1);
+        loaded++;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  function addThumb(src, index) {
+    const wrap = document.createElement("div");
+    wrap.className = "photo-thumb";
+    wrap.innerHTML = `
+      <img src="${src}" alt="journal photo ${index}">
+      <span>#${index}</span>
+    `;
+    photoPreview.appendChild(wrap);
+  }
+
+  function setStatus(msg, isError = false) {
+    statusEl.textContent = msg;
+    statusEl.style.color = isError ? "#ff8080" : "#9effc0";
+  }
 
   function savePlanet(e){
     e.preventDefault();
 
     const p = {
-      name: name.value.trim(),
-      galaxy: galaxy.value.trim(),
-      system: system.value.trim(),
-      biome: biome.value.trim(),
-      temp: temp.value.trim(),
-      hazard: hazard.value.trim(),
-      desc: desc.value.trim(),
+      id: Date.now(),
+      name: document.getElementById("name").value.trim(),
+      galaxy: document.getElementById("galaxy").value.trim(),
+      system: document.getElementById("system").value.trim(),
+      biome: document.getElementById("biome").value.trim(),
+      weather: document.getElementById("weather").value.trim(),
+      temp: document.getElementById("temp").value.trim(),
+      hazard: document.getElementById("hazard").value.trim(),
+      sentinels: document.getElementById("sentinels").value.trim(),
+      fauna: document.getElementById("fauna").value.trim(),
+      flora: document.getElementById("flora").value.trim(),
+      resources: document.getElementById("resources").value.trim(),
+      desc: document.getElementById("desc").value.trim(),
+      images: currentImages.slice(), // копие на масива със снимки
       createdAt: new Date().toISOString()
     };
 
     if(!p.name){
-      status.textContent = "Въведи име!";
-      status.style.color = "#ff8080";
+      setStatus("Въведи име на планетата!", true);
       return;
     }
 
-    const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    list.push(p);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    try {
+      const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+      list.push(p);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 
-    status.textContent = "Планетата е запазена ✔";
-    status.style.color = "#9effc0";
+      setStatus("Планетата е запазена в дневника ✔");
 
-    planetForm.reset();
+      formEl.reset();
+      currentImages = [];
+      photoPreview.innerHTML = "";
+
+    } catch (err) {
+      console.error(err);
+      setStatus("Грешка при запис. Провери localStorage.", true);
+    }
   }
 </script>
 
