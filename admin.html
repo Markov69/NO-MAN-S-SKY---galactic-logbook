@@ -1,515 +1,318 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <title>NMS Logbook • Planet Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>NMS • Planet Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #01030d;
+  --panel: rgba(5,14,30,0.96);
+  --border: rgba(0,180,255,0.8);
+  --accent: #4ddfff;
+  --text: #e9faff;
+  --danger: #ff7070;
+  --success: #9effc0;
+}
 
-  <style>
-    :root {
-      --bg: #020513;
-      --panel: rgba(4, 12, 30, 0.96);
-      --border: rgba(0, 200, 255, 0.7);
-      --accent: #4cd8ff;
-      --text: #e5f8ff;
-      --danger: #ff8080;
-      --success: #9effc0;
-    }
+body {
+  margin:0;
+  min-height:100vh;
+  font-family:"Orbitron",sans-serif;
+  background:radial-gradient(circle at 0 0,#123,#000), radial-gradient(circle at 100% 100%,#001,#000);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  color:var(--text);
+}
 
-    * { box-sizing: border-box; }
+.panel {
+  width:min(1080px,100%);
+  background:var(--panel);
+  border-radius:26px;
+  border:2px solid var(--border);
+  box-shadow:0 0 28px rgba(0,180,255,0.55);
+  padding:28px;
+  position:relative;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Orbitron", system-ui, sans-serif;
-      background:
-        radial-gradient(circle at 0 0, #172747, transparent 60%),
-        radial-gradient(circle at 100% 100%, #061024, transparent 55%),
-        var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 24px 8px;
-    }
+/* ─── CAPTAIN PORTRAIT ────────────────────────────────────────── */
+.captain-box {
+  position:absolute;
+  right:28px;
+  top:-40px;
+  text-align:center;
+}
 
-    .panel {
-      width: min(1080px, 100%);
-      background: var(--panel);
-      border-radius: 26px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
-      padding: 26px 26px 22px;
-      position: relative;
-    }
+.captain-avatar {
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  border:3px solid var(--border);
+  box-shadow:0 0 18px rgba(0,200,255,0.8);
+  object-fit:cover;
+}
 
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 12px;
-      border-radius: 18px;
-      border: 1px dashed rgba(0,200,255,0.35);
-      pointer-events: none;
-    }
+.captain-title {
+  margin-top:6px;
+  font-size:11px;
+  letter-spacing:0.18em;
+  opacity:0.8;
+}
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 22px;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-align: center;
-      text-shadow: 0 0 14px rgba(80,220,255,0.8);
-    }
+/* ─── LOGOUT ─────────────────────────────────────────────── */
+.logout-btn {
+  position:absolute;
+  top:14px;
+  left:28px;
+  padding:6px 18px;
+  border-radius:999px;
+  border:1px solid #ff9090;
+  background:rgba(60,0,0,0.8);
+  color:#ffbbbb;
+  cursor:pointer;
+  font-size:10px;
+  letter-spacing:0.14em;
+}
+.logout-btn:hover {
+  background:rgba(100,0,0,0.95);
+}
 
-    .subtitle {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(200,220,255,0.7);
-      margin-bottom: 20px;
-    }
+/* ─── FORM ───────────────────────────────────────────── */
+h1 {
+  text-align:center;
+  margin-bottom:4px;
+  letter-spacing:0.24em;
+  color:var(--accent);
+  text-shadow:0 0 14px var(--accent);
+}
+.subtitle {
+  text-align:center;
+  font-size:10px;
+  letter-spacing:0.22em;
+  margin-bottom:20px;
+  opacity:0.7;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px 18px;
-      position: relative;
-      z-index: 1;
-    }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px 18px;
+}
 
-    label {
-      display: block;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      color: rgba(190,215,255,0.8);
-    }
+label {
+  font-size:10px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  opacity:0.8;
+}
 
-    input[type="text"],
-    textarea {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(71,194,255,0.7);
-      background: rgba(3,10,30,0.9);
-      color: var(--text);
-      outline: none;
-      font-family: inherit;
-      font-size: 12px;
-    }
+input, textarea {
+  width:100%;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:rgba(3,10,28,0.9);
+  color:white;
+  font-family:inherit;
+}
 
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
+textarea { min-height:80px; resize:vertical; }
 
-    .full { grid-column: 1 / -1; }
+.full { grid-column:1/-1; }
 
-    .btn-row {
-      grid-column: 1 / -1;
-      text-align: center;
-      margin-top: 10px;
-    }
+.btn-primary {
+  background:linear-gradient(135deg,#07121f,#0b2e54);
+  border:2px solid var(--border);
+  padding:12px 44px;
+  border-radius:999px;
+  cursor:pointer;
+  letter-spacing:0.22em;
+  color:var(--accent);
+}
+.btn-primary:hover {
+  box-shadow:0 0 18px var(--border);
+  color:white;
+}
 
-    .btn-primary {
-      display: inline-block;
-      padding: 14px 46px;
-      border-radius: 999px;
-      border: 2px solid rgba(71,194,255,0.8);
-      background: linear-gradient(135deg, #050c1a, #0c284c);
-      color: #34d2ff;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
-      font-size: 11px;
-      cursor: pointer;
-    }
+.status {
+  text-align:center;
+  margin-top:12px;
+  font-size:11px;
+  min-height:14px;
+}
 
-    .btn-primary:hover {
-      color: #ffffff;
-      box-shadow: 0 0 22px rgba(71,194,255,0.85);
-    }
+/* ─── PHOTO PREVIEW ─────────────────────────────────────── */
+.photo-preview-wrap {
+  grid-column:1/-1;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:6px;
+}
 
-    .status {
-      grid-column: 1 / -1;
-      margin-top: 8px;
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      text-align: center;
-      color: var(--success);
-      min-height: 14px;
-    }
+.photo-thumb {
+  width:90px;
+  height:70px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  position:relative;
+  box-shadow:0 0 12px rgba(0,180,255,0.6);
+}
+.photo-thumb img {
+  width:100%; height:100%; object-fit:cover;
+}
+.photo-thumb span {
+  position:absolute;
+  bottom:2px; right:4px;
+  font-size:9px;
+  color:white;
+  text-shadow:0 0 4px black;
+}
 
-    .photos-row { grid-column: 1 / -1; }
-
-    #photos {
-      font-size: 11px;
-      color: #c7e7ff;
-    }
-
-    .photo-preview-wrap {
-      grid-column: 1 / -1;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .photo-thumb {
-      position: relative;
-      width: 80px;
-      height: 60px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(0,200,255,0.7);
-      box-shadow: 0 0 10px rgba(0,200,255,0.6);
-    }
-
-    .photo-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .photo-thumb span {
-      position: absolute;
-      bottom: 2px;
-      right: 4px;
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: #fff;
-      text-shadow: 0 0 5px #000;
-    }
-
-    .logout-btn {
-      position: absolute;
-      top: 14px;
-      right: 18px;
-      padding: 6px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,120,120,0.8);
-      background: rgba(40,0,0,0.8);
-      color: #ffc9c9;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      cursor: pointer;
-      z-index: 3;
-    }
-
-    .logout-btn:hover {
-      background: rgba(80,0,0,0.95);
-      color: white;
-      box-shadow: 0 0 14px rgba(255,120,120,0.9);
-    }
-
-    /* 🛸 STARSHIP VIDEO FRAME FOR CAPTAIN */
-    .captain-screen {
-      position: absolute;
-      top: 54px;
-      right: 20px;
-      width: 180px;
-      padding: 10px;
-      background: rgba(0, 12, 28, 0.85);
-      border-radius: 14px;
-      border: 2px solid rgba(0, 200, 255, 0.65);
-      box-shadow:
-        0 0 18px rgba(0, 200, 255, 0.55),
-        inset 0 0 22px rgba(0, 120, 180, 0.4);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 2;
-    }
-
-    .captain-screen::before {
-      content: "";
-      width: 100%;
-      height: 6px;
-      border-top: 2px solid rgba(0, 200, 255, 0.8);
-      border-left: 22px solid transparent;
-      border-right: 22px solid transparent;
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    .captain-title {
-      font-size: 10px;
-      text-transform: uppercase;
-      color: #8ad9ff;
-      letter-spacing: 0.18em;
-      margin-bottom: 6px;
-      text-align: center;
-    }
-
-    .captain-video {
-      width: 100%;
-      border-radius: 10px;
-      border: 2px solid rgba(0, 200, 255, 0.8);
-      overflow: hidden;
-      box-shadow: 0 0 18px rgba(0, 200, 255, 0.55);
-      background: #000;
-      display: block;
-    }
-
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 640px) {
-      body { padding: 18px 5px; }
-      .panel { padding: 22px 16px 18px; }
-      .grid { grid-template-columns: 1fr; }
-      h1 { font-size: 18px; letter-spacing: 0.22em; }
-
-      .captain-screen {
-        position: static;
-        margin: 6px auto 12px;
-      }
-    }
-  </style>
+@media (max-width:800px) {
+  .grid { grid-template-columns:1fr; }
+  .captain-box { position:static; margin:0 auto 16px; }
+}
+</style>
 </head>
 
 <body>
-  <div class="panel">
-    <button class="logout-btn" onclick="logout()">LOG OUT</button>
+<div class="panel">
 
-    <!-- 🛸 CAPTAIN VIDEO PANEL -->
-    <div class="captain-screen">
-      <div class="captain-title">CAPTAIN PROFILE</div>
-      <video class="captain-video" autoplay loop muted playsinline>
-        <source src="media/2025-01-03-170310107.mp4" type="video/mp4">
-      </video>
-    </div>
+<button class="logout-btn" onclick="logout()">LOG OUT</button>
 
-    <h1>PLANET ADMIN</h1>
-    <div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG • FULL PLANET RECORD</div>
+<div class="captain-box">
+  <img class="captain-avatar"
+       src="media/captain.jpg"
+       alt="Captain portrait">
+  <div class="captain-title">CAPTAIN PROFILE</div>
+</div>
 
-    <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
-      <div>
-        <label for="name">PLANET NAME</label>
-        <input type="text" id="name" required>
-      </div>
-      <div>
-        <label for="galaxy">GALAXY</label>
-        <input type="text" id="galaxy">
-      </div>
-      <div>
-        <label for="system">STAR SYSTEM</label>
-        <input type="text" id="system">
-      </div>
+<h1>PLANET ADMIN</h1>
+<div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG</div>
 
-      <div>
-        <label for="biome">BIOME / PLANET TYPE</label>
-        <input type="text" id="biome">
-      </div>
-      <div>
-        <label for="weather">WEATHER / CLIMATE</label>
-        <input type="text" id="weather">
-      </div>
-      <div>
-        <label for="temp">TEMPERATURE RANGE</label>
-        <input type="text" id="temp">
-      </div>
+<form id="planetForm" class="grid" onsubmit="savePlanet(event)">
 
-      <div>
-        <label for="hazard">MAIN HAZARDS</label>
-        <input type="text" id="hazard">
-      </div>
-      <div>
-        <label for="sentinels">SENTINELS</label>
-        <input type="text" id="sentinels">
-      </div>
-      <div>
-        <label for="fauna">FAUNA</label>
-        <input type="text" id="fauna">
-      </div>
+  <div><label>PLANET NAME</label><input id="name" required></div>
+  <div><label>GALAXY</label><input id="galaxy"></div>
+  <div><label>STAR SYSTEM</label><input id="system"></div>
 
-      <div>
-        <label for="flora">FLORA</label>
-        <input type="text" id="flora">
-      </div>
-      <div class="full">
-        <label for="resources">KEY RESOURCES</label>
-        <input type="text" id="resources">
-      </div>
+  <div><label>BIOME</label><input id="biome"></div>
+  <div><label>WEATHER</label><input id="weather"></div>
+  <div><label>TEMPERATURE</label><input id="temp"></div>
 
-      <div class="full">
-        <label for="desc">MISSION / STORY DESCRIPTION</label>
-        <textarea id="desc" placeholder="Какво намери, как мина мисията, бази, ресурси..."></textarea>
-      </div>
+  <div><label>HAZARDS</label><input id="hazard"></div>
+  <div><label>SENTINELS</label><input id="sentinels"></div>
+  <div><label>FAUNA</label><input id="fauna"></div>
 
-      <div class="photos-row">
-        <label for="photos">PLANET JOURNAL PHOTOS (CLICK TO CHOOSE JPG/PNG)</label>
-        <input type="file" id="photos" accept="image/*" multiple>
-      </div>
+  <div><label>FLORA</label><input id="flora"></div>
+  <div class="full"><label>RESOURCES</label><input id="resources"></div>
 
-      <div id="photoPreview" class="photo-preview-wrap"></div>
-
-      <div class="btn-row">
-        <button type="submit" class="btn-primary">SAVE PLANET ENTRY</button>
-      </div>
-
-      <div id="status" class="status"></div>
-    </form>
+  <div class="full">
+    <label>MISSION DESCRIPTION</label>
+    <textarea id="desc"></textarea>
   </div>
 
+  <div class="full">
+    <label>PHOTOS (JPG/PNG)</label>
+    <input type="file" id="photos" accept="image/*" multiple>
+  </div>
+
+  <div id="photoPreview" class="photo-preview-wrap"></div>
+
+  <div class="full" style="text-align:center;margin-top:10px;">
+    <button class="btn-primary" type="submit">SAVE PLANET ENTRY</button>
+  </div>
+
+  <div id="status" class="status"></div>
+
+</form>
+</div>
+
 <script>
-// само логнат админ
 if (localStorage.getItem("isAdmin") !== "true") {
   window.location.href = "login.html";
 }
 
 function logout() {
   localStorage.removeItem("isAdmin");
-  window.location.href = "login.html";
+  location.href = "login.html";
 }
 
-const STORAGE_KEY   = "nms_planets_archive_v1";
-let currentImages   = [];
+const STORAGE_KEY = "nms_planets_archive_v1";
+let currentImages = [];
 
-const photosInput   = document.getElementById("photos");
-const photoPreview  = document.getElementById("photoPreview");
-const statusEl      = document.getElementById("status");
-
-// helper: File -> dataURL
-function fileToDataURL(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload  = e => resolve(e.target.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-// helper: resize image via canvas
-function resizeImage(dataUrl, maxW, maxH, quality) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => {
-      let { width, height } = img;
-
-      const scale = Math.min(maxW / width, maxH / height, 1);
-      width  = Math.round(width  * scale);
-      height = Math.round(height * scale);
-
-      const canvas = document.createElement("canvas");
-      canvas.width  = width;
-      canvas.height = height;
-
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, width, height);
-
-      const out = canvas.toDataURL("image/jpeg", quality);
-      resolve(out);
-    };
-    img.src = dataUrl;
-  });
-}
-
-// преглед + намаляване на снимки
-photosInput.addEventListener("change", async function () {
-  const files = Array.from(this.files || []);
-  currentImages = [];
+photos.addEventListener("change", async () => {
   photoPreview.innerHTML = "";
+  currentImages = [];
 
-  const maxW = 1280;   // макс ширина
-  const maxH = 720;    // макс височина
-  const quality = 0.7; // jpeg качество
-
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
+  for (const file of photos.files) {
     if (!file.type.startsWith("image/")) continue;
 
-    try {
-      const rawData = await fileToDataURL(file);
-      const resized = await resizeImage(rawData, maxW, maxH, quality);
+    let resized = await resizeImage(file, 1280);
+    currentImages.push(resized);
 
-      currentImages.push(resized);
-
-      const box = document.createElement("div");
-      box.className = "photo-thumb";
-      box.innerHTML = `
-        <img src="${resized}">
-        <span>#${currentImages.length}</span>
-      `;
-      photoPreview.appendChild(box);
-    } catch (err) {
-      console.warn("Image resize error:", err);
-    }
+    const div = document.createElement("div");
+    div.className = "photo-thumb";
+    div.innerHTML = `<img src="${resized}"><span>#${currentImages.length}</span>`;
+    photoPreview.appendChild(div);
   }
 });
 
-function setStatus(msg, error = false) {
-  statusEl.textContent = msg;
-  statusEl.style.color = error ? "var(--danger)" : "var(--success)";
+/* ─── IMAGE RESIZER ───────────────────── */
+function resizeImage(file, maxWidth) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      let scale = maxWidth / img.width;
+      if (scale > 1) scale = 1;
+
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/jpeg", 0.8));
+    };
+    img.src = URL.createObjectURL(file);
+  });
 }
 
-// запис на планета
+/* ─── SAVE PLANET ───────────────────── */
 function savePlanet(e) {
   e.preventDefault();
 
-  let list = [];
-  try {
-    list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  } catch {
-    setStatus("LocalStorage съдържа повредени данни!", true);
-    return;
-  }
+  let list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
   const p = {
-    id:        Date.now(),
-    name:      document.getElementById("name").value.trim(),
-    galaxy:    document.getElementById("galaxy").value.trim(),
-    system:    document.getElementById("system").value.trim(),
-    biome:     document.getElementById("biome").value.trim(),
-    weather:   document.getElementById("weather").value.trim(),
-    temp:      document.getElementById("temp").value.trim(),
-    hazard:    document.getElementById("hazard").value.trim(),
-    sentinels: document.getElementById("sentinels").value.trim(),
-    fauna:     document.getElementById("fauna").value.trim(),
-    flora:     document.getElementById("flora").value.trim(),
-    resources: document.getElementById("resources").value.trim(),
-    desc:      document.getElementById("desc").value.trim(),
-    images:    currentImages.slice(),
+    id: Date.now(),
+    name: name.value.trim(),
+    galaxy: galaxy.value.trim(),
+    system: system.value.trim(),
+    biome: biome.value.trim(),
+    weather: weather.value.trim(),
+    temp: temp.value.trim(),
+    hazard: hazard.value.trim(),
+    sentinels: sentinels.value.trim(),
+    fauna: fauna.value.trim(),
+    flora: flora.value.trim(),
+    resources: resources.value.trim(),
+    desc: desc.value.trim(),
+    images: currentImages,
     createdAt: new Date().toISOString()
   };
 
-  if (!p.name) {
-    setStatus("Въведи име на планетата!", true);
-    return;
-  }
-
   list.push(p);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  status.textContent = "ЗАПАЗЕНО ✔";
 
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    setStatus("ПЛАНЕТАТА Е ЗАПАЗЕНА ✔");
-  } catch (err1) {
-    console.warn("Снимките са твърде големи → запис без снимки", err1);
-
-    p.images = [];
-    list[list.length - 1] = p;
-
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-      setStatus("Запазено БЕЗ снимки (файловете са твърде големи)", true);
-    } catch (err2) {
-      console.error(err2);
-      setStatus("ГРЕШКА ПРИ ЗАПИС! НИЩО НЕ Е ЗАПАЗЕНО!", true);
-      list.pop();
-      return;
-    }
-  }
-
-  document.getElementById("planetForm").reset();
+  planetForm.reset();
   currentImages = [];
   photoPreview.innerHTML = "";
 }
