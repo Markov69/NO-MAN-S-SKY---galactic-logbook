@@ -1,362 +1,3 @@
-Skip to content
-Navigation Menu
-Markov69
-NO-MAN-S-SKY---galactic-logbook
-
-Type / to search
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-Insights
-Settings
-Commit 85fdc85
-Markov69
-Markov69
-authored
-1 hour ago
-·
-·
-Verified
-Update admin.html
-Signed-off-by: Markov69 <73030135+Markov69@users.noreply.github.com>
-main
-1 parent 
-5f6e17e
- commit 
-85fdc85
-File tree
-Filter files…
-admin.html
-1 file changed
-+47
--40
-lines changed
-Search within code
- 
-‎admin.html‎
-+47
--40
-Lines changed: 47 additions & 40 deletions
-Original file line number	Diff line number	Diff line change
-@@ -43,7 +43,7 @@
-      box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
-      padding: 26px 26px 22px;
-      position: relative;
-      margin-top: 40px;
-      margin-top: 70px;
-    }
-
-    .panel::before {
-@@ -55,8 +55,41 @@
-      pointer-events: none;
-    }
-
-    /* *************** CAPTAIN FIX – НОВ КОД *************** */
-    .captain-wrapper {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      position: absolute;
-      top: -70px;
-      left: 0;
-      z-index: 10;
-    }
-    .captain-frame {
-      width: 120px;
-      height: 120px;
-      border-radius: 14px;
-      border: 2px solid rgba(0,200,255,0.9);
-      box-shadow: 0 0 22px rgba(0,200,255,0.8);
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-    .captain-avatar {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    /* ******************************************************* */
-    h1 {
-      margin: 0 0 6px;
-      margin: 40px 0 6px;
-      font-size: 22px;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-@@ -104,10 +137,8 @@
-    }
-
-    textarea { min-height: 80px; resize: vertical; }
-    .full { grid-column: 1 / -1; }
-
-    /* LOGOUT */
-    .logout-btn {
-      position: absolute;
-      top: 14px;
-@@ -121,27 +152,7 @@
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      cursor: pointer;
-      z-index: 4;
-    }
-    /* CAPTAIN PORTRAIT */
-    .captain-box {
-      position: absolute;
-      top: 60px;
-      right: 22px;
-      width: 120px;
-      text-align: center;
-      z-index: 3;
-    }
-    .captain-avatar {
-      width: 100px;
-      height: 100px;
-      border-radius: 12px;
-      border: 2px solid rgba(0,200,255,0.9);
-      box-shadow: 0 0 18px rgba(0,200,255,0.8);
-      object-fit: cover;
-      background: black;
-      z-index: 15;
-    }
-
-    .btn-row { grid-column: 1 / -1; text-align: center; margin-top: 14px; }
-@@ -166,7 +177,6 @@
-      min-height: 18px;
-    }
-
-    /* PREVIEW */
-    .photo-preview-wrap { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
-    .photo-thumb {
-      width: 80px; height: 60px;
-@@ -176,20 +186,22 @@
-      box-shadow: 0 0 10px cyan;
-    }
-    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  </style>
-</head>
-
-<body>
-<div class="panel">
-
-  <button class="logout-btn" onclick="logout()">LOG OUT</button>
-  <div class="captain-box">
-    <img class="captain-avatar" id="captainImg"
-         src="media/captain.png"
-         alt="captain">
-  <!-- NEW CAPTAIN SYSTEM -->
-  <div class="captain-wrapper">
-    <div class="captain-frame">
-      <img class="captain-avatar" id="captainImg" src="media/captain.png" alt="captain">
-    </div>
-  </div>
-
-  <button class="logout-btn" onclick="logout()">LOG OUT</button>
-  <h1>PLANET ADMIN</h1>
-  <div class="subtitle">NO MAN'S SKY • SHIP LOG • RECORD</div>
-
-@@ -211,10 +223,7 @@ <h1>PLANET ADMIN</h1>
-
-    <div class="full"><label>Description</label><textarea id="desc"></textarea></div>
-
-    <div class="full">
-      <label>Photos</label>
-      <input type="file" id="photos" accept="image/*" multiple>
-    </div>
-    <div class="full"><label>Photos</label><input type="file" id="photos" accept="image/*" multiple></div>
-
-    <div id="photoPreview" class="photo-preview-wrap"></div>
-
-@@ -266,9 +275,7 @@ <h1>PLANET ADMIN</h1>
-  return new Promise(resolve => {
-    const img = new Image();
-    const reader = new FileReader();
-    reader.onload = e => {
-      img.src = e.target.result;
-    };
-    reader.onload = e => { img.src = e.target.result; };
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      let scale = maxW / img.width;
-@@ -319,7 +326,7 @@ <h1>PLANET ADMIN</h1>
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    setStatus("Saved ✔");
-  } catch (err) {
-  } catch {
-    p.images = [];
-    list[list.length - 1] = p;
-
-0 commit comments
-Comments
-0
- (0)
-Comment
-You're not receiving notifications from this thread.
-
- 
-media content loaded
-Chat
-
-New Conversation
-
-🤓 Explain a complex thing
-
-Explain Artificial Intelligence so that I can explain it to my six-year-old child.
-
-
-🧠 Get suggestions and create new ideas
-
-Please give me the best 10 travel ideas around the world
-
-
-💭 Translate, summarize, fix grammar and more…
-
-Translate "I love you" French
-
-
-GPT-4o Mini
-Hello, how can I help you today?
-
-Respond in the English language.You are a YouTube video analysis assistant. Your task is to summarize the content of the video and generate a summary includes highlights with key moments and topics discussed in the video. Follow these steps to execute the task:
-
-1. Analyze the video content:
-   Review the video content provided in the webpage. Identify the main themes, topics, and key moments that are discussed throughout the video.
-  2. Create a summary:
-   Write a concise summary of the video, capturing the essence of the content in 3-5 sentences. Focus on the main points and any significant conclusions drawn in the video.
-
-3. Identify highlights:
-   List key moments in the video that are particularly noteworthy as a list in the table. For each highlight, give the timestamp second first and next to it provide a brief description of what happens in that timestamp second and why it is significant. Do not change the second format or value, Do NOT convert to seconds to hours format, just give it as second. Aim for 5-10 highlights.
-
-4. Format the response:
-   Organize the summary and highlights into a visually appealing sidebar format. Include headings for 'Summary' and 'Highlights', and ensure that the highlights are easy to read and navigate.
-
-5. Output the results:
-   Present the summary and highlights in a clear and structured manner, ready to be displayed next to the video.
-
-Notes:
-- Ensure that the summary is informative and engaging, encouraging viewers to watch the video.
-- The highlights should be specific and provide enough context for viewers to understand the significance of each moment.
-- Avoid including any personal opinions or unnecessary commentary; focus solely on the content of the video.
-
-Video content: second:0 text:[APPLAUSE]
-second:1 text:ALRIGHT LISITEN TO ME
-second:3 text:HERE&#39;S WHAT WE&#39;RE GOING TO DO
-second:4 text:YOU&#39;RE GOING TO DO
-THE SONG THAT
-second:5 text:I SAID I WANTED YOU
-TO DO, REMEMBER?
-second:6 text:NO, NO I&#39;M NOT
-second:8 text:PLEASE C&#39;MON
-second:10 text:C&#39;MON JACK, PLEASE DON&#39;T
-second:11 text:THIS IS WHAT I SAID ALLY
-second:12 text:YOU PROMISED ME YOU
-WERE GOING TO DO IT
-second:13 text:I ALWAYS SAY THAT
-second:14 text:I LOVE YOU
-second:17 text:ALWAYS REMEMBER US THIS WAY
-second:19 text:[APPLAUSE]
-second:22 text:EVERYBODY WE&#39;RE GOING TO BRING
-OUT ALLY TO BRING US HOME
-second:25 text:AND SHE&#39;S GOING TO SING YOU AN
-ORIGINAL SONG
-second:29 text:THANK YOU
-second:32 text:♪ THAT ARIZONA SKY ♪
-second:35 text:♪ BURNIN&#39; IN YOUR EYES ♪
-second:40 text:♪ YOU LOOK AT ME AND BABE
-I WANNA CATCH ON FIRE ♪
-second:46 text:♪ IT&#39;S BURIED IN MY SOUL ♪
-second:50 text:♪ LIKE CALIFORNIA GOLD ♪
-second:55 text:♪ YOU FOUND THE LIGHT IN
-ME THAT I COULDN&#39;T FIND ♪
-second:62 text:♪ SO WHEN I&#39;M ALL CHOKED UP
-BUT I CAN&#39;T FIND THE WORDS ♪
-second:69 text:♪ EVERY TIME WE SAY
-GOODBYE BABY IT HURTS ♪
-second:77 text:♪ WHEN THE SUN GOES DOWN ♪
-second:80 text:♪ AND THE BAND WON&#39;T PLAY ♪
-second:84 text:♪ I&#39;LL ALWAYS REMEMBER
-US THIS WAY ♪
-second:91 text:♪ LOVERS IN THE NIGHT ♪
-second:94 text:♪ POETS TRYIN&#39; TO WRITE ♪
-second:99 text:♪ WE DON&#39;T KNOW HOW TO
-RHYME BUT DAMN WE TRY ♪
-second:105 text:♪ BUT ALL I REALLY KNOW ♪
-second:109 text:♪ YOU&#39;RE WHERE I WANNA GO ♪
-second:113 text:♪ THE PART OF ME THAT&#39;S
-YOU WILL NEVER DIE ♪
-second:121 text:♪ SO WHEN I&#39;M ALL CHOKED UP
-AND I CAN&#39;T FIND THE WORDS ♪
-second:128 text:♪ EVERY TIME WE SAY
-GOODBYE BABY IT HURTS ♪
-second:135 text:♪ WHEN THE SUN GOES DOWN ♪
-second:139 text:♪ AND THE BAND WON&#39;T PLAY ♪
-second:143 text:♪ I&#39;LL ALWAYS REMEMBER
-US THIS WAY ♪
-second:148 text:♪ OH YEAH ♪
-second:151 text:♪ I DON&#39;T WANNA BE JUST
-A MEMORY BABY YEAH ♪
-second:155 text:♪ OO OO OO OO OO OO OO ♪
-second:158 text:♪ OO OO OO OO HOO HOO HOO ♪
-second:162 text:♪ OO OO OO OO HOO
-HOO HOOOOOOOOO ♪
-second:169 text:♪ SO WHEN I&#39;M ALL CHOKED UP
-AND I CAN&#39;T FIND THE WORDS ♪
-second:176 text:♪ EVERY TIME WE SAY
-GOODBYE BABY IT HURTS ♪
-second:183 text:♪ WHEN THE SUN GOES DOWN
-AND THE BAND WON&#39;T PLAY ♪
-second:191 text:♪ I&#39;LL ALWAYS REMEMBER
-US THIS WAY ♪
-second:197 text:♪ WAY YEAH ♪
-second:198 text:♪ WHEN YOU LOOK AT ME AND
-THE WHOLE WORLD FADES ♪
-second:206 text:♪ I&#39;LL ALWAYS REMEMBER
-US THIS WAY ♪
-second:219 text:♪ OOUUU HMMMM ♪
-second:222 text:♪ OOOUUU HMMMMMM ♪
-second:228 text:[APPLAUSE[
-
-
-
-GPT-4o Mini
-Summary
-
-In this engaging video, the audience is treated to a heartfelt performance of the song "Always Remember Us This Way," delivered by Ally. The performance begins with an enthusiastic introduction from the host, who encourages Ally to showcase her talent and sing an original piece. Throughout the song, powerful emotions are conveyed as Ally captures the essence of love and nostalgia through her soulful lyrics and melodious voice, leaving a lasting impression on everyone present.
-Highlights
-
-Timestamp	Description
-0	The video opens with applause, setting a lively atmosphere for the performance.
-1	The host calls attention to Ally, indicating that she will perform a special song that was previously requested.
-22	Introduction of Ally as she prepares to take center stage for her performance.
-32	The start of the song "Always Remember Us This Way," marking a significant moment in the video as it reveals her emotional delivery.
-40	Key lyric highlighting longing and desire: "You look at me and babe I wanna catch on fire."
-80	A poignant moment in lyrics about memories associated with love: "I'll always remember us this way."
-148	An energetic section where Ally expresses her determination not to be just a memory—a pivotal lyrical theme in the song.
-176	Recapitulation of emotional impact during repeated lines about parting: "Every time we say goodbye baby it hurts."
-206	Concludes with affirming sentiment reiterating that cherished memories will remain timeless in people's hearts.
-228	Closes with applause from an appreciative audience, reflecting their admiration for Ally's heartfelt rendition.
-
-
-ha
-
-GPT-4o Mini
-It seems like you might have sent that by mistake. If you have a question or need assistance, feel free to let me know!
-
-
-AITOPIA
-coin image
-10
-Upgrade
-
-
-
-
 <!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -369,8 +10,9 @@ Upgrade
   <style>
     :root {
       --bg: #020513;
-      --panel: rgba(4, 12, 30, 0.96);
-      --border: rgba(0, 200, 255, 0.7);
+      --panel: #040b19;
+      --panel-inner: #071327;
+      --border: #19c5ff;
       --accent: #4cd8ff;
       --text: #e5f8ff;
       --danger: #ff8080;
@@ -384,28 +26,495 @@ Upgrade
       min-height: 100vh;
       font-family: "Orbitron", system-ui, sans-serif;
       background:
-        radial-gradient(circle at 0 0, #172747, transparent 60%),
-        radial-gradient(circle at 100% 100%, #061024, transparent 55%),
+        radial-gradient(circle at 0 0, #182848 0, transparent 55%),
+        radial-gradient(circle at 100% 100%, #060c20 0, transparent 60%),
         var(--bg);
       color: var(--text);
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 24px 8px;
+      align-items: flex-start;
+      padding: 32px 10px;
     }
 
+    .panel {
+      width: min(1150px, 100%);
+      background: var(--panel);
+      border-radius: 26px;
+      border: 1px solid rgba(0, 220, 255, 0.85);
+      box-shadow:
+        0 0 26px rgba(0, 200, 255, 0.55),
+        0 0 86px rgba(0, 200, 255, 0.45);
+      padding: 30px 34px 26px;
+      position: relative;
+      overflow: hidden;
+    }
 
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 20px;
+      border: 1px dashed rgba(0,200,255,0.35);
+      pointer-events: none;
+    }
 
+    /* LOGOUT */
+    .logout-btn {
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      padding: 6px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,120,120,0.85);
+      background: radial-gradient(circle at 20% 0, #5d1515, #2b0202);
+      color: #ffd6d6;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      z-index: 5;
+      box-shadow:
+        0 0 14px rgba(255,80,80,0.7),
+        inset 0 0 8px rgba(90,0,0,0.9);
+    }
 
+    .logout-btn:hover {
+      box-shadow:
+        0 0 20px rgba(255,110,110,0.9),
+        inset 0 0 12px rgba(130,0,0,1);
+      transform: translateY(-1px);
+    }
 
-Make a Review & Earn Credit ❤
-Chat
-Ask
-Search
-Write
-Image
-ChatFile
-Vision
-Agent
-Full Page
-Invite & Earn
+    h1 {
+      margin: 8px 0 2px;
+      font-size: 24px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: center;
+      text-shadow:
+        0 0 14px rgba(80,220,255,0.9),
+        0 0 26px rgba(0,180,255,0.9);
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(200,220,255,0.75);
+      margin-bottom: 18px;
+    }
+
+    /* Квадрат под заглавието – портрет/лого */
+    .captain-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .captain-frame {
+      width: 86px;
+      height: 86px;
+      border-radius: 18px;
+      border: 2px solid rgba(0,255,255,0.95);
+      box-shadow:
+        0 0 24px rgba(0,255,255,0.9),
+        0 0 44px rgba(0,190,255,0.75);
+      background: radial-gradient(circle at 30% 0, rgba(0,255,255,0.3), transparent 60%),
+                  radial-gradient(circle at 100% 100%, rgba(0,200,255,0.25), transparent 60%),
+                  #000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .captain-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    /* ФОРМАТА НА ПОЛЕТАТА */
+    .grid {
+      position: relative;
+      z-index: 1;
+      margin-top: 6px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px 18px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      color: rgba(190,215,255,0.85);
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 7px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(35,190,255,0.8);
+      background: radial-gradient(circle at 0 0, rgba(0,255,255,0.15), transparent 55%),
+                  #071327;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 12px;
+      outline: none;
+      box-shadow:
+        0 0 10px rgba(0,180,255,0.55),
+        inset 0 0 4px rgba(0,0,0,0.9);
+      transition: 0.18s ease-out;
+    }
+
+    textarea {
+      border-radius: 14px;
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(150,185,230,0.75);
+      font-size: 11px;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #ffffff;
+      box-shadow:
+        0 0 18px rgba(0,220,255,1),
+        0 0 44px rgba(0,150,255,0.9);
+      transform: translateY(-1px);
+    }
+
+    /* PHOTOS */
+    .photo-preview-wrap {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .photo-thumb {
+      width: 90px;
+      height: 68px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,255,255,0.9);
+      overflow: hidden;
+      box-shadow:
+        0 0 14px rgba(0,255,255,0.85),
+        0 0 30px rgba(0,200,255,0.7);
+      position: relative;
+    }
+
+    .photo-thumb::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+                  rgba(255,255,255,0.18),
+                  transparent 60%);
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* БУТОН + СТАТУС */
+    .btn-row {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .btn-primary {
+      padding: 13px 60px;
+      border-radius: 999px;
+      border: 2px solid rgba(35,190,255,0.88);
+      background:
+        radial-gradient(circle at 0 0, rgba(0,255,255,0.35), transparent 60%),
+        linear-gradient(135deg, #051124, #0b2746);
+      color: #4ed8ff;
+      text-transform: uppercase;
+      letter-spacing: 0.23em;
+      font-size: 11px;
+      cursor: pointer;
+      box-shadow:
+        0 0 20px rgba(35,190,255,0.9),
+        0 0 50px rgba(0,120,255,0.9);
+      transition: 0.18s ease-out;
+    }
+
+    .btn-primary:hover {
+      color: #ffffff;
+      border-color: #ffffff;
+      box-shadow:
+        0 0 26px rgba(35,190,255,1),
+        0 0 66px rgba(0,160,255,1);
+      transform: translateY(-1px);
+    }
+
+    .status {
+      margin-top: 10px;
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 11px;
+      min-height: 18px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px 6px;
+      }
+      .panel {
+        padding: 22px 16px 18px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="panel">
+
+  <button class="logout-btn" onclick="logout()">LOG OUT</button>
+
+  <h1>PLANET ADMIN</h1>
+  <div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG • FULL PLANET RECORD</div>
+
+  <!-- квадрат под заглавието -->
+  <div class="captain-wrap">
+    <div class="captain-frame">
+      <!-- смени с друга снимка ако искаш -->
+      <img src="media/captain.png" alt="captain">
+    </div>
+  </div>
+
+  <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
+
+    <!-- първи ред -->
+    <div>
+      <label>Planet Name</label>
+      <input id="name" type="text" placeholder="Ex: Elysian Haven">
+    </div>
+
+    <div>
+      <label>Galaxy</label>
+      <input id="galaxy" type="text" placeholder="Euclid / Hilbert...">
+    </div>
+
+    <div>
+      <label>Star System</label>
+      <input id="system" type="text" placeholder="System Name">
+    </div>
+
+    <!-- втори ред -->
+    <div>
+      <label>Biome / Planet Type</label>
+      <input id="biome" type="text" placeholder="Lush / Toxic / Frozen...">
+    </div>
+
+    <div>
+      <label>Weather / Climate</label>
+      <input id="weather" type="text" placeholder="Calm / Extreme storms...">
+    </div>
+
+    <div>
+      <label>Temperature Range</label>
+      <input id="temp" type="text" placeholder="Ex: -10°C to 45°C">
+    </div>
+
+    <!-- трети ред -->
+    <div>
+      <label>Main Hazard</label>
+      <input id="hazard" type="text" placeholder="Radiation / Toxic / Heat...">
+    </div>
+
+    <div>
+      <label>Sentinels</label>
+      <input id="sentinels" type="text" placeholder="Low / High / Aggressive">
+    </div>
+
+    <div>
+      <label>Fauna</label>
+      <input id="fauna" type="text" placeholder="Rich / Sparse / None">
+    </div>
+
+    <!-- flora -->
+    <div class="full">
+      <label>Flora</label>
+      <input id="flora" type="text" placeholder="Exotic plants, forests, crystals...">
+    </div>
+
+    <!-- resources -->
+    <div class="full">
+      <label>Key Resources</label>
+      <input id="resources" type="text" placeholder="Copper • Paraffinium • Activated Indium...">
+    </div>
+
+    <!-- description -->
+    <div class="full">
+      <label>Mission / Story Description</label>
+      <textarea id="desc" placeholder="Какво намери, как мина мисията, бази, ресурси, спомени с децата..."></textarea>
+    </div>
+
+    <!-- photos -->
+    <div class="full">
+      <label>Planet Journal Photos (click to choose JPG/PNG)</label>
+      <input type="file" id="photos" accept="image/*" multiple>
+    </div>
+
+    <div id="photoPreview" class="photo-preview-wrap"></div>
+
+    <div class="btn-row">
+      <button type="submit" class="btn-primary">SAVE PLANET ENTRY</button>
+    </div>
+
+    <div id="status" class="status"></div>
+
+  </form>
+</div>
+
+<script>
+  // достъп само за логнат капитан
+  if (localStorage.getItem("isAdmin") !== "true") {
+    window.location.href = "login.html";
+  }
+
+  function logout() {
+    localStorage.removeItem("isAdmin");
+    window.location.href = "login.html";
+  }
+
+  const STORAGE_KEY = "nms_planets_archive_v1";
+  const statusEl = document.getElementById("status");
+  const photoPreview = document.getElementById("photoPreview");
+  const planetForm = document.getElementById("planetForm");
+  let currentImages = [];
+
+  function setStatus(msg, err = false) {
+    statusEl.style.color = err ? "var(--danger)" : "var(--success)";
+    statusEl.textContent = msg;
+  }
+
+  document.getElementById("photos").addEventListener("change", async function () {
+    currentImages = [];
+    photoPreview.innerHTML = "";
+
+    for (let file of this.files) {
+      const compressed = await compressImage(file, 900, 0.75);
+      currentImages.push(compressed);
+
+      const div = document.createElement("div");
+      div.className = "photo-thumb";
+      div.innerHTML = `<img src="${compressed}" alt="">`;
+      photoPreview.appendChild(div);
+    }
+  });
+
+  function compressImage(file, maxW, quality = 0.8) {
+    return new Promise(resolve => {
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = e => {
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const scale = maxW / img.width;
+        canvas.width = maxW;
+        canvas.height = img.height * scale;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+    });
+  }
+
+  function savePlanet(e) {
+    e.preventDefault();
+
+    let list = [];
+    try {
+      list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    } catch {
+      return setStatus("Storage corrupt!", true);
+    }
+
+    const p = {
+      id: Date.now(),
+      name: name.value.trim(),
+      galaxy: galaxy.value.trim(),
+      system: system.value.trim(),
+      biome: biome.value.trim(),
+      weather: weather.value.trim(),
+      temp: temp.value.trim(),
+      hazard: hazard.value.trim(),
+      sentinels: sentinels.value.trim(),
+      fauna: fauna.value.trim(),
+      flora: flora.value.trim(),
+      resources: resources.value.trim(),
+      desc: desc.value.trim(),
+      images: currentImages.slice(),
+      createdAt: new Date().toISOString()
+    };
+
+    if (!p.name) return setStatus("Missing planet name!", true);
+
+    list.push(p);
+
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      setStatus("Saved ✔");
+    } catch (err) {
+      // ако снимките са твърде тежки — пробваме без тях
+      p.images = [];
+      list[list.length - 1] = p;
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        setStatus("Saved WITHOUT images");
+      } catch {
+        list.pop();
+        return setStatus("SAVE ERROR!", true);
+      }
+    }
+
+    planetForm.reset();
+    currentImages = [];
+    photoPreview.innerHTML = "";
+  }
+</script>
+
+</body>
+</html>
