@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-/* ------------------ GLOBAL ------------------ */
 :root {
   --bg: #020513;
   --panel: rgba(4,12,25,0.96);
@@ -32,8 +31,6 @@ body {
 }
 
 .shell { width: min(1180px, 100%); }
-
-/* ------------------ HEADERS ------------------ */
 
 .back-link {
   display:inline-block;
@@ -66,8 +63,6 @@ body {
   margin-bottom:20px;
   opacity:0.75;
 }
-
-/* ------------------ GRID CARDS ------------------ */
 
 .cards {
   display:grid;
@@ -111,7 +106,6 @@ body {
   font-size:10px;
 }
 
-/* small preview */
 .thumb {
   margin-top:10px;
   width:100%;
@@ -127,8 +121,7 @@ body {
   object-fit:cover;
 }
 
-/* ------------------ FULL VIEW POPUP ------------------ */
-
+/* FULL VIEW POPUP */
 #fullView {
   position:fixed;
   inset:0;
@@ -159,7 +152,6 @@ body {
 
 .full-sub { text-align:center; font-size:11px; opacity:0.8; margin-bottom:16px; }
 
-/* captain hologram */
 .captain {
   width:80px;
   height:80px;
@@ -171,7 +163,6 @@ body {
   box-shadow:0 0 16px rgba(80,220,255,0.6);
 }
 
-/* section header */
 .sec-title {
   font-size:13px;
   margin-top:14px;
@@ -181,7 +172,6 @@ body {
   color:#7fdcff;
 }
 
-/* entry rows */
 .entry {
   padding:8px;
   border-radius:10px;
@@ -203,7 +193,6 @@ body {
   gap:12px;
 }
 
-/* big photo gallery */
 .bigphotos {
   display:flex;
   flex-wrap:wrap;
@@ -221,7 +210,6 @@ body {
   cursor:pointer;
 }
 
-/* zoom overlay */
 #zoomLayer {
   position:fixed;
   inset:0;
@@ -267,12 +255,10 @@ body {
 
 </div>
 
-<!-- FULL VIEW -->
 <div id="fullView" onclick="closeFull(event)">
   <div class="full-box" id="fullBox"></div>
 </div>
 
-<!-- ZOOM -->
 <div id="zoomLayer" onclick="closeZoom()">
   <img id="zoomImg">
 </div>
@@ -280,99 +266,116 @@ body {
 <script>
 const KEY = "nms_planets_archive_v1";
 
-function load() {
-  try { return JSON.parse(localStorage.getItem(KEY)) || []; }
-  catch { return []; }
+function loadPlanets() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
 }
 
-const planets = load();
+const planets = loadPlanets();
 const cards = document.getElementById("cards");
 const empty = document.getElementById("empty");
 
-if (!planets.length) empty.style.display = "block";
+if (!planets.length) {
+  empty.style.display = "block";
+}
 
 planets
   .slice()
-  .sort((a,b)=> b.id - a.id)
-  .forEach(p => {
-    const c = document.createElement("div");
-    c.className = "card";
-    c.onclick = () => openFull(p);
+  .sort(function(a,b){ return (b.id || 0) - (a.id || 0); })
+  .forEach(function(p) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.onclick = function(){ openFull(p); };
 
-    c.innerHTML = `
-      <div class="planet-name">${p.name}</div>
-      <div class="badge-line">
-        <span>${p.galaxy || "-"}</span>
-        <span class="badge">${p.biome || "-"}</span>
-      </div>
-      <div style="font-size:11px;">${p.weather || "-"} • ${p.temp || "-"}</div>
-      <div class="thumb"><img src="${(p.animals?.[0]?.img) || (p.plants?.[0]?.img) || 'media/captain.png'}"></div>
-    `;
+    var thumbSrc = "media/captain.png";
+    if (p.images && p.images.length) {
+      thumbSrc = p.images[0];
+    } else if (p.animals && p.animals.length && p.animals[0].img) {
+      thumbSrc = p.animals[0].img;
+    }
 
-    cards.appendChild(c);
+    card.innerHTML =
+      '<div class="planet-name">' + (p.name || "UNDEFINED") + '</div>' +
+      '<div class="badge-line">' +
+        '<span>' + (p.galaxy || "-") + ' • ' + (p.system || "-") + '</span>' +
+        '<span class="badge">' + (p.biome || "-") + '</span>' +
+      '</div>' +
+      '<div style="font-size:11px;">' + (p.weather || "-") + ' • ' + (p.temp || "-") + '</div>' +
+      '<div class="thumb"><img src="' + thumbSrc + '"></div>';
+
+    cards.appendChild(card);
   });
 
-/* FULL VIEW POPUP */
+function entrySection(title, list) {
+  if (!list || !list.length) return "";
+  var html = '<div class="sec-title">' + title + '</div>';
+  list.forEach(function(e){
+    html +=
+      '<div class="entry entry-flex">' +
+        '<img src="' + (e.img || "media/captain.png") + '">' +
+        '<div>' +
+          '<div><b>' + (e.name || "") + '</b></div>' +
+          '<div style="font-size:11px;opacity:0.8;">' + (e.desc || "") + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+  return html;
+}
+
 function openFull(p) {
   const box = document.getElementById("fullBox");
 
-  function entrySection(title, list) {
-    if (!list || !list.length) return "";
-    return `
-      <div class="sec-title">${title}</div>
-      ${list.map(e => `
-        <div class="entry entry-flex">
-          <img src="${e.img}">
-          <div>
-            <div><b>${e.name}</b></div>
-            <div style="font-size:11px;opacity:0.8;">${e.desc}</div>
-          </div>
-        </div>
-      `).join("")}
-    `;
+  const captain = localStorage.getItem("captainPhoto") || "media/captain.png";
+
+  const infoHtml =
+    '<div class="sec-title">Planet Info</div>' +
+    '<div class="entry">' +
+      'Biome: ' + (p.biome || "-") + '<br>' +
+      'Weather: ' + (p.weather || "-") + '<br>' +
+      'Temperature: ' + (p.temp || "-") + '<br>' +
+      'Hazards: ' + (p.hazard || "-") + '<br>' +
+      'Flora Count: ' + (p.floraCount || "-") + '<br>' +
+      'Fauna Count: ' + (p.faunaCount || "-") + '<br>' +
+      'Resources: ' + (p.resourcesSummary || "-") + '<br><br>' +
+      '<i>' + (p.desc ? p.desc.replace(/\n/g,"<br>") : "") + '</i>' +
+    '</div>';
+
+  var photosHtml = "";
+  if (p.images && p.images.length) {
+    photosHtml =
+      '<div class="sec-title">Planet Photos</div>' +
+      '<div class="bigphotos">' +
+        p.images.map(function(img){
+          return '<img src="' + img + '" onclick="zoom(\'' + img + '\')">';
+        }).join("") +
+      '</div>';
   }
 
-  box.innerHTML = `
-    <div class="full-title">${p.name}</div>
-    <div class="full-sub">${p.galaxy} • ${p.system}</div>
-
-    <img class="captain" src="${localStorage.getItem("captainPhoto") || 'media/captain.png'}">
-
-    <div class="sec-title">Planet Info</div>
-    <div class="entry">
-      Biome: ${p.biome}<br>
-      Weather: ${p.weather}<br>
-      Temperature: ${p.temp}<br>
-      Hazards: ${p.hazard}<br>
-      Flora Count: ${p.floraCount}<br>
-      Fauna Count: ${p.faunaCount}<br>
-      Resources: ${p.resourcesSummary}<br>
-      <br>
-      <i>${p.desc.replace(/\n/g,"<br>")}</i>
-    </div>
-
-    ${entrySection("Animals", p.animals)}
-    ${entrySection("Plants", p.plants)}
-    ${entrySection("Resources", p.resourcesDetailed)}
-    ${entrySection("Hazards", p.hazardsDetailed)}
-
-    <div class="sec-title">Planet Photos</div>
-    <div class="bigphotos">
-      ${(p.images||[]).map(img => `<img src="${img}" onclick="zoom('${img}')">`).join("")}
-    </div>
-
-    <div class="close-btn" onclick="closeFull()">Close</div>
-  `;
+  box.innerHTML =
+    '<div class="full-title">' + (p.name || "UNDEFINED") + '</div>' +
+    '<div class="full-sub">' + (p.galaxy || "-") + ' • ' + (p.system || "-") + '</div>' +
+    '<img class="captain" src="' + captain + '">' +
+    infoHtml +
+    entrySection("Animals", p.animals) +
+    entrySection("Plants", p.plants) +
+    entrySection("Resources", p.resourcesDetailed) +
+    entrySection("Hazards", p.hazardsDetailed) +
+    photosHtml +
+    '<div class="close-btn" onclick="closeFull()">Close</div>';
 
   document.getElementById("fullView").style.display = "flex";
 }
 
-function closeFull(e){
-  if (!e || e.target.id === "fullView")
+function closeFull(e) {
+  if (!e || e.target.id === "fullView") {
     document.getElementById("fullView").style.display = "none";
+  }
 }
 
-/* ZOOM */
 function zoom(src){
   document.getElementById("zoomImg").src = src;
   document.getElementById("zoomLayer").style.display = "flex";
