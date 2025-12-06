@@ -285,87 +285,86 @@ if (!planets.length) {
 
 planets
   .slice()
-  .sort(function(a,b){ return (b.id || 0) - (a.id || 0); })
-  .forEach(function(p) {
+  .sort((a,b)=> (b.id||0) - (a.id||0))
+  .forEach(p => {
     const card = document.createElement("div");
     card.className = "card";
-    card.onclick = function(){ openFull(p); };
+    card.onclick = () => openFull(p);
 
-    var thumbSrc = "media/captain.png";
-    if (p.images && p.images.length) {
-      thumbSrc = p.images[0];
-    } else if (p.animals && p.animals.length && p.animals[0].img) {
-      thumbSrc = p.animals[0].img;
-    }
+    let thumbSrc = "media/captain.png";
+    if (p.images && p.images.length) thumbSrc = p.images[0];
+    else if (p.animals?.length && p.animals[0].img) thumbSrc = p.animals[0].img;
 
-    card.innerHTML =
-      '<div class="planet-name">' + (p.name || "UNDEFINED") + '</div>' +
-      '<div class="badge-line">' +
-        '<span>' + (p.galaxy || "-") + ' • ' + (p.system || "-") + '</span>' +
-        '<span class="badge">' + (p.biome || "-") + '</span>' +
-      '</div>' +
-      '<div style="font-size:11px;">' + (p.weather || "-") + ' • ' + (p.temp || "-") + '</div>' +
-      '<div class="thumb"><img src="' + thumbSrc + '"></div>';
+    card.innerHTML = `
+      <div class="planet-name">${p.name || "UNDEFINED"}</div>
+      <div class="badge-line">
+        <span>${p.galaxy || "-"} • ${p.system || "-"}</span>
+        <span class="badge">${p.biome || "-"}</span>
+      </div>
+      <div style="font-size:11px;">${p.weather || "-"} • ${p.temp || "-"}</div>
+      <div class="thumb"><img src="${thumbSrc}"></div>
+    `;
 
     cards.appendChild(card);
   });
 
 function entrySection(title, list) {
   if (!list || !list.length) return "";
-  var html = '<div class="sec-title">' + title + '</div>';
-  list.forEach(function(e){
-    html +=
-      '<div class="entry entry-flex">' +
-        '<img src="' + (e.img || "media/captain.png") + '">' +
-        '<div>' +
-          '<div><b>' + (e.name || "") + '</b></div>' +
-          '<div style="font-size:11px;opacity:0.8;">' + (e.desc || "") + '</div>' +
-        '</div>' +
-      '</div>';
+  let html = `<div class="sec-title">${title}</div>`;
+  list.forEach(e=>{
+    html += `
+      <div class="entry entry-flex">
+        <img src="${e.img || "media/captain.png"}">
+        <div>
+          <div><b>${e.name || ""}</b></div>
+          <div style="font-size:11px;opacity:0.8;">${e.desc || ""}</div>
+        </div>
+      </div>
+    `;
   });
   return html;
 }
 
 function openFull(p) {
   const box = document.getElementById("fullBox");
-
   const captain = localStorage.getItem("captainPhoto") || "media/captain.png";
 
-  const infoHtml =
-    '<div class="sec-title">Planet Info</div>' +
-    '<div class="entry">' +
-      'Biome: ' + (p.biome || "-") + '<br>' +
-      'Weather: ' + (p.weather || "-") + '<br>' +
-      'Temperature: ' + (p.temp || "-") + '<br>' +
-      'Hazards: ' + (p.hazard || "-") + '<br>' +
-      'Flora Count: ' + (p.floraCount || "-") + '<br>' +
-      'Fauna Count: ' + (p.faunaCount || "-") + '<br>' +
-      'Resources: ' + (p.resourcesSummary || "-") + '<br><br>' +
-      '<i>' + (p.desc ? p.desc.replace(/\n/g,"<br>") : "") + '</i>' +
-    '</div>';
+  const info = `
+    <div class="sec-title">Planet Info</div>
+    <div class="entry">
+      Biome: ${p.biome || "-"}<br>
+      Weather: ${p.weather || "-"}<br>
+      Temperature: ${p.temp || "-"}<br>
+      Hazards: ${p.hazard || "-"}<br>
+      Flora Count: ${p.floraCount || "-"}<br>
+      Fauna Count: ${p.faunaCount || "-"}<br>
+      Resources: ${p.resourcesSummary || "-"}<br><br>
+      <i>${(p.desc || "").replace(/\n/g,"<br>")}</i>
+    </div>
+  `;
 
-  var photosHtml = "";
-  if (p.images && p.images.length) {
-    photosHtml =
-      '<div class="sec-title">Planet Photos</div>' +
-      '<div class="bigphotos">' +
-        p.images.map(function(img){
-          return '<img src="' + img + '" onclick="zoom(\'' + img + '\')">';
-        }).join("") +
-      '</div>';
+  let photosHtml = "";
+  if (p.images?.length) {
+    photosHtml = `
+      <div class="sec-title">Planet Photos</div>
+      <div class="bigphotos">
+        ${p.images.map(img => `<img src="${img}" onclick="zoom('${img}')">`).join("")}
+      </div>
+    `;
   }
 
-  box.innerHTML =
-    '<div class="full-title">' + (p.name || "UNDEFINED") + '</div>' +
-    '<div class="full-sub">' + (p.galaxy || "-") + ' • ' + (p.system || "-") + '</div>' +
-    '<img class="captain" src="' + captain + '">' +
-    infoHtml +
-    entrySection("Animals", p.animals) +
-    entrySection("Plants", p.plants) +
-    entrySection("Resources", p.resourcesDetailed) +
-    entrySection("Hazards", p.hazardsDetailed) +
-    photosHtml +
-    '<div class="close-btn" onclick="closeFull()">Close</div>';
+  box.innerHTML = `
+    <div class="full-title">${p.name || "UNDEFINED"}</div>
+    <div class="full-sub">${p.galaxy || "-"} • ${p.system || "-"}</div>
+    <img class="captain" src="${captain}">
+    ${info}
+    ${entrySection("Animals", p.animals)}
+    ${entrySection("Plants", p.plants)}
+    ${entrySection("Resources", p.resourcesDetailed)}
+    ${entrySection("Hazards", p.hazardsDetailed)}
+    ${photosHtml}
+    <div class="close-btn" onclick="closeFull()">Close</div>
+  `;
 
   document.getElementById("fullView").style.display = "flex";
 }
