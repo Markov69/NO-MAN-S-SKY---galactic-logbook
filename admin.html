@@ -16,7 +16,7 @@
       --text: #e5f8ff;
       --danger: #ff8080;
       --success: #9effc0;
-      --card-bg: rgba(8,18,40,0.95);
+      --section-bg: #030816;
     }
 
     * { box-sizing: border-box; }
@@ -42,7 +42,7 @@
       border-radius: 26px;
       border: 1px solid var(--border);
       box-shadow: 0 0 34px rgba(0, 200, 255, 0.35);
-      padding: 26px 26px 22px;
+      padding: 26px 26px 26px;
       position: relative;
       margin-top: 40px;
     }
@@ -72,32 +72,24 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       color: rgba(200,220,255,0.7);
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
 
-    /* КАПИТАНСКА СНИМКА – КВАДРАТНА, КЛИКАЕМА */
+    /* CAPTAIN – квадратна снимка над формата */
     .captain-box {
-      width: 140px;
-      margin: 6px auto 22px auto;
+      width: 120px;
+      margin: 6px auto 18px auto;
       text-align: center;
-      cursor: pointer;
     }
 
     .captain-frame {
-      width: 130px;
-      height: 130px;
-      border-radius: 14px;
+      width: 120px;
+      height: 120px;
+      border-radius: 18px;
       border: 2px solid rgba(0,200,255,0.9);
-      box-shadow: 0 0 18px rgba(0,200,255,0.7);
+      box-shadow: 0 0 22px rgba(0,200,255,0.8);
       overflow: hidden;
       background: #000;
-      margin: 0 auto;
-      transition: 0.2s;
-    }
-
-    .captain-box:hover .captain-frame {
-      box-shadow: 0 0 24px rgba(0,255,255,1);
-      transform: scale(1.04);
     }
 
     .captain-frame img {
@@ -107,17 +99,14 @@
       display: block;
     }
 
-    input[type="file"] {
-      display: none;
-    }
-
-    /* GRID – БАЗОВА ЧАСТ */
-    .grid {
+    /* GRID – основни полета за планетата */
+    .grid-main {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px 18px;
       position: relative;
       z-index: 1;
+      margin-bottom: 16px;
     }
 
     .full { grid-column: 1 / -1; }
@@ -131,7 +120,8 @@
       color: rgba(190,215,255,0.8);
     }
 
-    input[type="text"], textarea {
+    input[type="text"],
+    textarea {
       width: 100%;
       padding: 8px 10px;
       border-radius: 10px;
@@ -139,18 +129,19 @@
       background: rgba(3,10,30,0.9);
       color: var(--text);
       outline: none;
-      font-size: 12px;
       font-family: inherit;
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
+      font-size: 12px;
     }
 
     input[type="text"]:focus,
     textarea:focus {
       border-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0,200,255,0.5);
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
     }
 
     /* LOGOUT */
@@ -172,9 +163,8 @@
 
     /* SAVE BUTTON */
     .btn-row {
-      grid-column: 1 / -1;
       text-align: center;
-      margin-top: 14px;
+      margin-top: 18px;
     }
 
     .btn-primary {
@@ -189,23 +179,28 @@
       cursor: pointer;
     }
 
+    .btn-primary:hover {
+      border-color: #9cf0ff;
+      box-shadow: 0 0 22px rgba(0,200,255,0.9);
+      color: #ffffff;
+    }
+
     .status {
       margin-top: 12px;
-      grid-column: 1 / -1;
       text-align: center;
       font-size: 12px;
       min-height: 18px;
     }
 
-    /* СЕКЦИИ ЗА ANIMALS / PLANTS / RESOURCES / HAZARDS */
+    /* ==== ДИНАМИЧНИ СЕКЦИИ (ANIMALS, PLANTS, RESOURCES, HAZARDS) ==== */
+
     .section-block {
-      grid-column: 1 / -1;
       margin-top: 18px;
-      padding: 12px 14px 14px;
-      border-radius: 16px;
-      background: radial-gradient(circle at 0 0, rgba(60,120,200,0.16), transparent 55%),
-                  linear-gradient(145deg, rgba(5,10,28,0.98), rgba(4,8,20,0.98));
-      border: 1px solid rgba(0,200,255,0.25);
+      padding: 14px 14px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,200,255,0.45);
+      background: radial-gradient(circle at 0 0, #08152a, transparent 70%), var(--section-bg);
+      box-shadow: 0 0 18px rgba(0,0,0,0.8);
     }
 
     .section-header {
@@ -217,126 +212,201 @@
 
     .section-title {
       font-size: 11px;
-      letter-spacing: 0.26em;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: rgba(190,230,255,0.95);
+      color: rgba(200,230,255,0.9);
     }
 
-    .mini-btn {
-      padding: 6px 12px;
+    .pill-btn {
+      padding: 6px 18px;
       border-radius: 999px;
-      border: 1px solid rgba(120,220,255,0.8);
-      background: rgba(6,20,40,0.9);
-      color: #88e3ff;
-      font-size: 9px;
-      letter-spacing: 0.17em;
+      border: 1px solid rgba(71,194,255,0.9);
+      background: transparent;
+      color: #7fe0ff;
+      font-size: 10px;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       cursor: pointer;
     }
 
-    .mini-btn:hover {
-      border-color: #ffffff;
+    .pill-btn:hover {
+      background: rgba(0,200,255,0.15);
       color: #ffffff;
     }
 
-    .cards-wrap {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 10px;
+    .entity-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
-    .entry-card {
-      background: var(--card-bg);
-      border-radius: 14px;
-      border: 1px solid rgba(90,170,255,0.6);
-      padding: 8px 8px 10px;
+    .entity-card {
       display: grid;
-      grid-template-columns: 92px 1fr auto;
-      gap: 8px;
+      grid-template-columns: auto minmax(0,1fr) auto;
+      gap: 10px 16px;
       align-items: stretch;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,200,255,0.35);
+      background: rgba(2, 8, 20, 0.9);
+      box-shadow: 0 0 14px rgba(0,0,0,0.8);
     }
 
-    .entry-thumb {
-      width: 90px;
-      height: 90px;
-      border-radius: 10px;
-      border: 1px solid rgba(140,220,255,0.9);
-      box-shadow: 0 0 12px rgba(80,180,255,0.7);
+    .entity-title {
+      grid-column: 1 / -1;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(170,215,255,0.9);
+      margin-bottom: 2px;
+    }
+
+    .entity-photo-box {
+      width: 120px;
+      height: 120px;
+      border-radius: 16px;
+      border: 2px solid rgba(0,200,255,0.9);
+      box-shadow: 0 0 18px rgba(0,200,255,0.7);
       overflow: hidden;
-      background: radial-gradient(circle at 30% 0, #21334a, #020715);
-      position: relative;
+      background: radial-gradient(circle at 30% 0, #223045, #02040b 80%);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
 
-    .entry-thumb img {
+    .entity-photo-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none;
+      display: block;
     }
 
-    .thumb-placeholder {
-      font-size: 9px;
-      text-align: center;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(190,230,255,0.8);
-      padding: 0 6px;
-    }
-
-    .entry-fields {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .entry-fields input[type="text"] {
-      font-size: 11px;
-      padding: 5px 8px;
-    }
-
-    .entry-fields textarea {
-      font-size: 11px;
-      min-height: 50px;
-      padding: 5px 8px;
-    }
-
-    .remove-btn {
-      align-self: flex-start;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,120,120,0.85);
-      background: rgba(50,0,0,0.85);
-      color: #ffd0d0;
+    .entity-photo-placeholder {
       font-size: 9px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      cursor: pointer;
-      margin-top: 2px;
+      color: rgba(190,220,255,0.7);
+      text-align: center;
+      padding: 4px;
     }
 
-    .remove-btn:hover {
-      border-color: #ffffff;
+    .entity-main {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .entity-name {
+      font-size: 12px;
+    }
+
+    .entity-notes {
+      min-height: 60px;
+      font-size: 11px;
+    }
+
+    .entity-remove {
+      align-self: flex-start;
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,120,120,0.8);
+      background: rgba(40,0,0,0.8);
+      color: #ffd0d0;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-left: 4px;
+    }
+
+    .entity-remove:hover {
+      background: rgba(80,0,0,0.9);
       color: #ffffff;
     }
 
     @media (max-width: 900px) {
-      .grid {
+      .grid-main {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-      .entry-card {
-        grid-template-columns: 1fr;
+      .entity-card {
+        grid-template-columns: auto minmax(0,1fr);
+        grid-template-rows: auto auto;
+      }
+      .entity-remove {
+        grid-column: 1 / -1;
+        justify-self: flex-end;
       }
     }
 
     @media (max-width: 640px) {
-      .grid {
+      .grid-main {
         grid-template-columns: 1fr;
       }
     }
+
+    /* ==== LIGHTBOX – fullscreen zoom със светеща рамка ==== */
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease-out;
+      z-index: 999;
+    }
+
+    .lightbox.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 88vw;
+      max-height: 88vh;
+    }
+
+    .lightbox-img {
+      max-width: 88vw;
+      max-height: 88vh;
+      border-radius: 22px;
+      border: 2px solid rgba(0, 240, 255, 0.95);
+      box-shadow:
+        0 0 26px rgba(0,255,255,0.9),
+        0 0 60px rgba(0,120,255,0.85);
+      transform: scale(0.92);
+      transition: transform 0.25s ease-out;
+      display: block;
+    }
+
+    .lightbox.visible .lightbox-img {
+      transform: scale(1);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,220,255,0.9);
+      background: radial-gradient(circle at 30% 0, #143048, #02060c 80%);
+      color: #c8f7ff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(0,200,255,0.9);
+    }
+
   </style>
 </head>
 
@@ -349,72 +419,73 @@
   <h1>PLANET ADMIN</h1>
   <div class="subtitle">NO MAN'S SKY • SHIP LOG • RECORD</div>
 
-  <!-- КАПИТАНСКА СНИМКА – КВАДРАТНА ПОД ЗАГЛАВИЕТО -->
-  <div class="captain-box" onclick="document.getElementById('avatarInput').click()">
+  <!-- КАПИТАН -->
+  <div class="captain-box">
     <div class="captain-frame">
-      <img id="captainImg" src="media/captain.png" alt="captain">
+      <img src="media/captain.png" alt="captain" id="captainImg">
     </div>
   </div>
-  <input type="file" id="avatarInput" accept="image/*">
 
-  <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
+  <form id="planetForm" onsubmit="savePlanet(event)">
 
-    <!-- PLANET INFO -->
-    <div><label>Planet</label><input id="name" type="text"></div>
-    <div><label>Galaxy</label><input id="galaxy" type="text"></div>
-    <div><label>System</label><input id="system" type="text"></div>
+    <!-- ОСНОВНИ ПОЛЕТА -->
+    <div class="grid-main">
+      <div><label>Planet</label><input id="name" type="text"></div>
+      <div><label>Galaxy</label><input id="galaxy" type="text"></div>
+      <div><label>System</label><input id="system" type="text"></div>
 
-    <div><label>Biome</label><input id="biome" type="text"></div>
-    <div><label>Weather</label><input id="weather" type="text"></div>
-    <div><label>Temperature</label><input id="temp" type="text"></div>
+      <div><label>Biome</label><input id="biome" type="text"></div>
+      <div><label>Weather</label><input id="weather" type="text"></div>
+      <div><label>Temperature</label><input id="temp" type="text"></div>
 
-    <div><label>Hazards</label><input id="hazard" type="text"></div>
-    <div><label>Sentinels</label><input id="sentinels" type="text"></div>
-    <div><label>Fauna Count</label><input id="fauna" type="text"></div>
+      <div><label>Main Hazards</label><input id="hazard" type="text"></div>
+      <div><label>Sentinels</label><input id="sentinels" type="text"></div>
+      <div><label>Fauna Count</label><input id="fauna" type="text"></div>
 
-    <div class="full"><label>Flora Count</label><input id="flora" type="text"></div>
-    <div class="full"><label>Resources (summary)</label><input id="resources" type="text"></div>
+      <div class="full"><label>Flora Count</label><input id="flora" type="text"></div>
 
-    <!-- DESCRIPTION -->
-    <div class="full">
-      <label>Description</label>
-      <textarea id="desc"></textarea>
+      <div class="full"><label>Resources (summary)</label><input id="resources" type="text"></div>
+
+      <div class="full">
+        <label>Description / Mission Log</label>
+        <textarea id="desc" placeholder="Какво намери, как мина мисията, бази, ресурси..."></textarea>
+      </div>
     </div>
 
     <!-- ANIMALS -->
     <div class="section-block">
       <div class="section-header">
         <div class="section-title">ANIMALS</div>
-        <button type="button" class="mini-btn" onclick="addCard('animalsList','Animal')">+ ADD ANIMAL</button>
+        <button type="button" class="pill-btn" onclick="addEntity('animal')">+ ADD ANIMAL</button>
       </div>
-      <div id="animalsList" class="cards-wrap"></div>
+      <div id="animalsList" class="entity-list"></div>
     </div>
 
     <!-- PLANTS -->
     <div class="section-block">
       <div class="section-header">
         <div class="section-title">PLANTS</div>
-        <button type="button" class="mini-btn" onclick="addCard('plantsList','Plant')">+ ADD PLANT</button>
+        <button type="button" class="pill-btn" onclick="addEntity('plant')">+ ADD PLANT</button>
       </div>
-      <div id="plantsList" class="cards-wrap"></div>
+      <div id="plantsList" class="entity-list"></div>
     </div>
 
     <!-- RESOURCES -->
     <div class="section-block">
       <div class="section-header">
         <div class="section-title">RESOURCES</div>
-        <button type="button" class="mini-btn" onclick="addCard('resourcesList','Resource')">+ ADD RESOURCE</button>
+        <button type="button" class="pill-btn" onclick="addEntity('resource')">+ ADD RESOURCE</button>
       </div>
-      <div id="resourcesList" class="cards-wrap"></div>
+      <div id="resourcesList" class="entity-list"></div>
     </div>
 
     <!-- HAZARDS -->
     <div class="section-block">
       <div class="section-header">
         <div class="section-title">HAZARDS</div>
-        <button type="button" class="mini-btn" onclick="addCard('hazardsList','Hazard')">+ ADD HAZARD</button>
+        <button type="button" class="pill-btn" onclick="addEntity('hazardDetail')">+ ADD HAZARD</button>
       </div>
-      <div id="hazardsList" class="cards-wrap"></div>
+      <div id="hazardsList" class="entity-list"></div>
     </div>
 
     <div class="btn-row">
@@ -424,6 +495,14 @@
     <div id="status" class="status"></div>
 
   </form>
+</div>
+
+<!-- LIGHTBOX ЗА СНИМКИ -->
+<div id="lightbox" class="lightbox">
+  <div class="lightbox-inner">
+    <button type="button" class="lightbox-close" onclick="closeLightbox()">×</button>
+    <img id="lightboxImg" class="lightbox-img" src="" alt="preview">
+  </div>
 </div>
 
 <script>
@@ -437,101 +516,169 @@
     window.location.href = "login.html";
   }
 
-  /* КАПИТАНСКИ АВАТАР СЪС ЗАПИС В localStorage */
-  const avatarInput = document.getElementById("avatarInput");
-  const captainImg = document.getElementById("captainImg");
-
-  const savedAvatar = localStorage.getItem("captainPortrait");
-  if (savedAvatar) captainImg.src = savedAvatar;
-
-  avatarInput.addEventListener("change", () => {
-    const file = avatarInput.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      captainImg.src = reader.result;
-      localStorage.setItem("captainPortrait", reader.result);
-    };
-    reader.readAsDataURL(file);
-  });
-
-  /* ГЛОБАЛНИ КОНСТАНТИ ЗА ПЛАНЕТИТЕ */
   const STORAGE_KEY = "nms_planets_archive_v1";
   const statusEl = document.getElementById("status");
   const planetForm = document.getElementById("planetForm");
 
+  const animalsListEl   = document.getElementById("animalsList");
+  const plantsListEl    = document.getElementById("plantsList");
+  const resListEl       = document.getElementById("resourcesList");
+  const hazardsListEl   = document.getElementById("hazardsList");
+
+  const lightboxEl      = document.getElementById("lightbox");
+  const lightboxImg     = document.getElementById("lightboxImg");
+
   function setStatus(msg, err = false) {
     statusEl.style.color = err ? "var(--danger)" : "var(--success)";
-    statusEl.textContent = msg;
+    statusEl.textContent = msg || "";
   }
 
-  /* ДИНАМИЧНИ КАРТИ ЗА ANIMALS / PLANTS / RESOURCES / HAZARDS */
+  // LIGHTBOX
+  function openLightbox(src) {
+    if (!src) return;
+    lightboxImg.src = src;
+    lightboxEl.classList.add("visible");
+  }
 
-  function addCard(containerId, typeLabel) {
-    const list = document.getElementById(containerId);
+  function closeLightbox() {
+    lightboxEl.classList.remove("visible");
+    // малко забавяне преди да изчистим src, за да не мига
+    setTimeout(() => { lightboxImg.src = ""; }, 220);
+  }
+
+  lightboxEl.addEventListener("click", (e) => {
+    if (e.target === lightboxEl) {
+      closeLightbox();
+    }
+  });
+
+  // компресия на снимките (използваме я за всички mini-карти)
+  function compressImage(file, maxW, quality = 0.8) {
+    return new Promise(resolve => {
+      const img = new Image();
+      const reader = new FileReader();
+
+      reader.onload = e => { img.src = e.target.result; };
+      reader.readAsDataURL(file);
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const scale = maxW / img.width;
+        canvas.width = maxW;
+        canvas.height = img.height * scale;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+    });
+  }
+
+  // Създаване на един блок (animal / plant / resource / hazardDetail)
+  function addEntity(type) {
+    let listEl;
+    let label;
+
+    switch (type) {
+      case "animal":
+        listEl = animalsListEl;
+        label = "ANIMAL";
+        break;
+      case "plant":
+        listEl = plantsListEl;
+        label = "PLANT";
+        break;
+      case "resource":
+        listEl = resListEl;
+        label = "RESOURCE";
+        break;
+      case "hazardDetail":
+        listEl = hazardsListEl;
+        label = "HAZARD";
+        break;
+      default:
+        return;
+    }
+
+    const index = listEl.querySelectorAll(".entity-card").length + 1;
+
     const card = document.createElement("div");
-    card.className = "entry-card";
+    card.className = "entity-card";
+    card.dataset.type = type;
+    card.dataset.image = "";
 
     card.innerHTML = `
-      <div class="entry-thumb" data-image="">
-        <span class="thumb-placeholder">ADD IMAGE</span>
-        <img alt="">
-        <input type="file" class="entry-file" accept="image/*" style="display:none;">
+      <div class="entity-title">${label} #${index}</div>
+      <div class="entity-photo-box">
+        <div class="entity-photo-placeholder">CLICK TO ADD PHOTO</div>
       </div>
-      <div class="entry-fields">
-        <input type="text" class="entry-name" placeholder="${typeLabel} name">
-        <textarea class="entry-desc" placeholder="Description"></textarea>
+      <div class="entity-main">
+        <input type="text" class="entity-name" placeholder="${label} NAME">
+        <textarea class="entity-notes" placeholder="${label} NOTES / DESCRIPTION"></textarea>
       </div>
-      <button type="button" class="remove-btn">REMOVE</button>
+      <button type="button" class="entity-remove">REMOVE</button>
+      <input type="file" accept="image/*" class="entity-file" style="display:none">
     `;
 
-    const thumb = card.querySelector(".entry-thumb");
-    const img = card.querySelector("img");
-    const fileInput = card.querySelector(".entry-file");
-    const placeholder = card.querySelector(".thumb-placeholder");
-    const removeBtn = card.querySelector(".remove-btn");
+    // hook-и
+    const photoBox = card.querySelector(".entity-photo-box");
+    const fileInput = card.querySelector(".entity-file");
+    const removeBtn = card.querySelector(".entity-remove");
 
-    thumb.addEventListener("click", () => fileInput.click());
+    // клик по снимката – ако няма – отваря file; ако има – lightbox
+    photoBox.addEventListener("click", () => {
+      const current = card.dataset.image;
+      if (!current) {
+        fileInput.click();
+      } else {
+        openLightbox(current);
+      }
+    });
 
-    fileInput.addEventListener("change", () => {
-      const file = fileInput.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        img.src = reader.result;
-        img.style.display = "block";
-        if (placeholder) placeholder.style.display = "none";
-        thumb.dataset.image = reader.result;
-      };
-      reader.readAsDataURL(file);
+    fileInput.addEventListener("change", async function () {
+      if (!this.files || !this.files[0]) return;
+      const file = this.files[0];
+      const compressed = await compressImage(file, 700, 0.8);
+      card.dataset.image = compressed;
+
+      photoBox.innerHTML = `<img src="${compressed}" alt="">`;
     });
 
     removeBtn.addEventListener("click", () => {
       card.remove();
+      // преподреждаме номерата в секцията
+      renumberEntities(listEl, label);
     });
 
-    list.appendChild(card);
+    listEl.appendChild(card);
   }
 
-  function collectEntries(containerId) {
-    const list = document.getElementById(containerId);
-    const cards = list.querySelectorAll(".entry-card");
-    const result = [];
+  function renumberEntities(listEl, label) {
+    const cards = listEl.querySelectorAll(".entity-card");
+    cards.forEach((card, idx) => {
+      const t = card.querySelector(".entity-title");
+      if (t) t.textContent = `${label} #${idx + 1}`;
+    });
+  }
+
+  // Събиране на данните от секциите при SAVE
+  function collectEntities(listEl) {
+    const cards = listEl.querySelectorAll(".entity-card");
+    const out = [];
     cards.forEach(card => {
-      const nameEl = card.querySelector(".entry-name");
-      const descEl = card.querySelector(".entry-desc");
-      const thumb = card.querySelector(".entry-thumb");
-      const name = nameEl ? nameEl.value.trim() : "";
-      const desc = descEl ? descEl.value.trim() : "";
-      const image = thumb ? (thumb.dataset.image || "") : "";
-      if (name || desc || image) {
-        result.push({ name, desc, image });
-      }
+      const nameInput  = card.querySelector(".entity-name");
+      const notesInput = card.querySelector(".entity-notes");
+      out.push({
+        name:  (nameInput?.value || "").trim(),
+        desc:  (notesInput?.value || "").trim(),
+        image: card.dataset.image || null
+      });
     });
-    return result;
+    return out;
   }
 
-  /* SAVE PLANET */
+  // SAVE ENTRY
   function savePlanet(e) {
     e.preventDefault();
 
@@ -557,10 +704,10 @@
       flora: flora.value.trim(),
       resources: resources.value.trim(),
       desc: desc.value.trim(),
-      animals: collectEntries("animalsList"),
-      plants: collectEntries("plantsList"),
-      resourcesDetails: collectEntries("resourcesList"),
-      hazards: collectEntries("hazardsList"),
+      animals:   collectEntities(animalsListEl),
+      plants:    collectEntities(plantsListEl),
+      resourcesDetailed: collectEntities(resListEl),
+      hazardsDetailed:   collectEntities(hazardsListEl),
       createdAt: new Date().toISOString()
     };
 
@@ -574,17 +721,16 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       setStatus("Saved ✔");
-    } catch {
+    } catch (err) {
       setStatus("SAVE ERROR!", true);
       return;
     }
 
     planetForm.reset();
-    // не чистим капитанската снимка, тя е отделна
-    document.getElementById("animalsList").innerHTML = "";
-    document.getElementById("plantsList").innerHTML = "";
-    document.getElementById("resourcesList").innerHTML = "";
-    document.getElementById("hazardsList").innerHTML = "";
+    animalsListEl.innerHTML = "";
+    plantsListEl.innerHTML = "";
+    resListEl.innerHTML = "";
+    hazardsListEl.innerHTML = "";
   }
 </script>
 
