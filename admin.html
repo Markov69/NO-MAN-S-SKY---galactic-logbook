@@ -75,7 +75,7 @@
       margin-bottom: 10px;
     }
 
-    /* CAPTAIN */
+    /* CAPTAIN – квадратна снимка + бутони */
     .captain-box {
       width: 150px;
       margin: 6px auto 24px auto;
@@ -121,7 +121,7 @@
       color: #ffb0b0;
     }
 
-    /* GRID FORM */
+    /* GRID FORM – горната част с основните полета */
     .grid-top {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -164,7 +164,24 @@
       border-color: #ffffff;
     }
 
-    /* SECTION HEADERS */
+    /* LOGOUT */
+    .logout-btn {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,120,120,0.8);
+      background: rgba(40,0,0,0.8);
+      color: #ffc9c9;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      z-index: 4;
+    }
+
+    /* SECTION HEADERS (Animals / Plants / Resources / Hazards) */
     .section-block {
       margin-top: 12px;
       border-radius: 18px;
@@ -264,23 +281,16 @@
       justify-content: flex-start;
     }
 
-    .btn-entry-upload,
     .btn-entry-remove {
       padding: 6px 8px;
       font-size: 9px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
       border-radius: 999px;
-      border: 1px solid rgba(0,200,255,0.7);
-      background: rgba(0,18,40,0.9);
-      color: #7fe9ff;
-      cursor: pointer;
-    }
-
-    .btn-entry-remove {
-      border-color: rgba(255,90,90,0.9);
+      border: 1px solid rgba(255,90,90,0.9);
       background: rgba(40,0,0,0.9);
       color: #ffc3c3;
+      cursor: pointer;
     }
 
     /* PLANET PHOTOS */
@@ -307,6 +317,7 @@
       border-radius: 9px;
       border: 1px solid cyan;
       box-shadow: 0 0 10px cyan;
+      cursor: pointer;
     }
 
     .photo-thumb img {
@@ -341,7 +352,7 @@
       min-height: 18px;
     }
 
-    /* LIGHTBOX */
+    /* LIGHTBOX за zoom на картинките */
     .lightbox {
       position: fixed;
       inset: 0;
@@ -387,6 +398,9 @@
 <body>
 
 <div class="panel">
+
+  <button class="logout-btn" onclick="logout()">LOG OUT</button>
+
   <h1>PLANET ADMIN</h1>
   <div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG • FULL PLANET RECORD</div>
 
@@ -398,7 +412,7 @@
 
     <input type="file" id="captainUpload" accept="image/*" style="display:none;">
 
-    <button class="btn-captain" type="button" onclick="document.getElementById('captainUpload').click()">
+    <button class="btn-captain" onclick="document.getElementById('captainUpload').click()">
       CHANGE CAPTAIN PHOTO
     </button>
 
@@ -477,7 +491,9 @@
         <button type="button" class="btn-chip" onclick="addEntryCard('animalsList')">+ ADD ANIMAL</button>
       </div>
 
-      <div class="cards-wrap" id="animalsList"></div>
+      <div class="cards-wrap" id="animalsList">
+        <!-- cards -->
+      </div>
     </div>
 
     <!-- PLANTS -->
@@ -490,7 +506,8 @@
         <button type="button" class="btn-chip" onclick="addEntryCard('plantsList')">+ ADD PLANT</button>
       </div>
 
-      <div class="cards-wrap" id="plantsList"></div>
+      <div class="cards-wrap" id="plantsList">
+      </div>
     </div>
 
     <!-- RESOURCES -->
@@ -503,7 +520,8 @@
         <button type="button" class="btn-chip" onclick="addEntryCard('resourcesList')">+ ADD RESOURCE</button>
       </div>
 
-      <div class="cards-wrap" id="resourcesList"></div>
+      <div class="cards-wrap" id="resourcesList">
+      </div>
     </div>
 
     <!-- HAZARDS -->
@@ -516,11 +534,12 @@
         <button type="button" class="btn-chip" onclick="addEntryCard('hazardsList')">+ ADD HAZARD</button>
       </div>
 
-      <div class="cards-wrap" id="hazardsList"></div>
+      <div class="cards-wrap" id="hazardsList">
+      </div>
     </div>
 
     <!-- PLANET PHOTOS -->
-    <div class="planet-photos-label">PLANET JOURNAL PHOTOS (CLICK TO CHOOSE JPG/PNG)</div>
+    <div class="planet-photos-label">PLANET JOURNAL PHOTOS (CLICK SQUARES TO ADD / ZOOM)</div>
     <input type="file" id="photos" accept="image/*" multiple>
 
     <div id="photoPreview" class="photo-preview-wrap"></div>
@@ -539,12 +558,20 @@
 </div>
 
 <script>
+  // --- LOGIN GUARD ---
+  if (localStorage.getItem("isAdmin") !== "true") {
+    window.location.href = "login.html";
+  }
+
+  function logout() {
+    localStorage.removeItem("isAdmin");
+    window.location.href = "login.html";
+  }
+
   const STORAGE_KEY = "nms_planets_archive_v1";
   const statusEl = document.getElementById("status");
   const photoPreview = document.getElementById("photoPreview");
   const planetForm = document.getElementById("planetForm");
-
-  let planetImages = []; // снимките за планетата
 
   function setStatus(msg, err = false) {
     statusEl.style.color = err ? "var(--danger)" : "var(--success)";
@@ -600,52 +627,70 @@
     });
   }
 
-  // ---------- PLANET PHOTOS PREVIEW ----------
+  // ---------- PLANET PHOTOS PREVIEW + CLICK / ZOOM ----------
   document.getElementById("photos").addEventListener("change", async function () {
     photoPreview.innerHTML = "";
-    planetImages = [];
-
     for (let file of this.files) {
       const dataUrl = await compressImage(file, 700, 0.7);
-      planetImages.push(dataUrl);
-
       const div = document.createElement("div");
       div.className = "photo-thumb";
-      div.innerHTML = '<img src="' + dataUrl + '" alt="">';
+      const img = document.createElement("img");
+      img.src = dataUrl;
+      div.appendChild(img);
+
+      // клик за zoom
+      div.addEventListener("click", () => {
+        openLightboxWithSrc(dataUrl);
+      });
+
       photoPreview.appendChild(div);
     }
   });
 
-  // ---------- GENERIC ENTRY CARD ----------
+  // ---------- GENERIC ENTRY CARD (Animals/Plants/Resources/Hazards) ----------
   function addEntryCard(listId) {
     const list = document.getElementById(listId);
 
     const card = document.createElement("div");
     card.className = "entry-card";
-    card.dataset.img = "";
+    card.dataset.img = ""; // base64 тук
 
     const imgId = "img_" + Math.random().toString(36).slice(2);
     const fileId = "file_" + Math.random().toString(36).slice(2);
 
-    card.innerHTML =
-      '<div class="entry-thumb" onclick="openLightboxFromThumb(\'' + imgId + '\')">' +
-        '<img id="' + imgId + '" src="media/captain.png" alt="">' +
-      '</div>' +
-      '<div class="entry-main">' +
-        '<input type="text" class="entry-name" placeholder="Name / Type">' +
-        '<textarea class="entry-desc" placeholder="Short description, behaviour, where you saw it..."></textarea>' +
-      '</div>' +
-      '<div class="entry-actions">' +
-        '<input type="file" id="' + fileId + '" accept="image/*" style="display:none;">' +
-        '<button type="button" class="btn-entry-upload" onclick="document.getElementById(\'' + fileId + '\').click()">Upload</button>' +
-        '<button type="button" class="btn-entry-remove" onclick="this.closest(\'.entry-card\').remove()">Remove</button>' +
-      '</div>';
+    card.innerHTML = `
+      <div class="entry-thumb" data-img-id="${imgId}" data-file-id="${fileId}">
+        <img id="${imgId}" src="media/captain.png" alt="">
+      </div>
+      <div class="entry-main">
+        <input type="text" class="entry-name" placeholder="Name / Type">
+        <textarea class="entry-desc" placeholder="Short description, behaviour, where you saw it..."></textarea>
+      </div>
+      <div class="entry-actions">
+        <input type="file" id="${fileId}" accept="image/*" style="display:none;">
+        <button type="button" class="btn-entry-remove">Remove</button>
+      </div>
+    `;
 
     list.appendChild(card);
 
     const fileInput = card.querySelector("#" + fileId);
     const imgEl = card.querySelector("#" + imgId);
+    const thumb = card.querySelector(".entry-thumb");
+    const removeBtn = card.querySelector(".btn-entry-remove");
 
+    // клик на квадрата -> upload
+    thumb.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    // двойно кликване -> zoom
+    thumb.addEventListener("dblclick", (ev) => {
+      ev.stopPropagation();
+      openLightboxWithSrc(imgEl.src);
+    });
+
+    // upload
     fileInput.addEventListener("change", async function () {
       const file = this.files[0];
       if (!file) return;
@@ -653,16 +698,19 @@
       imgEl.src = dataUrl;
       card.dataset.img = dataUrl;
     });
+
+    // remove card
+    removeBtn.addEventListener("click", () => {
+      card.remove();
+    });
   }
 
   // ---------- LIGHTBOX ----------
   const lightbox = document.getElementById("lightbox");
   const lightboxImg = document.getElementById("lightboxImg");
 
-  function openLightboxFromThumb(imgId) {
-    const img = document.getElementById(imgId);
-    if (!img) return;
-    lightboxImg.src = img.src;
+  function openLightboxWithSrc(src) {
+    lightboxImg.src = src;
     lightbox.style.display = "flex";
   }
 
@@ -676,12 +724,12 @@
     const list = document.getElementById(listId);
     const cards = list.querySelectorAll(".entry-card");
     const result = [];
-    cards.forEach(function(card) {
+    cards.forEach(card => {
       const name = card.querySelector(".entry-name").value.trim();
       const desc = card.querySelector(".entry-desc").value.trim();
       const img = card.dataset.img || card.querySelector(".entry-thumb img").src || "";
       if (!name && !desc && !img) return;
-      result.push({ name: name, desc: desc, img: img });
+      result.push({ name, desc, img });
     });
     return result;
   }
@@ -692,29 +740,32 @@
     let list = [];
     try {
       list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    } catch (err) {
+    } catch {
       setStatus("Storage corrupt!", true);
       return;
     }
 
+    // planet-level photos (малките в долния preview)
+    const planetImages = Array.from(photoPreview.querySelectorAll("img")).map(img => img.src);
+
     const p = {
       id: Date.now(),
-      name: document.getElementById("name").value.trim(),
-      galaxy: document.getElementById("galaxy").value.trim(),
-      system: document.getElementById("system").value.trim(),
-      biome: document.getElementById("biome").value.trim(),
-      weather: document.getElementById("weather").value.trim(),
-      temp: document.getElementById("temp").value.trim(),
-      hazard: document.getElementById("hazard").value.trim(),
-      floraCount: document.getElementById("floraCount").value.trim(),
-      faunaCount: document.getElementById("faunaCount").value.trim(),
-      resourcesSummary: document.getElementById("resourcesSummary").value.trim(),
-      desc: document.getElementById("desc").value.trim(),
+      name: name.value.trim(),
+      galaxy: galaxy.value.trim(),
+      system: system.value.trim(),
+      biome: biome.value.trim(),
+      weather: weather.value.trim(),
+      temp: temp.value.trim(),
+      hazard: hazard.value.trim(),
+      floraCount: floraCount.value.trim(),
+      faunaCount: faunaCount.value.trim(),
+      resourcesSummary: resourcesSummary.value.trim(),
+      desc: desc.value.trim(),
       animals: collectEntries("animalsList"),
       plants: collectEntries("plantsList"),
       resourcesDetailed: collectEntries("resourcesList"),
       hazardsDetailed: collectEntries("hazardsList"),
-      images: planetImages.slice(),
+      images: planetImages,
       createdAt: new Date().toISOString()
     };
 
@@ -728,13 +779,12 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       setStatus("Saved ✔");
-    } catch (err2) {
+    } catch (err) {
       setStatus("SAVE ERROR!", true);
       return;
     }
 
     planetForm.reset();
-    planetImages = [];
     photoPreview.innerHTML = "";
     document.getElementById("animalsList").innerHTML = "";
     document.getElementById("plantsList").innerHTML = "";
