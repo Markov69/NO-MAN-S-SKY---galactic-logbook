@@ -43,7 +43,7 @@
       box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
       padding: 26px 26px 22px;
       position: relative;
-      margin-top: 70px;
+      margin-top: 100px; /* освободено място за капитана */
     }
 
     .panel::before {
@@ -55,16 +55,15 @@
       pointer-events: none;
     }
 
-    /* *************** CAPTAIN FIX – НОВ КОД *************** */
-
+    /* КАПИТАН – НОВО ПОЗИЦИОНИРАНЕ */
     .captain-wrapper {
+      position: absolute;
+      top: -90px;
+      left: 0;
       width: 100%;
       display: flex;
       justify-content: center;
-      position: absolute;
-      top: -70px;
-      left: 0;
-      z-index: 10;
+      z-index: 20;
     }
 
     .captain-frame {
@@ -73,11 +72,8 @@
       border-radius: 14px;
       border: 2px solid rgba(0,200,255,0.9);
       box-shadow: 0 0 22px rgba(0,200,255,0.8);
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       overflow: hidden;
+      background: black;
     }
 
     .captain-avatar {
@@ -86,10 +82,8 @@
       object-fit: cover;
     }
 
-    /* ******************************************************* */
-
     h1 {
-      margin: 40px 0 6px;
+      margin: 0 0 6px;
       font-size: 22px;
       letter-spacing: 0.26em;
       text-transform: uppercase;
@@ -137,6 +131,7 @@
     }
 
     textarea { min-height: 80px; resize: vertical; }
+
     .full { grid-column: 1 / -1; }
 
     .logout-btn {
@@ -152,7 +147,7 @@
       letter-spacing: 0.18em;
       text-transform: uppercase;
       cursor: pointer;
-      z-index: 15;
+      z-index: 50;
     }
 
     .btn-row { grid-column: 1 / -1; text-align: center; margin-top: 14px; }
@@ -177,26 +172,40 @@
       min-height: 18px;
     }
 
-    .photo-preview-wrap { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+    .photo-preview-wrap {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
     .photo-thumb {
-      width: 80px; height: 60px;
+      width: 80px;
+      height: 60px;
       overflow: hidden;
       border-radius: 10px;
       border: 1px solid cyan;
       box-shadow: 0 0 10px cyan;
     }
-    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
   </style>
 </head>
 
 <body>
+
 <div class="panel">
 
-  <!-- NEW CAPTAIN SYSTEM -->
+  <!-- НОВО: капитанът стои над формата -->
   <div class="captain-wrapper">
     <div class="captain-frame">
-      <img class="captain-avatar" id="captainImg" src="media/captain.png" alt="captain">
+      <img class="captain-avatar" src="media/captain.png" alt="Captain">
     </div>
   </div>
 
@@ -223,7 +232,10 @@
 
     <div class="full"><label>Description</label><textarea id="desc"></textarea></div>
 
-    <div class="full"><label>Photos</label><input type="file" id="photos" accept="image/*" multiple></div>
+    <div class="full">
+      <label>Photos</label>
+      <input type="file" id="photos" accept="image/*" multiple>
+    </div>
 
     <div id="photoPreview" class="photo-preview-wrap"></div>
 
@@ -270,7 +282,6 @@ document.getElementById("photos").addEventListener("change", async function () {
   }
 });
 
-// IMG COMPRESSOR
 function compressImage(file, maxW, quality = 0.8) {
   return new Promise(resolve => {
     const img = new Image();
@@ -289,7 +300,6 @@ function compressImage(file, maxW, quality = 0.8) {
   });
 }
 
-// SAVE ENTRY
 function savePlanet(e) {
   e.preventDefault();
 
