@@ -1,361 +1,224 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <title>NMS Logbook • Planet Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>NMS Logbook • Planet Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --bg: #020513;
-      --panel: rgba(4, 12, 30, 0.96);
-      --border: rgba(0, 200, 255, 0.7);
-      --accent: #4cd8ff;
-      --text: #e5f8ff;
-      --danger: #ff8080;
-      --success: #9effc0;
-    }
+<style>
+:root{
+  --bg:#020513;--panel:rgba(4,12,30,0.96);--border:rgba(0,200,255,0.7);
+  --accent:#4cd8ff;--text:#e5f8ff;--danger:#ff8080;--success:#9effc0;
+}
+body{
+  margin:0;min-height:100vh;font-family:"Orbitron";
+  background:radial-gradient(circle at 0 0,#172747,transparent 60%),
+  radial-gradient(circle at 100% 100%,#061024,transparent 55%),var(--bg);
+  color:var(--text);display:flex;justify-content:center;align-items:flex-start;padding:40px 8px;
+}
+.panel{
+  width:min(1080px,100%);background:var(--panel);border-radius:26px;border:1px solid var(--border);
+  box-shadow:0 0 34px rgba(0,200,255,0.45);padding:26px;position:relative;
+}
+h1{
+  text-align:center;font-size:22px;letter-spacing:.25em;color:var(--accent);
+  margin-bottom:6px;text-transform:uppercase;
+}
+.subtitle{text-align:center;font-size:11px;letter-spacing:.18em;margin-bottom:20px;}
 
-    * { box-sizing: border-box; }
+.logout-btn{
+  position:absolute;top:14px;right:18px;padding:6px 18px;border-radius:999px;
+  border:1px solid rgba(255,120,120,.8);background:rgba(40,0,0,.8);cursor:pointer;
+  color:#ffc9c9;font-size:10px;letter-spacing:.18em;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Orbitron", system-ui, sans-serif;
-      background:
-        radial-gradient(circle at 0 0, #172747, transparent 60%),
-        radial-gradient(circle at 100% 100%, #061024, transparent 55%),
-        var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 24px 8px;
-    }
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 18px;}
+label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px;}
+input,textarea{
+  width:100%;padding:8px 10px;border-radius:10px;border:1px solid rgba(71,194,255,.7);
+  background:rgba(3,10,30,.9);color:var(--text);font-size:12px;
+}
+textarea{min-height:80px;}
 
-    .panel {
-      width: min(1080px, 100%);
-      background: var(--panel);
-      border-radius: 26px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
-      padding: 40px 26px 22px;
-      position: relative;
-    }
+.full{grid-column:1/-1;}
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 22px;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-align: center;
-    }
+.btn-primary{
+  margin-top:10px;padding:14px 46px;border-radius:999px;border:2px solid rgba(71,194,255,.8);
+  background:#0c213c;color:#34d2ff;font-size:11px;letter-spacing:.25em;cursor:pointer;
+}
+.status{text-align:center;font-size:11px;min-height:16px;margin-top:6px;}
 
-    .subtitle {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      color: rgba(200,220,255,0.7);
-    }
+.photo-preview-wrap{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.photo-thumb{width:80px;height:80px;border-radius:12px;overflow:hidden;border:1px solid cyan;}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;}
 
-    /* CAPTAIN PORTRAIT */
-    .captain-box {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 110px;
-      text-align: center;
-    }
+.captain-box{
+  position:absolute;top:60px;right:20px;width:120px;text-align:center;
+}
+.captain-title{
+  font-size:10px;letter-spacing:.18em;color:#aee;text-transform:uppercase;margin-bottom:6px;
+}
 
-    .captain-title {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      color: rgba(200,220,255,0.7);
-    }
-
-    .captain-avatar {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      object-fit: cover;
-      box-shadow: 0 0 14px var(--accent);
-    }
-
-    .logout-btn {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      padding: 6px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,120,120,0.8);
-      background: rgba(40,0,0,0.8);
-      color: #ffc9c9;
-      cursor: pointer;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px 18px;
-      margin-top: 30px;
-    }
-
-    label {
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    input[type="text"], textarea {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(71,194,255,0.7);
-      background: rgba(3,10,30,0.9);
-      color: var(--text);
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    .full { grid-column: 1 / -1; }
-
-    .btn-primary {
-      padding: 12px 40px;
-      border-radius: 999px;
-      border: 2px solid rgba(71,194,255,0.8);
-      background: #061020;
-      color: var(--accent);
-      cursor: pointer;
-      letter-spacing: 0.2em;
-    }
-
-    .status {
-      text-align: center;
-      margin-top: 10px;
-      min-height: 14px;
-      font-size: 11px;
-    }
-
-    /* Photo preview */
-    .photo-preview-wrap {
-      grid-column: 1 / -1;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .photo-thumb {
-      width: 90px;
-      height: 70px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--accent);
-      box-shadow: 0 0 10px var(--accent);
-      position: relative;
-    }
-
-    .photo-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  </style>
+.captain-avatar{
+  width:90px;height:90px;border-radius:50%;border:2px solid cyan;object-fit:cover;
+  background:#000;
+}
+</style>
 </head>
 
 <body>
 <div class="panel">
 
-  <button class="logout-btn" onclick="logout()">LOG OUT</button>
+<button class="logout-btn" onclick="logout()">LOG OUT</button>
 
-  <div class="captain-box">
-    <div class="captain-title">CAPTAIN PROFILE</div>
+<div class="captain-box">
+  <div class="captain-title">CAPTAIN PROFILE</div>
+  <img id="captainAvatar" class="captain-avatar" src="" alt="Captain">
+  <input id="captainInput" type="file" accept="image/*">
+</div>
 
-    <!-- СНИМКА 256x256 JPG -->
-    <img class="captain-avatar" src="https://i.imgur.com/3G3Q2Qp.jpg" alt="Captain">
-  </div>
+<h1>PLANET ADMIN</h1>
+<div class="subtitle">NO MAN'S SKY — PERSONAL SHIP LOG — PLANET DATABASE</div>
 
-  <h1>PLANET ADMIN</h1>
-  <div class="subtitle">NO MAN'S SKY • PERSONAL LOG</div>
+<form id="planetForm" class="grid" onsubmit="savePlanet(event)">
 
-  <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
-    
-    <div>
-      <label>PLANET NAME</label>
-      <input type="text" id="name" required>
-    </div>
+  <div><label>PLANET NAME</label><input id="name" required></div>
+  <div><label>GALAXY</label><input id="galaxy"></div>
+  <div><label>STAR SYSTEM</label><input id="system"></div>
 
-    <div>
-      <label>GALAXY</label>
-      <input type="text" id="galaxy">
-    </div>
+  <div><label>BIOME</label><input id="biome"></div>
+  <div><label>WEATHER</label><input id="weather"></div>
+  <div><label>TEMP RANGE</label><input id="temp"></div>
 
-    <div>
-      <label>STAR SYSTEM</label>
-      <input type="text" id="system">
-    </div>
+  <div><label>HAZARDS</label><input id="hazard"></div>
+  <div><label>SENTINELS</label><input id="sentinels"></div>
+  <div><label>FAUNA</label><input id="fauna"></div>
 
-    <div>
-      <label>BIOME</label>
-      <input type="text" id="biome">
-    </div>
+  <div><label>FLORA</label><input id="flora"></div>
+  <div class="full"><label>RESOURCES</label><input id="resources"></div>
 
-    <div>
-      <label>WEATHER</label>
-      <input type="text" id="weather">
-    </div>
+  <div class="full"><label>STORY / NOTES</label><textarea id="desc"></textarea></div>
 
-    <div>
-      <label>TEMPERATURE</label>
-      <input type="text" id="temp">
-    </div>
+  <div class="full"><label>PLANET PHOTOS</label><input type="file" id="photos" accept="image/*" multiple></div>
 
-    <div>
-      <label>HAZARDS</label>
-      <input type="text" id="hazard">
-    </div>
+  <div id="photoPreview" class="photo-preview-wrap"></div>
 
-    <div>
-      <label>SENTINELS</label>
-      <input type="text" id="sentinels">
-    </div>
+  <div class="full" style="text-align:center;"><button class="btn-primary" type="submit">SAVE ENTRY</button></div>
 
-    <div>
-      <label>FAUNA</label>
-      <input type="text" id="fauna">
-    </div>
+  <div id="status" class="status"></div>
+</form>
 
-    <div class="full">
-      <label>FLORA</label>
-      <input type="text" id="flora">
-    </div>
-
-    <div class="full">
-      <label>KEY RESOURCES</label>
-      <input type="text" id="resources">
-    </div>
-
-    <div class="full">
-      <label>DESCRIPTION</label>
-      <textarea id="desc"></textarea>
-    </div>
-
-    <div class="full">
-      <label>PHOTOS</label>
-      <input type="file" id="photos" accept="image/*" multiple>
-    </div>
-
-    <div id="photoPreview" class="photo-preview-wrap"></div>
-
-    <div class="full" style="text-align:center;">
-      <button class="btn-primary">SAVE PLANET ENTRY</button>
-    </div>
-
-    <div id="status" class="status"></div>
-
-  </form>
 </div>
 
 <script>
-if (localStorage.getItem("isAdmin") !== "true") {
-  window.location.href = "login.html";
+// -------------------------
+// LOGIN PROTECT
+// -------------------------
+if(localStorage.getItem("isAdmin")!=="true"){
+  window.location.href="login.html";
 }
 
-function logout() {
+function logout(){
   localStorage.removeItem("isAdmin");
-  window.location.href = "login.html";
+  window.location.href="login.html";
 }
 
-const STORAGE_KEY = "nms_planets_archive_v1";
-let currentImages = [];
+// -------------------------
+// IMAGE COMPRESSOR
+// -------------------------
+function compressImage(file,maxSize=320){
+  return new Promise(resolve=>{
+    const img=new Image();
+    const reader=new FileReader();
+    reader.onload=e=>{
+      img.src=e.target.result;
+      img.onload=()=>{
+        const canvas=document.createElement("canvas");
+        const ctx=canvas.getContext("2d");
 
-/* Compress image to max 300 KB */
-function compressImage(file, maxKB = 300) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+        let w=img.width, h=img.height;
 
-        const scale = Math.sqrt(maxKB * 1024 / file.size);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
+        const scale=maxSize/Math.max(w,h);
+        w*=scale; h*=scale;
 
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg", 0.85));
+        canvas.width=w; canvas.height=h;
+        ctx.drawImage(img,0,0,w,h);
+
+        resolve(canvas.toDataURL("image/jpeg",0.75));
       };
-      img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   });
 }
 
-/* Preview & compress */
-photosInput = document.getElementById("photos");
-photoPreview = document.getElementById("photoPreview");
-photosInput.addEventListener("change", async function () {
+// ---------------------------
+// CAPTAIN IMAGE UPLOAD
+// ---------------------------
+const captainInput=document.getElementById("captainInput");
+const captainAvatar=document.getElementById("captainAvatar");
 
-  currentImages = [];
-  photoPreview.innerHTML = "";
+captainInput.addEventListener("change",async()=>{
+  const file=captainInput.files[0];
+  if(!file)return;
+  const small=await compressImage(file,220);
+  captainAvatar.src=small;
+});
 
-  for (const file of this.files) {
-    if (!file.type.startsWith("image/")) continue;
+// ---------------------------
+// PLANET PHOTOS
+// ---------------------------
+const photos=document.getElementById("photos");
+const preview=document.getElementById("photoPreview");
+let planetImages=[];
 
-    const compressed = await compressImage(file);
-    currentImages.push(compressed);
-
-    const box = document.createElement("div");
-    box.className = "photo-thumb";
-    box.innerHTML = `<img src="${compressed}">`;
-    photoPreview.appendChild(box);
+photos.addEventListener("change",async()=>{
+  preview.innerHTML="";
+  planetImages=[];
+  for(const file of photos.files){
+    const small=await compressImage(file,320);
+    planetImages.push(small);
+    const box=document.createElement("div");
+    box.className="photo-thumb";
+    box.innerHTML=`<img src="${small}">`;
+    preview.appendChild(box);
   }
 });
 
-/* Save */
-function savePlanet(e) {
+// ---------------------------
+// SAVE PLANET
+// ---------------------------
+function savePlanet(e){
   e.preventDefault();
 
-  let list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  const key="nms_planets_archive_v1";
+  let arr=JSON.parse(localStorage.getItem(key) || "[]");
 
-  const p = {
-    id: Date.now(),
-    name: name.value.trim(),
-    galaxy: galaxy.value.trim(),
-    system: system.value.trim(),
-    biome: biome.value.trim(),
-    weather: weather.value.trim(),
-    temp: temp.value.trim(),
-    hazard: hazard.value.trim(),
-    sentinels: sentinels.value.trim(),
-    fauna: fauna.value.trim(),
-    flora: flora.value.trim(),
-    resources: resources.value.trim(),
-    desc: desc.value.trim(),
-    images: currentImages,
-    createdAt: new Date().toISOString()
+  const entry={
+    id:Date.now(),
+    name:name.value,
+    galaxy:galaxy.value,
+    system:system.value,
+    biome:biome.value,
+    weather:weather.value,
+    temp:temp.value,
+    hazard:hazard.value,
+    sentinels:sentinels.value,
+    fauna:fauna.value,
+    flora:flora.value,
+    resources:resources.value,
+    desc:desc.value,
+    images:planetImages,
+    captain:captainAvatar.src,
+    createdAt:new Date().toISOString()
   };
 
-  list.push(p);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  arr.push(entry);
+  localStorage.setItem(key,JSON.stringify(arr));
 
-  document.getElementById("status").textContent = "УСПЕШНО ЗАПАЗЕНО ✔";
-  document.getElementById("planetForm").reset();
-  photoPreview.innerHTML = "";
-  currentImages = [];
+  status.textContent="✔ ЗАПАЗЕНО УСПЕШНО!";
+  status.style.color="var(--success)";
 }
 </script>
 
