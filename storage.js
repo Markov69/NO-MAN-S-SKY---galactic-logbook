@@ -1,25 +1,31 @@
-// Netlify Blobs API Wrapper
-// This file must be loaded as a module via <script type="module">
+// storage.js — FINAL
 
-// SAVE FILE TO BLOB STORAGE
-export async function saveBlob(path, content){
-    const r = await fetch(`/blob/${path}`, {
-        method: "PUT",
-        body: content
-    });
-    if (!r.ok) throw new Error("Blob save failed: " + r.status);
+const STORAGE_KEY = "nms_planets_archive_v1";
+
+// Взима планети
+function loadPlanets() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  } catch (e) {
+    console.error("LocalStorage ERROR:", e);
+    return [];
+  }
 }
 
-// READ FILE
-export async function readBlob(path){
-    const r = await fetch(`/blob/${path}`);
-    if (!r.ok) throw new Error("Blob read failed: " + r.status);
-    return await r.text();
+// Записва масива
+function savePlanets(arr) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    return true;
+  } catch (e) {
+    console.error("SAVE ERROR:", e);
+    return false;
+  }
 }
 
-// LIST FILES BY PREFIX
-export async function listBlobs(prefix){
-    const r = await fetch(`/blob/list?prefix=${prefix}`);
-    if (!r.ok) throw new Error("Blob list failed: " + r.status);
-    return await r.json();
+// Добавя една планета
+function addPlanet(entry) {
+  const list = loadPlanets();
+  list.push(entry);
+  return savePlanets(list);
 }
