@@ -1,184 +1,365 @@
+Skip to content
+Navigation Menu
+Markov69
+NO-MAN-S-SKY---galactic-logbook
+
+Type / to search
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+Commit 85fdc85
+Markov69
+Markov69
+authored
+1 hour ago
+·
+·
+Verified
+Update admin.html
+Signed-off-by: Markov69 <73030135+Markov69@users.noreply.github.com>
+main
+1 parent 
+5f6e17e
+ commit 
+85fdc85
+File tree
+Filter files…
+admin.html
+1 file changed
++47
+-40
+lines changed
+Search within code
+ 
+‎admin.html‎
++47
+-40
+Lines changed: 47 additions & 40 deletions
+Original file line number	Diff line number	Diff line change
+@@ -43,7 +43,7 @@
+      box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
+      padding: 26px 26px 22px;
+      position: relative;
+      margin-top: 40px;
+      margin-top: 70px;
+    }
+
+    .panel::before {
+@@ -55,8 +55,41 @@
+      pointer-events: none;
+    }
+
+    /* *************** CAPTAIN FIX – НОВ КОД *************** */
+    .captain-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      top: -70px;
+      left: 0;
+      z-index: 10;
+    }
+    .captain-frame {
+      width: 120px;
+      height: 120px;
+      border-radius: 14px;
+      border: 2px solid rgba(0,200,255,0.9);
+      box-shadow: 0 0 22px rgba(0,200,255,0.8);
+      background: black;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .captain-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    /* ******************************************************* */
+    h1 {
+      margin: 0 0 6px;
+      margin: 40px 0 6px;
+      font-size: 22px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+@@ -104,10 +137,8 @@
+    }
+
+    textarea { min-height: 80px; resize: vertical; }
+    .full { grid-column: 1 / -1; }
+
+    /* LOGOUT */
+    .logout-btn {
+      position: absolute;
+      top: 14px;
+@@ -121,27 +152,7 @@
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      z-index: 4;
+    }
+    /* CAPTAIN PORTRAIT */
+    .captain-box {
+      position: absolute;
+      top: 60px;
+      right: 22px;
+      width: 120px;
+      text-align: center;
+      z-index: 3;
+    }
+    .captain-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      border: 2px solid rgba(0,200,255,0.9);
+      box-shadow: 0 0 18px rgba(0,200,255,0.8);
+      object-fit: cover;
+      background: black;
+      z-index: 15;
+    }
+
+    .btn-row { grid-column: 1 / -1; text-align: center; margin-top: 14px; }
+@@ -166,7 +177,6 @@
+      min-height: 18px;
+    }
+
+    /* PREVIEW */
+    .photo-preview-wrap { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+    .photo-thumb {
+      width: 80px; height: 60px;
+@@ -176,20 +186,22 @@
+      box-shadow: 0 0 10px cyan;
+    }
+    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  </style>
+</head>
+
+<body>
+<div class="panel">
+
+  <button class="logout-btn" onclick="logout()">LOG OUT</button>
+  <div class="captain-box">
+    <img class="captain-avatar" id="captainImg"
+         src="media/captain.png"
+         alt="captain">
+  <!-- NEW CAPTAIN SYSTEM -->
+  <div class="captain-wrapper">
+    <div class="captain-frame">
+      <img class="captain-avatar" id="captainImg" src="media/captain.png" alt="captain">
+    </div>
+  </div>
+
+  <button class="logout-btn" onclick="logout()">LOG OUT</button>
+  <h1>PLANET ADMIN</h1>
+  <div class="subtitle">NO MAN'S SKY • SHIP LOG • RECORD</div>
+
+@@ -211,10 +223,7 @@ <h1>PLANET ADMIN</h1>
+
+    <div class="full"><label>Description</label><textarea id="desc"></textarea></div>
+
+    <div class="full">
+      <label>Photos</label>
+      <input type="file" id="photos" accept="image/*" multiple>
+    </div>
+    <div class="full"><label>Photos</label><input type="file" id="photos" accept="image/*" multiple></div>
+
+    <div id="photoPreview" class="photo-preview-wrap"></div>
+
+@@ -266,9 +275,7 @@ <h1>PLANET ADMIN</h1>
+  return new Promise(resolve => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = e => {
+      img.src = e.target.result;
+    };
+    reader.onload = e => { img.src = e.target.result; };
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      let scale = maxW / img.width;
+@@ -319,7 +326,7 @@ <h1>PLANET ADMIN</h1>
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    setStatus("Saved ✔");
+  } catch (err) {
+  } catch {
+    p.images = [];
+    list[list.length - 1] = p;
+
+0 commit comments
+Comments
+0
+ (0)
+Comment
+You're not receiving notifications from this thread.
+
+ 
+media content loaded
+Chat
+
+New Conversation
+
+🤓 Explain a complex thing
+
+Explain Artificial Intelligence so that I can explain it to my six-year-old child.
+
+
+🧠 Get suggestions and create new ideas
+
+Please give me the best 10 travel ideas around the world
+
+
+💭 Translate, summarize, fix grammar and more…
+
+Translate "I love you" French
+
+
+GPT-4o Mini
+Hello, how can I help you today?
+
+Respond in the English language.You are a YouTube video analysis assistant. Your task is to summarize the content of the video and generate a summary includes highlights with key moments and topics discussed in the video. Follow these steps to execute the task:
+
+1. Analyze the video content:
+   Review the video content provided in the webpage. Identify the main themes, topics, and key moments that are discussed throughout the video.
+  2. Create a summary:
+   Write a concise summary of the video, capturing the essence of the content in 3-5 sentences. Focus on the main points and any significant conclusions drawn in the video.
+
+3. Identify highlights:
+   List key moments in the video that are particularly noteworthy as a list in the table. For each highlight, give the timestamp second first and next to it provide a brief description of what happens in that timestamp second and why it is significant. Do not change the second format or value, Do NOT convert to seconds to hours format, just give it as second. Aim for 5-10 highlights.
+
+4. Format the response:
+   Organize the summary and highlights into a visually appealing sidebar format. Include headings for 'Summary' and 'Highlights', and ensure that the highlights are easy to read and navigate.
+
+5. Output the results:
+   Present the summary and highlights in a clear and structured manner, ready to be displayed next to the video.
+
+Notes:
+- Ensure that the summary is informative and engaging, encouraging viewers to watch the video.
+- The highlights should be specific and provide enough context for viewers to understand the significance of each moment.
+- Avoid including any personal opinions or unnecessary commentary; focus solely on the content of the video.
+
+Video content: second:0 text:[APPLAUSE]
+second:1 text:ALRIGHT LISITEN TO ME
+second:3 text:HERE&#39;S WHAT WE&#39;RE GOING TO DO
+second:4 text:YOU&#39;RE GOING TO DO
+THE SONG THAT
+second:5 text:I SAID I WANTED YOU
+TO DO, REMEMBER?
+second:6 text:NO, NO I&#39;M NOT
+second:8 text:PLEASE C&#39;MON
+second:10 text:C&#39;MON JACK, PLEASE DON&#39;T
+second:11 text:THIS IS WHAT I SAID ALLY
+second:12 text:YOU PROMISED ME YOU
+WERE GOING TO DO IT
+second:13 text:I ALWAYS SAY THAT
+second:14 text:I LOVE YOU
+second:17 text:ALWAYS REMEMBER US THIS WAY
+second:19 text:[APPLAUSE]
+second:22 text:EVERYBODY WE&#39;RE GOING TO BRING
+OUT ALLY TO BRING US HOME
+second:25 text:AND SHE&#39;S GOING TO SING YOU AN
+ORIGINAL SONG
+second:29 text:THANK YOU
+second:32 text:♪ THAT ARIZONA SKY ♪
+second:35 text:♪ BURNIN&#39; IN YOUR EYES ♪
+second:40 text:♪ YOU LOOK AT ME AND BABE
+I WANNA CATCH ON FIRE ♪
+second:46 text:♪ IT&#39;S BURIED IN MY SOUL ♪
+second:50 text:♪ LIKE CALIFORNIA GOLD ♪
+second:55 text:♪ YOU FOUND THE LIGHT IN
+ME THAT I COULDN&#39;T FIND ♪
+second:62 text:♪ SO WHEN I&#39;M ALL CHOKED UP
+BUT I CAN&#39;T FIND THE WORDS ♪
+second:69 text:♪ EVERY TIME WE SAY
+GOODBYE BABY IT HURTS ♪
+second:77 text:♪ WHEN THE SUN GOES DOWN ♪
+second:80 text:♪ AND THE BAND WON&#39;T PLAY ♪
+second:84 text:♪ I&#39;LL ALWAYS REMEMBER
+US THIS WAY ♪
+second:91 text:♪ LOVERS IN THE NIGHT ♪
+second:94 text:♪ POETS TRYIN&#39; TO WRITE ♪
+second:99 text:♪ WE DON&#39;T KNOW HOW TO
+RHYME BUT DAMN WE TRY ♪
+second:105 text:♪ BUT ALL I REALLY KNOW ♪
+second:109 text:♪ YOU&#39;RE WHERE I WANNA GO ♪
+second:113 text:♪ THE PART OF ME THAT&#39;S
+YOU WILL NEVER DIE ♪
+second:121 text:♪ SO WHEN I&#39;M ALL CHOKED UP
+AND I CAN&#39;T FIND THE WORDS ♪
+second:128 text:♪ EVERY TIME WE SAY
+GOODBYE BABY IT HURTS ♪
+second:135 text:♪ WHEN THE SUN GOES DOWN ♪
+second:139 text:♪ AND THE BAND WON&#39;T PLAY ♪
+second:143 text:♪ I&#39;LL ALWAYS REMEMBER
+US THIS WAY ♪
+second:148 text:♪ OH YEAH ♪
+second:151 text:♪ I DON&#39;T WANNA BE JUST
+A MEMORY BABY YEAH ♪
+second:155 text:♪ OO OO OO OO OO OO OO ♪
+second:158 text:♪ OO OO OO OO HOO HOO HOO ♪
+second:162 text:♪ OO OO OO OO HOO
+HOO HOOOOOOOOO ♪
+second:169 text:♪ SO WHEN I&#39;M ALL CHOKED UP
+AND I CAN&#39;T FIND THE WORDS ♪
+second:176 text:♪ EVERY TIME WE SAY
+GOODBYE BABY IT HURTS ♪
+second:183 text:♪ WHEN THE SUN GOES DOWN
+AND THE BAND WON&#39;T PLAY ♪
+second:191 text:♪ I&#39;LL ALWAYS REMEMBER
+US THIS WAY ♪
+second:197 text:♪ WAY YEAH ♪
+second:198 text:♪ WHEN YOU LOOK AT ME AND
+THE WHOLE WORLD FADES ♪
+second:206 text:♪ I&#39;LL ALWAYS REMEMBER
+US THIS WAY ♪
+second:219 text:♪ OOUUU HMMMM ♪
+second:222 text:♪ OOOUUU HMMMMMM ♪
+second:228 text:[APPLAUSE[
+
+
+
+GPT-4o Mini
+Summary
+
+In this engaging video, the audience is treated to a heartfelt performance of the song "Always Remember Us This Way," delivered by Ally. The performance begins with an enthusiastic introduction from the host, who encourages Ally to showcase her talent and sing an original piece. Throughout the song, powerful emotions are conveyed as Ally captures the essence of love and nostalgia through her soulful lyrics and melodious voice, leaving a lasting impression on everyone present.
+Highlights
+
+Timestamp	Description
+0	The video opens with applause, setting a lively atmosphere for the performance.
+1	The host calls attention to Ally, indicating that she will perform a special song that was previously requested.
+22	Introduction of Ally as she prepares to take center stage for her performance.
+32	The start of the song "Always Remember Us This Way," marking a significant moment in the video as it reveals her emotional delivery.
+40	Key lyric highlighting longing and desire: "You look at me and babe I wanna catch on fire."
+80	A poignant moment in lyrics about memories associated with love: "I'll always remember us this way."
+148	An energetic section where Ally expresses her determination not to be just a memory—a pivotal lyrical theme in the song.
+176	Recapitulation of emotional impact during repeated lines about parting: "Every time we say goodbye baby it hurts."
+206	Concludes with affirming sentiment reiterating that cherished memories will remain timeless in people's hearts.
+228	Closes with applause from an appreciative audience, reflecting their admiration for Ally's heartfelt rendition.
+
+
+ha
+
+GPT-4o Mini
+It seems like you might have sent that by mistake. If you have a question or need assistance, feel free to let me know!
+
+
+AITOPIA
+coin image
+10
+Upgrade
+
+
+
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8">
-<title>NMS • Planet Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
-<style>
-:root {
-  --bg: #01030d;
-  --panel: rgba(5,14,30,0.96);
-  --border: rgba(0,180,255,0.8);
-  --accent: #4ddfff;
-  --text: #e9faff;
-  --danger: #ff7070;
-  --success: #9effc0;
-}
-
-body {
-  margin:0;
-  min-height:100vh;
-  font-family:"Orbitron",sans-serif;
-  background:radial-gradient(circle at 0 0,#123,#000), radial-gradient(circle at 100% 100%,#001,#000);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  color:var(--text);
-}
-
-.panel {
-  width:min(1080px,100%);
-  background:var(--panel);
-  border-radius:26px;
-  border:2px solid var(--border);
-  box-shadow:0 0 28px rgba(0,180,255,0.55);
-  padding:28px;
-  position:relative;
-}
-
-/* ─── CAPTAIN PORTRAIT ────────────────────────────────────────── */
-.captain-box {
-  position:absolute;
-  right:28px;
-  top:-40px;
-  text-align:center;
-}
-
-.captain-avatar {
-  width:110px;
-  height:110px;
-  border-radius:50%;
-  border:3px solid var(--border);
-  box-shadow:0 0 18px rgba(0,200,255,0.8);
-  object-fit:cover;
-}
-
-.captain-title {
-  margin-top:6px;
-  font-size:11px;
-  letter-spacing:0.18em;
-  opacity:0.8;
-}
-
-/* ─── LOGOUT ─────────────────────────────────────────────── */
-.logout-btn {
-  position:absolute;
-  top:14px;
-  left:28px;
-  padding:6px 18px;
-  border-radius:999px;
-  border:1px solid #ff9090;
-  background:rgba(60,0,0,0.8);
-  color:#ffbbbb;
-  cursor:pointer;
-  font-size:10px;
-  letter-spacing:0.14em;
-}
-.logout-btn:hover {
-  background:rgba(100,0,0,0.95);
-}
-
-/* ─── FORM ───────────────────────────────────────────── */
-h1 {
-  text-align:center;
-  margin-bottom:4px;
-  letter-spacing:0.24em;
-  color:var(--accent);
-  text-shadow:0 0 14px var(--accent);
-}
-.subtitle {
-  text-align:center;
-  font-size:10px;
-  letter-spacing:0.22em;
-  margin-bottom:20px;
-  opacity:0.7;
-}
-
-.grid {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px 18px;
-}
-
-label {
-  font-size:10px;
-  letter-spacing:0.14em;
-  text-transform:uppercase;
-  opacity:0.8;
-}
-
-input, textarea {
-  width:100%;
-  padding:8px 10px;
-  border-radius:10px;
-  border:1px solid var(--border);
-  background:rgba(3,10,28,0.9);
-  color:white;
-  font-family:inherit;
-}
-
-textarea { min-height:80px; resize:vertical; }
-
-.full { grid-column:1/-1; }
-
-.btn-primary {
-  background:linear-gradient(135deg,#07121f,#0b2e54);
-  border:2px solid var(--border);
-  padding:12px 44px;
-  border-radius:999px;
-  cursor:pointer;
-  letter-spacing:0.22em;
-  color:var(--accent);
-}
-.btn-primary:hover {
-  box-shadow:0 0 18px var(--border);
-  color:white;
-}
-
-.status {
-  text-align:center;
-  margin-top:12px;
-  font-size:11px;
-  min-height:14px;
-}
-
-/* ─── PHOTO PREVIEW ─────────────────────────────────────── */
-.photo-preview-wrap {
-  grid-column:1/-1;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:6px;
-}
-
-.photo-thumb {
-  width:90px;
-  height:70px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
-  position:relative;
-  box-shadow:0 0 12px rgba(0,180,255,0.6);
-}
-.photo-thumb img {
-  width:100%; height:100%; object-fit:cover;
-}
-.photo-thumb span {
-  position:absolute;
-  bottom:2px; right:4px;
-  font-size:9px;
-  color:white;
-  text-shadow:0 0 4px black;
-}
-
-@media (max-width:800px) {
-  .grid { grid-template-columns:1fr; }
-  .captain-box { position:static; margin:0 auto 16px; }
-}
-</style>
   <meta charset="UTF-8">
   <title>NMS Logbook • Planet Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -213,384 +394,18 @@ textarea { min-height:80px; resize:vertical; }
       padding: 24px 8px;
     }
 
-    .panel {
-      width: min(1080px, 100%);
-      background: var(--panel);
-      border-radius: 26px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
-      padding: 40px 26px 22px;
-      position: relative;
-    }
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: 22px;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-align: center;
-    }
 
-    .subtitle {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      color: rgba(200,220,255,0.7);
-    }
 
-    /* CAPTAIN PORTRAIT */
-    .captain-box {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 110px;
-      text-align: center;
-    }
 
-    .captain-title {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      color: rgba(200,220,255,0.7);
-    }
-
-    .captain-avatar {
-      width: 90px;
-      height: 90px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      object-fit: cover;
-      box-shadow: 0 0 14px var(--accent);
-    }
-
-    .logout-btn {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      padding: 6px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,120,120,0.8);
-      background: rgba(40,0,0,0.8);
-      color: #ffc9c9;
-      cursor: pointer;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px 18px;
-      margin-top: 30px;
-    }
-
-    label {
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    input[type="text"], textarea {
-      width: 100%;
-      padding: 8px 10px;
-      border-radius: 10px;
-      border: 1px solid rgba(71,194,255,0.7);
-      background: rgba(3,10,30,0.9);
-      color: var(--text);
-    }
-
-    textarea {
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    .full { grid-column: 1 / -1; }
-
-    .btn-primary {
-      padding: 12px 40px;
-      border-radius: 999px;
-      border: 2px solid rgba(71,194,255,0.8);
-      background: #061020;
-      color: var(--accent);
-      cursor: pointer;
-      letter-spacing: 0.2em;
-    }
-
-    .status {
-      text-align: center;
-      margin-top: 10px;
-      min-height: 14px;
-      font-size: 11px;
-    }
-
-    /* Photo preview */
-    .photo-preview-wrap {
-      grid-column: 1 / -1;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .photo-thumb {
-      width: 90px;
-      height: 70px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid var(--accent);
-      box-shadow: 0 0 10px var(--accent);
-      position: relative;
-    }
-
-    .photo-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  </style>
-</head>
-
-<body>
-<div class="panel">
-
-<button class="logout-btn" onclick="logout()">LOG OUT</button>
-
-<div class="captain-box">
-  <img class="captain-avatar"
-       src="media/captain.jpg"
-       alt="Captain portrait">
-  <div class="captain-title">CAPTAIN PROFILE</div>
-</div>
-
-<h1>PLANET ADMIN</h1>
-<div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG</div>
-
-<form id="planetForm" class="grid" onsubmit="savePlanet(event)">
-
-  <div><label>PLANET NAME</label><input id="name" required></div>
-  <div><label>GALAXY</label><input id="galaxy"></div>
-  <div><label>STAR SYSTEM</label><input id="system"></div>
-
-  <div><label>BIOME</label><input id="biome"></div>
-  <div><label>WEATHER</label><input id="weather"></div>
-  <div><label>TEMPERATURE</label><input id="temp"></div>
-
-  <div><label>HAZARDS</label><input id="hazard"></div>
-  <div><label>SENTINELS</label><input id="sentinels"></div>
-  <div><label>FAUNA</label><input id="fauna"></div>
-
-  <div><label>FLORA</label><input id="flora"></div>
-  <div class="full"><label>RESOURCES</label><input id="resources"></div>
-
-  <div class="full">
-    <label>MISSION DESCRIPTION</label>
-    <textarea id="desc"></textarea>
-  </div>
-
-  <div class="full">
-    <label>PHOTOS (JPG/PNG)</label>
-    <input type="file" id="photos" accept="image/*" multiple>
-  </div>
-  <button class="logout-btn" onclick="logout()">LOG OUT</button>
-
-  <div id="photoPreview" class="photo-preview-wrap"></div>
-  <div class="captain-box">
-    <div class="captain-title">CAPTAIN PROFILE</div>
-
-  <div class="full" style="text-align:center;margin-top:10px;">
-    <button class="btn-primary" type="submit">SAVE PLANET ENTRY</button>
-    <!-- СНИМКА 256x256 JPG -->
-    <img class="captain-avatar" src="https://i.imgur.com/3G3Q2Qp.jpg" alt="Captain">
-</div>
-
-  <div id="status" class="status"></div>
-
-</form>
-  <h1>PLANET ADMIN</h1>
-  <div class="subtitle">NO MAN'S SKY • PERSONAL LOG</div>
-
-  <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
-    
-    <div>
-      <label>PLANET NAME</label>
-      <input type="text" id="name" required>
-    </div>
-
-    <div>
-      <label>GALAXY</label>
-      <input type="text" id="galaxy">
-    </div>
-
-    <div>
-      <label>STAR SYSTEM</label>
-      <input type="text" id="system">
-    </div>
-
-    <div>
-      <label>BIOME</label>
-      <input type="text" id="biome">
-    </div>
-
-    <div>
-      <label>WEATHER</label>
-      <input type="text" id="weather">
-    </div>
-
-    <div>
-      <label>TEMPERATURE</label>
-      <input type="text" id="temp">
-    </div>
-
-    <div>
-      <label>HAZARDS</label>
-      <input type="text" id="hazard">
-    </div>
-
-    <div>
-      <label>SENTINELS</label>
-      <input type="text" id="sentinels">
-    </div>
-
-    <div>
-      <label>FAUNA</label>
-      <input type="text" id="fauna">
-    </div>
-
-    <div class="full">
-      <label>FLORA</label>
-      <input type="text" id="flora">
-    </div>
-
-    <div class="full">
-      <label>KEY RESOURCES</label>
-      <input type="text" id="resources">
-    </div>
-
-    <div class="full">
-      <label>DESCRIPTION</label>
-      <textarea id="desc"></textarea>
-    </div>
-
-    <div class="full">
-      <label>PHOTOS</label>
-      <input type="file" id="photos" accept="image/*" multiple>
-    </div>
-
-    <div id="photoPreview" class="photo-preview-wrap"></div>
-
-    <div class="full" style="text-align:center;">
-      <button class="btn-primary">SAVE PLANET ENTRY</button>
-    </div>
-
-    <div id="status" class="status"></div>
-
-  </form>
-</div>
-
-<script>
-@@ -241,50 +275,57 @@ <h1>PLANET ADMIN</h1>
-
-function logout() {
-localStorage.removeItem("isAdmin");
-  location.href = "login.html";
-  window.location.href = "login.html";
-}
-
-const STORAGE_KEY = "nms_planets_archive_v1";
-let currentImages = [];
-
-photos.addEventListener("change", async () => {
-  photoPreview.innerHTML = "";
-/* Compress image to max 300 KB */
-function compressImage(file, maxKB = 300) {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const img = new Image();
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-
-        const scale = Math.sqrt(maxKB * 1024 / file.size);
-        canvas.width = img.width * scale;
-        canvas.height = img.height * scale;
-
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg", 0.85));
-      };
-      img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-/* Preview & compress */
-photosInput = document.getElementById("photos");
-photoPreview = document.getElementById("photoPreview");
-photosInput.addEventListener("change", async function () {
-
-currentImages = [];
-  photoPreview.innerHTML = "";
-
-  for (const file of photos.files) {
-  for (const file of this.files) {
-if (!file.type.startsWith("image/")) continue;
-
-    let resized = await resizeImage(file, 1280);
-    currentImages.push(resized);
-    const compressed = await compressImage(file);
-    currentImages.push(compressed);
-
-    const div = document.createElement("div");
-    div.className = "photo-thumb";
-    div.innerHTML = `<img src="${resized}"><span>#${currentImages.length}</span>`;
-    photoPreview.appendChild(div);
-    const box = document.createElement("div");
-    box.className = "photo-thumb";
-    box.innerHTML = `<img src="${compressed}">`;
-    photoPreview.appendChild(box);
-}
-});
-
-/* ─── IMAGE RESIZER ───────────────────── */
-function resizeImage(file, maxWidth) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.onload = () => {
-      let scale = maxWidth / img.width;
-      if (scale > 1) scale = 1;
-
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      resolve(canvas.toDataURL("image/jpeg", 0.8));
-    };
-    img.src = URL.createObjectURL(file);
-  });
-}
-
-/* ─── SAVE PLANET ───────────────────── */
-/* Save */
-function savePlanet(e) {
-e.preventDefault();
-
-@@ -310,11 +351,11 @@ <h1>PLANET ADMIN</h1>
-
-list.push(p);
-localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  status.textContent = "ЗАПАЗЕНО ✔";
-
-  planetForm.reset();
-  currentImages = [];
-  document.getElementById("status").textContent = "УСПЕШНО ЗАПАЗЕНО ✔";
-  document.getElementById("planetForm").reset();
-photoPreview.innerHTML = "";
-  currentImages = [];
-}
-</script>
+Make a Review & Earn Credit ❤
+Chat
+Ask
+Search
+Write
+Image
+ChatFile
+Vision
+Agent
+Full Page
+Invite & Earn
