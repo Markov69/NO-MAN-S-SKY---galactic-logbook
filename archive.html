@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<title>NMS Logbook • Planet Archive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ------------------ GLOBAL ------------------ */
+:root {
+  --bg: #020513;
+  --panel: rgba(4,12,25,0.96);
+  --border: rgba(0,200,255,0.55);
+  --text: #e5f8ff;
+  --accent: #4cd8ff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 30px 16px;
+  font-family: "Orbitron", system-ui, sans-serif;
+  background: radial-gradient(circle at 15% 0, #15233e, transparent 55%),
+              radial-gradient(circle at 85% 100%, #091326, transparent 55%),
+              var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+}
+
+.shell { width: min(1180px, 100%); }
+
+/* ------------------ HEADERS ------------------ */
+
+.back-link {
+  display:inline-block;
+  margin-bottom:10px;
+  font-size:11px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:#7fdcff;
+  text-decoration:none;
+  border-bottom:1px dashed rgba(127,220,255,0.7);
+  padding-bottom:2px;
+}
+.back-link:hover {
+  color:#fff;
+  border-color:#fff;
+}
+
+.title {
+  text-align:center;
+  font-size:26px;
+  letter-spacing:0.22em;
+  margin-bottom:6px;
+  text-shadow:0 0 12px rgba(80,220,255,0.9);
+}
+
+.subtitle {
+  text-align:center;
+  font-size:12px;
+  letter-spacing:0.18em;
+  margin-bottom:20px;
+  opacity:0.75;
+}
+
+/* ------------------ GRID CARDS ------------------ */
+
+.cards {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
+  gap:22px;
+}
+
+.card {
+  background:var(--panel);
+  border-radius:20px;
+  border:1px solid var(--border);
+  padding:16px;
+  cursor:pointer;
+  transition:0.25s;
+  box-shadow:0 0 20px rgba(0,200,255,0.15);
+}
+.card:hover {
+  box-shadow:0 0 28px rgba(0,200,255,0.35);
+  transform:translateY(-3px);
+}
+
+.planet-name {
+  font-size:15px;
+  text-transform:uppercase;
+  margin-bottom:6px;
+  color:var(--accent);
+}
+
+.badge-line {
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:8px;
+  font-size:11px;
+  opacity:0.85;
+}
+
+.badge {
+  border:1px solid #ffb388;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:10px;
+}
+
+/* small preview */
+.thumb {
+  margin-top:10px;
+  width:100%;
+  height:160px;
+  border-radius:12px;
+  overflow:hidden;
+  border:1px solid #00c8ff;
+  box-shadow:0 0 10px #0088aa;
+}
+.thumb img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* ------------------ FULL VIEW POPUP ------------------ */
+
+#fullView {
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,0.85);
+  z-index:9999;
+}
+
+.full-box {
+  background:var(--panel);
+  padding:20px;
+  width:min(900px,90%);
+  max-height:90vh;
+  overflow-y:auto;
+  border-radius:16px;
+  border:1px solid var(--border);
+  box-shadow:0 0 30px rgba(0,200,255,0.4);
+}
+
+.full-title {
+  font-size:22px;
+  text-align:center;
+  color:var(--accent);
+  margin-bottom:6px;
+}
+
+.full-sub { text-align:center; font-size:11px; opacity:0.8; margin-bottom:16px; }
+
+/* captain hologram */
+.captain {
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  object-fit:cover;
+  margin:10px auto;
+  display:block;
+  border:2px solid #4cd8ff;
+  box-shadow:0 0 16px rgba(80,220,255,0.6);
+}
+
+/* section header */
+.sec-title {
+  font-size:13px;
+  margin-top:14px;
+  margin-bottom:6px;
+  text-transform:uppercase;
+  letter-spacing:0.15em;
+  color:#7fdcff;
+}
+
+/* entry rows */
+.entry {
+  padding:8px;
+  border-radius:10px;
+  border:1px solid rgba(0,150,255,0.3);
+  margin-bottom:8px;
+}
+
+.entry img {
+  width:90px;
+  height:90px;
+  border-radius:10px;
+  object-fit:cover;
+  border:1px solid #00c8ff;
+  margin-right:10px;
+}
+
+.entry-flex {
+  display:flex;
+  gap:12px;
+}
+
+/* big photo gallery */
+.bigphotos {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:10px;
+}
+
+.bigphotos img {
+  width:140px;
+  height:100px;
+  object-fit:cover;
+  border-radius:12px;
+  border:1px solid #00c8ff;
+  box-shadow:0 0 12px rgba(0,200,255,0.5);
+  cursor:pointer;
+}
+
+/* zoom overlay */
+#zoomLayer {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+#zoomLayer img {
+  max-width:90vw;
+  max-height:90vh;
+  border-radius:12px;
+  border:2px solid #00c8ff;
+}
+
+.close-btn {
+  text-align:center;
+  margin-top:12px;
+  padding:8px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,80,80,0.8);
+  background:rgba(70,0,0,0.9);
+  color:#ffb3b3;
+  cursor:pointer;
+  width:120px;
+  margin-left:auto;
+  margin-right:auto;
+}
+</style>
+</head>
+
+<body>
+<div class="shell">
+
+<a href="index.html" class="back-link">⟵ BACK</a>
+
+<div class="title">PLANET ARCHIVE</div>
+<div class="subtitle">Personal Explorer Diary</div>
+
+<div id="cards" class="cards"></div>
+<div id="empty" style="display:none;text-align:center;margin-top:40px;font-size:13px;">Няма записи.</div>
+
+</div>
+
+<!-- FULL VIEW -->
+<div id="fullView" onclick="closeFull(event)">
+  <div class="full-box" id="fullBox"></div>
+</div>
+
+<!-- ZOOM -->
+<div id="zoomLayer" onclick="closeZoom()">
+  <img id="zoomImg">
+</div>
+
+<script>
+const KEY = "nms_planets_archive_v1";
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY)) || []; }
+  catch { return []; }
+}
+
+const planets = load();
+const cards = document.getElementById("cards");
+const empty = document.getElementById("empty");
+
+if (!planets.length) empty.style.display = "block";
+
+planets
+  .slice()
+  .sort((a,b)=> b.id - a.id)
+  .forEach(p => {
+    const c = document.createElement("div");
+    c.className = "card";
+    c.onclick = () => openFull(p);
+
+    c.innerHTML = `
+      <div class="planet-name">${p.name}</div>
+      <div class="badge-line">
+        <span>${p.galaxy || "-"}</span>
+        <span class="badge">${p.biome || "-"}</span>
+      </div>
+      <div style="font-size:11px;">${p.weather || "-"} • ${p.temp || "-"}</div>
+      <div class="thumb"><img src="${(p.animals?.[0]?.img) || (p.plants?.[0]?.img) || 'media/captain.png'}"></div>
+    `;
+
+    cards.appendChild(c);
+  });
+
+/* FULL VIEW POPUP */
+function openFull(p) {
+  const box = document.getElementById("fullBox");
+
+  function entrySection(title, list) {
+    if (!list || !list.length) return "";
+    return `
+      <div class="sec-title">${title}</div>
+      ${list.map(e => `
+        <div class="entry entry-flex">
+          <img src="${e.img}">
+          <div>
+            <div><b>${e.name}</b></div>
+            <div style="font-size:11px;opacity:0.8;">${e.desc}</div>
+          </div>
+        </div>
+      `).join("")}
+    `;
+  }
+
+  box.innerHTML = `
+    <div class="full-title">${p.name}</div>
+    <div class="full-sub">${p.galaxy} • ${p.system}</div>
+
+    <img class="captain" src="${localStorage.getItem("captainPhoto") || 'media/captain.png'}">
+
+    <div class="sec-title">Planet Info</div>
+    <div class="entry">
+      Biome: ${p.biome}<br>
+      Weather: ${p.weather}<br>
+      Temperature: ${p.temp}<br>
+      Hazards: ${p.hazard}<br>
+      Flora Count: ${p.floraCount}<br>
+      Fauna Count: ${p.faunaCount}<br>
+      Resources: ${p.resourcesSummary}<br>
+      <br>
+      <i>${p.desc.replace(/\n/g,"<br>")}</i>
+    </div>
+
+    ${entrySection("Animals", p.animals)}
+    ${entrySection("Plants", p.plants)}
+    ${entrySection("Resources", p.resourcesDetailed)}
+    ${entrySection("Hazards", p.hazardsDetailed)}
+
+    <div class="sec-title">Planet Photos</div>
+    <div class="bigphotos">
+      ${(p.images||[]).map(img => `<img src="${img}" onclick="zoom('${img}')">`).join("")}
+    </div>
+
+    <div class="close-btn" onclick="closeFull()">Close</div>
+  `;
+
+  document.getElementById("fullView").style.display = "flex";
+}
+
+function closeFull(e){
+  if (!e || e.target.id === "fullView")
+    document.getElementById("fullView").style.display = "none";
+}
+
+/* ZOOM */
+function zoom(src){
+  document.getElementById("zoomImg").src = src;
+  document.getElementById("zoomLayer").style.display = "flex";
+}
+function closeZoom(){
+  document.getElementById("zoomLayer").style.display = "none";
+}
+</script>
+
+</body>
+</html>
