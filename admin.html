@@ -188,7 +188,6 @@
       text-shadow: 0 0 5px #000;
     }
 
-    /* LOGOUT бутон */
     .logout-btn {
       position: absolute;
       top: 14px;
@@ -211,32 +210,53 @@
       box-shadow: 0 0 14px rgba(255,120,120,0.9);
     }
 
-    /* 🧑‍🚀 КАПИТАНСКА СНИМКА */
-    .captain-box {
+    /* 🛸 STARSHIP VIDEO FRAME FOR CAPTAIN */
+    .captain-screen {
       position: absolute;
-      top: 56px;
-      right: 22px;
-      width: 110px;
-      text-align: center;
+      top: 54px;
+      right: 20px;
+      width: 180px;
+      padding: 10px;
+      background: rgba(0, 12, 28, 0.85);
+      border-radius: 14px;
+      border: 2px solid rgba(0, 200, 255, 0.65);
+      box-shadow:
+        0 0 18px rgba(0, 200, 255, 0.55),
+        inset 0 0 22px rgba(0, 120, 180, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       z-index: 2;
     }
 
-    .captain-title {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(200,220,255,0.7);
-      margin-bottom: 4px;
+    .captain-screen::before {
+      content: "";
+      width: 100%;
+      height: 6px;
+      border-top: 2px solid rgba(0, 200, 255, 0.8);
+      border-left: 22px solid transparent;
+      border-right: 22px solid transparent;
+      display: block;
+      margin-bottom: 8px;
     }
 
-    .captain-avatar {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      border: 2px solid rgba(0,200,255,0.9);
-      box-shadow: 0 0 18px rgba(0,200,255,0.7);
-      object-fit: cover;
+    .captain-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #8ad9ff;
+      letter-spacing: 0.18em;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .captain-video {
+      width: 100%;
+      border-radius: 10px;
+      border: 2px solid rgba(0, 200, 255, 0.8);
+      overflow: hidden;
+      box-shadow: 0 0 18px rgba(0, 200, 255, 0.55);
       background: #000;
+      display: block;
     }
 
     @media (max-width: 900px) {
@@ -249,7 +269,7 @@
       .grid { grid-template-columns: 1fr; }
       h1 { font-size: 18px; letter-spacing: 0.22em; }
 
-      .captain-box {
+      .captain-screen {
         position: static;
         margin: 6px auto 12px;
       }
@@ -259,24 +279,20 @@
 
 <body>
   <div class="panel">
-    <!-- LOGOUT -->
     <button class="logout-btn" onclick="logout()">LOG OUT</button>
 
-    <!-- 🧑‍🚀 КАПИТАН -->
-    <div class="captain-box">
+    <!-- 🛸 CAPTAIN VIDEO PANEL -->
+    <div class="captain-screen">
       <div class="captain-title">CAPTAIN PROFILE</div>
-      <img
-        class="captain-avatar"
-        src="https://github.com/user-attachments/assets/22466e13-3f63-4282-a126-77bf79dbb9a4"
-        alt="Captain portrait"
-      >
+      <video class="captain-video" autoplay loop muted playsinline>
+        <source src="media/2025-01-03-170310107.mp4" type="video/mp4">
+      </video>
     </div>
 
     <h1>PLANET ADMIN</h1>
     <div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG • FULL PLANET RECORD</div>
 
     <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
-      <!-- ред 1 -->
       <div>
         <label for="name">PLANET NAME</label>
         <input type="text" id="name" required>
@@ -290,7 +306,6 @@
         <input type="text" id="system">
       </div>
 
-      <!-- ред 2 -->
       <div>
         <label for="biome">BIOME / PLANET TYPE</label>
         <input type="text" id="biome">
@@ -304,7 +319,6 @@
         <input type="text" id="temp">
       </div>
 
-      <!-- ред 3 -->
       <div>
         <label for="hazard">MAIN HAZARDS</label>
         <input type="text" id="hazard">
@@ -318,7 +332,6 @@
         <input type="text" id="fauna">
       </div>
 
-      <!-- ред 4 -->
       <div>
         <label for="flora">FLORA</label>
         <input type="text" id="flora">
@@ -328,13 +341,11 @@
         <input type="text" id="resources">
       </div>
 
-      <!-- описание -->
       <div class="full">
         <label for="desc">MISSION / STORY DESCRIPTION</label>
         <textarea id="desc" placeholder="Какво намери, как мина мисията, бази, ресурси..."></textarea>
       </div>
 
-      <!-- снимки -->
       <div class="photos-row">
         <label for="photos">PLANET JOURNAL PHOTOS (CLICK TO CHOOSE JPG/PNG)</label>
         <input type="file" id="photos" accept="image/*" multiple>
@@ -342,18 +353,16 @@
 
       <div id="photoPreview" class="photo-preview-wrap"></div>
 
-      <!-- бутон за запис -->
       <div class="btn-row">
         <button type="submit" class="btn-primary">SAVE PLANET ENTRY</button>
       </div>
 
-      <!-- статус -->
       <div id="status" class="status"></div>
     </form>
   </div>
 
 <script>
-// 🔐 Проверка – само логнат админ
+// само логнат админ
 if (localStorage.getItem("isAdmin") !== "true") {
   window.location.href = "login.html";
 }
@@ -363,38 +372,79 @@ function logout() {
   window.location.href = "login.html";
 }
 
-const STORAGE_KEY = "nms_planets_archive_v1";
+const STORAGE_KEY   = "nms_planets_archive_v1";
+let currentImages   = [];
 
-let currentImages = [];
+const photosInput   = document.getElementById("photos");
+const photoPreview  = document.getElementById("photoPreview");
+const statusEl      = document.getElementById("status");
 
-const photosInput  = document.getElementById("photos");
-const photoPreview = document.getElementById("photoPreview");
-const statusEl     = document.getElementById("status");
+// helper: File -> dataURL
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload  = e => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
-// Преглед на снимки
-photosInput.addEventListener("change", function () {
+// helper: resize image via canvas
+function resizeImage(dataUrl, maxW, maxH, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+
+      const scale = Math.min(maxW / width, maxH / height, 1);
+      width  = Math.round(width  * scale);
+      height = Math.round(height * scale);
+
+      const canvas = document.createElement("canvas");
+      canvas.width  = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const out = canvas.toDataURL("image/jpeg", quality);
+      resolve(out);
+    };
+    img.src = dataUrl;
+  });
+}
+
+// преглед + намаляване на снимки
+photosInput.addEventListener("change", async function () {
   const files = Array.from(this.files || []);
   currentImages = [];
   photoPreview.innerHTML = "";
 
-  files.forEach((file, index) => {
-    if (!file.type.startsWith("image/")) return;
+  const maxW = 1280;   // макс ширина
+  const maxH = 720;    // макс височина
+  const quality = 0.7; // jpeg качество
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const src = e.target.result;
-      currentImages.push(src);
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (!file.type.startsWith("image/")) continue;
+
+    try {
+      const rawData = await fileToDataURL(file);
+      const resized = await resizeImage(rawData, maxW, maxH, quality);
+
+      currentImages.push(resized);
 
       const box = document.createElement("div");
       box.className = "photo-thumb";
       box.innerHTML = `
-        <img src="${src}">
-        <span>#${index + 1}</span>
+        <img src="${resized}">
+        <span>#${currentImages.length}</span>
       `;
       photoPreview.appendChild(box);
-    };
-    reader.readAsDataURL(file);
-  });
+    } catch (err) {
+      console.warn("Image resize error:", err);
+    }
+  }
 });
 
 function setStatus(msg, error = false) {
@@ -402,7 +452,7 @@ function setStatus(msg, error = false) {
   statusEl.style.color = error ? "var(--danger)" : "var(--success)";
 }
 
-// 🔥 SAVE PLANET
+// запис на планета
 function savePlanet(e) {
   e.preventDefault();
 
@@ -415,7 +465,7 @@ function savePlanet(e) {
   }
 
   const p = {
-    id: Date.now(),
+    id:        Date.now(),
     name:      document.getElementById("name").value.trim(),
     galaxy:    document.getElementById("galaxy").value.trim(),
     system:    document.getElementById("system").value.trim(),
@@ -439,14 +489,12 @@ function savePlanet(e) {
 
   list.push(p);
 
-  // опит 1 – със снимки
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
     setStatus("ПЛАНЕТАТА Е ЗАПАЗЕНА ✔");
   } catch (err1) {
     console.warn("Снимките са твърде големи → запис без снимки", err1);
 
-    // опит 2 – без снимки
     p.images = [];
     list[list.length - 1] = p;
 
