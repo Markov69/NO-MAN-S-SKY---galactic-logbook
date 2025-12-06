@@ -1,568 +1,3 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-  <meta charset="UTF-8">
-  <title>NMS Logbook • Planet Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
-  <style>
-    :root {
-      --bg: #020513;
-      --panel: rgba(4, 12, 30, 0.96);
-      --border: rgba(0, 200, 255, 0.7);
-      --accent: #4cd8ff;
-      --text: #e5f8ff;
-      --danger: #ff8080;
-      --success: #9effc0;
-      --chip-bg: rgba(4,25,55,0.95);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Orbitron", system-ui, sans-serif;
-      background:
-        radial-gradient(circle at 0 0, #172747, transparent 60%),
-        radial-gradient(circle at 100% 100%, #061024, transparent 55%),
-        var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 24px 8px;
-    }
-
-    .panel {
-      width: min(1080px, 100%);
-      background: var(--panel);
-      border-radius: 26px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 34px rgba(0, 200, 255, 0.35);
-      padding: 26px 26px 22px;
-      position: relative;
-      margin-top: 40px;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 12px;
-      border-radius: 18px;
-      border: 1px dashed rgba(0,200,255,0.35);
-      pointer-events: none;
-    }
-
-    h1 {
-      margin: 0 0 6px;
-      font-size: 22px;
-      letter-spacing: 0.26em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-align: center;
-      text-shadow: 0 0 14px rgba(80,220,255,0.8);
-    }
-
-    .subtitle {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(200,220,255,0.7);
-      margin-bottom: 10px;
-    }
-
-    /* CAPTAIN – квадратна снимка + бутони */
-    .captain-box {
-      width: 150px;
-      margin: 6px auto 24px auto;
-      text-align: center;
-    }
-
-    .captain-frame {
-      width: 130px;
-      height: 130px;
-      border-radius: 14px;
-      border: 2px solid rgba(0,200,255,0.9);
-      box-shadow: 0 0 18px rgba(0,200,255,0.7);
-      overflow: hidden;
-      background: #000;
-      margin: 0 auto 10px auto;
-    }
-
-    .captain-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .btn-captain,
-    .btn-remove-captain {
-      margin-top: 4px;
-      padding: 6px 10px;
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      cursor: pointer;
-      border: 1px solid rgba(0,200,255,0.7);
-      background: rgba(0,20,40,0.7);
-      color: #4cd8ff;
-      width: 100%;
-    }
-
-    .btn-remove-captain {
-      border-color: rgba(255,70,70,0.9);
-      background: rgba(50,0,0,0.7);
-      color: #ffb0b0;
-    }
-
-    /* GRID FORM – горната част с основните полета */
-    .grid-top {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px 18px;
-      margin-bottom: 14px;
-    }
-
-    .full-row { grid-column: 1 / -1; }
-
-    label {
-      display: block;
-      font-size: 9px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      color: rgba(190,215,255,0.8);
-    }
-
-    input[type="text"],
-    textarea {
-      width: 100%;
-      padding: 7px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(71,194,255,0.7);
-      background: rgba(3,10,30,0.9);
-      color: var(--text);
-      outline: none;
-      font-family: inherit;
-      font-size: 11px;
-    }
-
-    textarea {
-      border-radius: 12px;
-      min-height: 80px;
-      resize: vertical;
-    }
-
-    input[type="text"]:focus,
-    textarea:focus {
-      border-color: #ffffff;
-    }
-
-    /* LOGOUT */
-    .logout-btn {
-      position: absolute;
-      top: 14px;
-      right: 18px;
-      padding: 6px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,120,120,0.8);
-      background: rgba(40,0,0,0.8);
-      color: #ffc9c9;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      cursor: pointer;
-      z-index: 4;
-    }
-
-    /* SECTION HEADERS (Animals / Plants / Resources / Hazards) */
-    .section-block {
-      margin-top: 12px;
-      border-radius: 18px;
-      border: 1px solid rgba(0, 150, 240, 0.4);
-      background: radial-gradient(circle at 0 0, rgba(0,60,120,0.45), transparent 60%),
-                  radial-gradient(circle at 100% 100%, rgba(0,30,80,0.7), transparent 60%),
-                  rgba(3,10,25,0.95);
-      padding: 12px 14px 10px;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .section-title {
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(210,235,255,0.9);
-    }
-
-    .section-caption {
-      font-size: 9px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(145,190,235,0.8);
-      margin-top: 2px;
-    }
-
-    .btn-chip {
-      padding: 6px 14px;
-      font-size: 9px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      border: 1px solid rgba(0,200,255,0.7);
-      background: var(--chip-bg);
-      color: #7fe9ff;
-      cursor: pointer;
-    }
-
-    .cards-wrap {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .entry-card {
-      display: grid;
-      grid-template-columns: 130px minmax(0, 1fr) 86px;
-      gap: 10px;
-      padding: 10px 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(0,120,200,0.6);
-      background: rgba(2,8,20,0.9);
-      align-items: center;
-    }
-
-    .entry-thumb {
-      width: 120px;
-      height: 120px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(0,200,255,0.8);
-      box-shadow: 0 0 10px rgba(0,200,255,0.65);
-      cursor: pointer;
-      background: #000;
-      position: relative;
-    }
-
-    .entry-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .entry-main input[type="text"] {
-      border-radius: 999px;
-      margin-bottom: 6px;
-    }
-
-    .entry-main textarea {
-      border-radius: 10px;
-      min-height: 48px;
-      font-size: 10px;
-    }
-
-    .entry-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      align-items: stretch;
-      justify-content: flex-start;
-    }
-
-    .btn-entry-upload,
-    .btn-entry-remove {
-      padding: 6px 8px;
-      font-size: 9px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      border: 1px solid rgba(0,200,255,0.7);
-      background: rgba(0,18,40,0.9);
-      color: #7fe9ff;
-      cursor: pointer;
-    }
-
-    .btn-entry-remove {
-      border-color: rgba(255,90,90,0.9);
-      background: rgba(40,0,0,0.9);
-      color: #ffc3c3;
-    }
-
-    /* PLANET PHOTOS */
-    .planet-photos-label {
-      font-size: 9px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-top: 12px;
-      margin-bottom: 4px;
-      color: rgba(190,215,255,0.8);
-    }
-
-    .photo-preview-wrap {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-
-    .photo-thumb {
-      width: 80px;
-      height: 60px;
-      overflow: hidden;
-      border-radius: 9px;
-      border: 1px solid cyan;
-      box-shadow: 0 0 10px cyan;
-    }
-
-    .photo-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* SAVE BUTTON */
-    .btn-save-row {
-      text-align: center;
-      margin-top: 18px;
-    }
-
-    .btn-primary {
-      padding: 14px 46px;
-      border-radius: 999px;
-      border: 2px solid rgba(71,194,255,0.8);
-      background: linear-gradient(135deg, #050c1a, #0c284c);
-      color: #34d2ff;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
-      font-size: 11px;
-      cursor: pointer;
-    }
-
-    .status {
-      margin-top: 12px;
-      text-align: center;
-      font-size: 12px;
-      min-height: 18px;
-    }
-
-    /* LIGHTBOX за zoom на картинките */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    .lightbox img {
-      max-width: 90vw;
-      max-height: 90vh;
-      border-radius: 12px;
-      border: 2px solid rgba(0,200,255,0.8);
-      box-shadow: 0 0 24px rgba(0,200,255,0.9);
-    }
-
-    @media (max-width: 900px) {
-      .grid-top {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .entry-card {
-        grid-template-columns: 1fr;
-        justify-items: stretch;
-      }
-
-      .entry-actions {
-        flex-direction: row;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .grid-top {
-        grid-template-columns: 1fr;
-      }
-    }
-
-  </style>
-</head>
-
-<body>
-
-<div class="panel">
-
-  <button class="logout-btn" onclick="logout()">LOG OUT</button>
-
-  <h1>PLANET ADMIN</h1>
-  <div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG • FULL PLANET RECORD</div>
-
-  <!-- CAPTAIN PHOTO -->
-  <div class="captain-box">
-    <div class="captain-frame">
-      <img src="media/captain.png" alt="captain" id="captainImg">
-    </div>
-
-    <input type="file" id="captainUpload" accept="image/*" style="display:none;">
-
-    <button class="btn-captain" onclick="document.getElementById('captainUpload').click()">
-      CHANGE CAPTAIN PHOTO
-    </button>
-
-    <button class="btn-remove-captain" onclick="removeCaptainPhoto()">
-      REMOVE
-    </button>
-  </div>
-
-  <form id="planetForm" onsubmit="savePlanet(event)">
-
-    <!-- TOP GRID -->
-    <div class="grid-top">
-      <div>
-        <label>Planet</label>
-        <input id="name" type="text">
-      </div>
-
-      <div>
-        <label>Galaxy</label>
-        <input id="galaxy" type="text">
-      </div>
-
-      <div>
-        <label>System</label>
-        <input id="system" type="text">
-      </div>
-
-      <div>
-        <label>Biome</label>
-        <input id="biome" type="text">
-      </div>
-
-      <div>
-        <label>Weather</label>
-        <input id="weather" type="text">
-      </div>
-
-      <div>
-        <label>Temperature</label>
-        <input id="temp" type="text">
-      </div>
-
-      <div>
-        <label>Hazards (short)</label>
-        <input id="hazard" type="text">
-      </div>
-
-      <div>
-        <label>Flora Count</label>
-        <input id="floraCount" type="text">
-      </div>
-
-      <div>
-        <label>Fauna Count</label>
-        <input id="faunaCount" type="text">
-      </div>
-
-      <div class="full-row">
-        <label>Resources (summary)</label>
-        <input id="resourcesSummary" type="text">
-      </div>
-
-      <div class="full-row">
-        <label>Description / Story</label>
-        <textarea id="desc" placeholder="Какво намери, как мина мисията, бази, ресурси..."></textarea>
-      </div>
-    </div>
-
-    <!-- ANIMALS -->
-    <div class="section-block" id="animalsSection">
-      <div class="section-header">
-        <div>
-          <div class="section-title">ANIMALS</div>
-          <div class="section-caption">CREATURES YOU DISCOVERED • NAME • BEHAVIOUR • SPECIAL NOTES</div>
-        </div>
-        <button type="button" class="btn-chip" onclick="addEntryCard('animalsList')">+ ADD ANIMAL</button>
-      </div>
-
-      <div class="cards-wrap" id="animalsList">
-        <!-- cards go here -->
-      </div>
-    </div>
-
-    <!-- PLANTS -->
-    <div class="section-block" id="plantsSection">
-      <div class="section-header">
-        <div>
-          <div class="section-title">PLANTS</div>
-          <div class="section-caption">FLORA • HAZARDOUS, RARE, BEAUTIFUL • WHERE YOU SAW IT</div>
-        </div>
-        <button type="button" class="btn-chip" onclick="addEntryCard('plantsList')">+ ADD PLANT</button>
-      </div>
-
-      <div class="cards-wrap" id="plantsList">
-      </div>
-    </div>
-
-    <!-- RESOURCES -->
-    <div class="section-block" id="resourcesSection">
-      <div class="section-header">
-        <div>
-          <div class="section-title">RESOURCES</div>
-          <div class="section-caption">MINERALS • GASES • TRADE GOODS WITH EXAMPLE PHOTO</div>
-        </div>
-        <button type="button" class="btn-chip" onclick="addEntryCard('resourcesList')">+ ADD RESOURCE</button>
-      </div>
-
-      <div class="cards-wrap" id="resourcesList">
-      </div>
-    </div>
-
-    <!-- HAZARDS -->
-    <div class="section-block" id="hazardsSection">
-      <div class="section-header">
-        <div>
-          <div class="section-title">HAZARDS</div>
-          <div class="section-caption">STORMS • TOXIC RAIN • SENTINEL THREATS • ANY DANGER</div>
-        </div>
-        <button type="button" class="btn-chip" onclick="addEntryCard('hazardsList')">+ ADD HAZARD</button>
-      </div>
-
-      <div class="cards-wrap" id="hazardsList">
-      </div>
-    </div>
-
-    <!-- PLANET PHOTOS -->
-    <div class="planet-photos-label">PLANET JOURNAL PHOTOS (CLICK TO CHOOSE JPG/PNG)</div>
-    <input type="file" id="photos" accept="image/*" multiple>
-
-    <div id="photoPreview" class="photo-preview-wrap"></div>
-
-    <div class="btn-save-row">
-      <button type="submit" class="btn-primary">SAVE ENTRY</button>
-    </div>
-
-    <div id="status" class="status"></div>
-  </form>
-</div>
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <img id="lightboxImg" src="" alt="">
-</div>
-
 <script>
   // --- LOGIN GUARD ---
   if (localStorage.getItem("isAdmin") !== "true") {
@@ -588,18 +23,15 @@
   const captainImg = document.getElementById("captainImg");
   const captainUpload = document.getElementById("captainUpload");
 
-  // при зареждане – ако имаме записана снимка
   const savedCaptain = localStorage.getItem("captainPhoto");
-  if (savedCaptain) {
-    captainImg.src = savedCaptain;
-  }
+  if (savedCaptain) captainImg.src = savedCaptain;
 
   captainUpload.addEventListener("change", function () {
     const file = this.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.onload = e => {
       captainImg.src = e.target.result;
       localStorage.setItem("captainPhoto", e.target.result);
     };
@@ -635,10 +67,16 @@
   }
 
   // ---------- PLANET PHOTOS PREVIEW ----------
+  const selectedPlanetPhotos = [];
+
   document.getElementById("photos").addEventListener("change", async function () {
     photoPreview.innerHTML = "";
+    selectedPlanetPhotos.length = 0;
+
     for (let file of this.files) {
       const dataUrl = await compressImage(file, 700, 0.7);
+      selectedPlanetPhotos.push(dataUrl);
+
       const div = document.createElement("div");
       div.className = "photo-thumb";
       div.innerHTML = `<img src="${dataUrl}" alt="">`;
@@ -646,39 +84,34 @@
     }
   });
 
-  // ---------- GENERIC ENTRY CARD (Animals/Plants/Resources/Hazards) ----------
+  // ---------- ENTRY CARDS ----------
   function addEntryCard(listId) {
     const list = document.getElementById(listId);
 
     const card = document.createElement("div");
     card.className = "entry-card";
-    card.dataset.img = ""; // ще пазим base64 тук
+    card.dataset.img = "";
 
     const imgId = "img_" + Math.random().toString(36).slice(2);
     const fileId = "file_" + Math.random().toString(36).slice(2);
 
     card.innerHTML = `
       <div class="entry-thumb" onclick="openLightboxFromThumb('${imgId}')">
-        <img id="${imgId}" src="media/captain.png" alt="">
+        <img id="${imgId}" src="media/captain.png">
       </div>
       <div class="entry-main">
         <input type="text" class="entry-name" placeholder="Name / Type">
-        <textarea class="entry-desc" placeholder="Short description, behaviour, where you saw it..."></textarea>
+        <textarea class="entry-desc" placeholder="Short description..."></textarea>
       </div>
       <div class="entry-actions">
         <input type="file" id="${fileId}" accept="image/*" style="display:none;">
-        <button type="button" class="btn-entry-upload" onclick="document.getElementById('${fileId}').click()">
-          Upload
-        </button>
-        <button type="button" class="btn-entry-remove" onclick="this.closest('.entry-card').remove()">
-          Remove
-        </button>
+        <button type="button" class="btn-entry-upload" onclick="document.getElementById('${fileId}').click()">Upload</button>
+        <button type="button" class="btn-entry-remove" onclick="this.closest('.entry-card').remove()">Remove</button>
       </div>
     `;
 
     list.appendChild(card);
 
-    // обработка на качване
     const fileInput = card.querySelector("#" + fileId);
     const imgEl = card.querySelector("#" + imgId);
 
@@ -704,34 +137,24 @@
 
   function closeLightbox() {
     lightbox.style.display = "none";
-    lightboxImg.src = "";
   }
 
-  // ---------- SAVE ENTRY ----------
+  // ---------- COLLECT ENTRIES ----------
   function collectEntries(listId) {
     const list = document.getElementById(listId);
     const cards = list.querySelectorAll(".entry-card");
-    const result = [];
-    cards.forEach(card => {
-      const name = card.querySelector(".entry-name").value.trim();
-      const desc = card.querySelector(".entry-desc").value.trim();
-      const img = card.dataset.img || card.querySelector(".entry-thumb img").src || "";
-      if (!name && !desc && !img) return;
-      result.push({ name, desc, img });
-    });
-    return result;
+    return Array.from(cards).map(card => ({
+      name: card.querySelector(".entry-name").value.trim(),
+      desc: card.querySelector(".entry-desc").value.trim(),
+      img: card.dataset.img || "media/captain.png"
+    }));
   }
 
+  // ---------- SAVE PLANET ----------
   function savePlanet(e) {
     e.preventDefault();
 
-    let list = [];
-    try {
-      list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    } catch {
-      setStatus("Storage corrupt!", true);
-      return;
-    }
+    let list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
     const p = {
       id: Date.now(),
@@ -746,11 +169,11 @@
       faunaCount: faunaCount.value.trim(),
       resourcesSummary: resourcesSummary.value.trim(),
       desc: desc.value.trim(),
-      // детайлните секции:
       animals: collectEntries("animalsList"),
       plants: collectEntries("plantsList"),
       resourcesDetailed: collectEntries("resourcesList"),
       hazardsDetailed: collectEntries("hazardsList"),
+      images: selectedPlanetPhotos,
       createdAt: new Date().toISOString()
     };
 
@@ -759,26 +182,18 @@
       return;
     }
 
-    // засега не записваме planet-level photos (само визуално)
-
     list.push(p);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-      setStatus("Saved ✔");
-    } catch (err) {
-      setStatus("SAVE ERROR!", true);
-      return;
-    }
+    setStatus("Saved ✔");
 
     planetForm.reset();
     photoPreview.innerHTML = "";
+    selectedPlanetPhotos.length = 0;
+
     document.getElementById("animalsList").innerHTML = "";
     document.getElementById("plantsList").innerHTML = "";
     document.getElementById("resourcesList").innerHTML = "";
     document.getElementById("hazardsList").innerHTML = "";
   }
 </script>
-
-</body>
-</html>
