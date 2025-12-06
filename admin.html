@@ -1,251 +1,237 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8">
-<title>NMS Logbook • Planet Admin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>NMS Logbook • Planet Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-:root {
-  --bg: #020513;
-  --panel: rgba(4, 12, 30, 0.96);
-  --border: rgba(0, 200, 255, 0.7);
-  --accent: #4cd8ff;
-  --text: #e5f8ff;
-  --danger: #ff8080;
-  --success: #9effc0;
-}
+  <style>
+    :root {
+      --bg: #020513;
+      --panel: rgba(4,12,30,0.96);
+      --border: rgba(0,200,255,0.7);
+      --accent: #4cd8ff;
+      --text: #e5f8ff;
+      --danger: #ff8080;
+      --success: #9effc0;
+    }
 
-* { box-sizing: border-box; }
+    * { box-sizing: border-box; }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  font-family: "Orbitron", system-ui, sans-serif;
-  background: radial-gradient(circle at 0 0, #172747, transparent 60%),
-              radial-gradient(circle at 100% 100%, #061024, transparent 55%),
-              var(--bg);
-  color: var(--text);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 24px 8px;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Orbitron", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 0 0, #172747, transparent 60%),
+        radial-gradient(circle at 100% 100%, #061024, transparent 55%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 8px;
+    }
 
-.panel {
-  width: min(1080px, 100%);
-  background: var(--panel);
-  border-radius: 26px;
-  border: 1px solid var(--border);
-  box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
-  padding: 26px 26px 22px;
-  position: relative;
-  margin-top: 40px;
-}
+    .panel {
+      width: min(1080px, 100%);
+      background: var(--panel);
+      border-radius: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 34px rgba(0,200,255,0.45);
+      padding: 26px 26px 22px;
+      position: relative;
+      margin-top: 40px;
+    }
 
-.panel::before {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  border-radius: 18px;
-  border: 1px dashed rgba(0,200,255,0.35);
-  pointer-events: none;
-}
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 18px;
+      border: 1px dashed rgba(0,200,255,0.35);
+      pointer-events: none;
+    }
 
-h1 {
-  margin: 0 0 6px;
-  font-size: 22px;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--accent);
-  text-align: center;
-  text-shadow: 0 0 14px rgba(80,220,255,0.8);
-}
+    h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: var(--accent);
+      text-align: center;
+      text-shadow: 0 0 14px rgba(80,220,255,0.8);
+    }
 
-.subtitle {
-  text-align: center;
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(200,220,255,0.7);
-  margin-bottom: 20px;
-}
+    .subtitle {
+      text-align: center;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(200,220,255,0.7);
+      margin-bottom: 16px;
+    }
 
-/* --- CAPTAIN IMAGE UNDER TITLE --- */
-.captain-box {
-  width: 140px;
-  margin: 10px auto 22px auto;
-  text-align: center;
-}
+    /* КАПИТАНСКА СНИМКА – ПОД ЗАГЛАВИЕТО */
+    .captain-center {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .captain-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 14px;
+      border: 2px solid rgba(0,200,255,0.9);
+      object-fit: cover;
+      box-shadow: 0 0 18px rgba(0,200,255,0.8);
+      background: black;
+    }
 
-.captain-avatar {
-  width: 130px;
-  height: 130px;
-  border-radius: 14px;
-  border: 2px solid rgba(0,200,255,0.9);
-  box-shadow: 0 0 18px rgba(0,200,255,0.8);
-  object-fit: cover;
-  background: black;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px 18px;
+      z-index: 1;
+    }
 
-/* GRID FORM */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px 18px;
-  position: relative;
-  z-index: 1;
-}
+    label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      color: rgba(190,215,255,0.8);
+    }
 
-label {
-  display: block;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-  color: rgba(190,215,255,0.8);
-}
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(71,194,255,0.7);
+      background: rgba(3,10,30,0.9);
+      color: var(--text);
+      font-size: 12px;
+      outline: none;
+    }
 
-input[type="text"], textarea {
-  width: 100%;
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(71,194,255,0.7);
-  background: rgba(3,10,30,0.9);
-  color: var(--text);
-  outline: none;
-  font-family: inherit;
-  font-size: 12px;
-}
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
 
-textarea {
-  min-height: 80px;
-  resize: vertical;
-}
+    .full { grid-column: 1 / -1; }
 
-.full { grid-column: 1 / -1; }
+    .btn-row {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-top: 14px;
+    }
 
-/* LOGOUT BUTTON */
-.logout-btn {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  padding: 6px 18px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,120,120,0.8);
-  background: rgba(40,0,0,0.8);
-  color: #ffc9c9;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  cursor: pointer;
-  z-index: 4;
-}
+    .btn-primary {
+      padding: 14px 46px;
+      border-radius: 999px;
+      border: 2px solid rgba(71,194,255,0.8);
+      background: linear-gradient(135deg,#050c1a,#0c284c);
+      color: #34d2ff;
+      letter-spacing: 0.25em;
+      font-size: 11px;
+      cursor: pointer;
+    }
 
-/* SAVE BUTTON */
-.btn-row {
-  grid-column: 1 / -1;
-  text-align: center;
-  margin-top: 14px;
-}
+    .status {
+      margin-top: 12px;
+      grid-column: 1 / -1;
+      text-align: center;
+      font-size: 12px;
+      min-height: 18px;
+    }
 
-.btn-primary {
-  padding: 14px 46px;
-  border-radius: 999px;
-  border: 2px solid rgba(71,194,255,0.8);
-  background: linear-gradient(135deg, #050c1a, #0c284c);
-  color: #34d2ff;
-  text-transform: uppercase;
-  letter-spacing: 0.25em;
-  font-size: 11px;
-  cursor: pointer;
-}
+    .photo-preview-wrap {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.status {
-  margin-top: 12px;
-  grid-column: 1 / -1;
-  text-align: center;
-  font-size: 12px;
-  min-height: 18px;
-}
+    .photo-thumb {
+      width: 80px;
+      height: 60px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid cyan;
+      box-shadow: 0 0 10px cyan;
+    }
+    .photo-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-/* PHOTO PREVIEW */
-.photo-preview-wrap {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 10px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-}
-
-.photo-thumb {
-  width: 80px;
-  height: 60px;
-  overflow: hidden;
-  border-radius: 10px;
-  border: 1px solid cyan;
-  box-shadow: 0 0 10px cyan;
-}
-
-.photo-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-</style>
+    .logout-btn {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      color: #ffc9c9;
+      border: 1px solid rgba(255,120,120,0.8);
+      background: rgba(40,0,0,0.8);
+      cursor: pointer;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="panel">
 
-<button class="logout-btn" onclick="logout()">LOG OUT</button>
+  <button class="logout-btn" onclick="logout()">LOG OUT</button>
 
-<h1>PLANET ADMIN</h1>
-<div class="subtitle">NO MAN'S SKY • SHIP LOG • RECORD</div>
+  <h1>PLANET ADMIN</h1>
+  <div class="subtitle">NO MAN'S SKY • SHIP LOG • RECORD</div>
 
-<!-- CAPTAIN IMAGE MOVED UNDER TITLE -->
-<div class="captain-box">
-  <img class="captain-avatar" id="captainImg" src="media/captain.png" alt="captain">
-</div>
-
-<form id="planetForm" class="grid" onsubmit="savePlanet(event)">
-
-  <div><label>Planet</label><input id="name"></div>
-  <div><label>Galaxy</label><input id="galaxy"></div>
-  <div><label>System</label><input id="system"></div>
-
-  <div><label>Biome</label><input id="biome"></div>
-  <div><label>Weather</label><input id="weather"></div>
-  <div><label>Temperature</label><input id="temp"></div>
-
-  <div><label>Hazards</label><input id="hazard"></div>
-  <div><label>Sentinels</label><input id="sentinels"></div>
-  <div><label>Fauna</label><input id="fauna"></div>
-
-  <div class="full"><label>Flora</label><input id="flora"></div>
-
-  <div class="full"><label>Resources</label><input id="resources"></div>
-
-  <div class="full"><label>Description</label><textarea id="desc"></textarea></div>
-
-  <div class="full">
-    <label>Photos</label>
-    <input type="file" id="photos" accept="image/*" multiple>
+  <!-- КАПИТАНСКИ ПОРТРЕТ -->
+  <div class="captain-center">
+    <img class="captain-avatar" src="media/captain.png" alt="captain">
   </div>
 
-  <div id="photoPreview" class="photo-preview-wrap"></div>
+  <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
 
-  <div class="btn-row">
-    <button type="submit" class="btn-primary">SAVE ENTRY</button>
-  </div>
+    <div><label>Planet</label><input id="name"></div>
+    <div><label>Galaxy</label><input id="galaxy"></div>
+    <div><label>System</label><input id="system"></div>
 
-  <div id="status" class="status"></div>
+    <div><label>Biome</label><input id="biome"></div>
+    <div><label>Weather</label><input id="weather"></div>
+    <div><label>Temperature</label><input id="temp"></div>
 
-</form>
+    <div><label>Hazards</label><input id="hazard"></div>
+    <div><label>Sentinels</label><input id="sentinels"></div>
+    <div><label>Fauna</label><input id="fauna"></div>
+
+    <div><label>Flora</label><input id="flora"></div>
+    <div class="full"><label>Resources</label><input id="resources"></div>
+
+    <div class="full"><label>Description</label><textarea id="desc"></textarea></div>
+
+    <div class="full">
+      <label>Photos</label>
+      <input type="file" id="photos" accept="image/*" multiple>
+    </div>
+
+    <div id="photoPreview" class="photo-preview-wrap"></div>
+
+    <div class="btn-row">
+      <button type="submit" class="btn-primary">SAVE ENTRY</button>
+    </div>
+
+    <div id="status" class="status"></div>
+
+  </form>
 </div>
 
 <script>
@@ -262,7 +248,7 @@ const STORAGE_KEY = "nms_planets_archive_v1";
 let currentImages = [];
 const statusEl = document.getElementById("status");
 
-function setStatus(msg, err = false) {
+function setStatus(msg, err=false){
   statusEl.style.color = err ? "var(--danger)" : "var(--success)";
   statusEl.textContent = msg;
 }
@@ -282,37 +268,32 @@ document.getElementById("photos").addEventListener("change", async function () {
   }
 });
 
-function compressImage(file, maxW, quality = 0.8) {
+function compressImage(file, maxW, quality=0.8) {
   return new Promise(resolve => {
     const img = new Image();
     const reader = new FileReader();
-    reader.onload = e => { img.src = e.target.result; };
-
+    reader.onload = e => img.src = e.target.result;
     img.onload = () => {
       const canvas = document.createElement("canvas");
-      let scale = maxW / img.width;
+      const scale = maxW / img.width;
       canvas.width = maxW;
       canvas.height = img.height * scale;
-
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
       resolve(canvas.toDataURL("image/jpeg", quality));
     };
-
     reader.readAsDataURL(file);
   });
 }
 
-function savePlanet(e) {
+function savePlanet(e){
   e.preventDefault();
 
-  let list = [];
+  let list;
   try {
     list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   } catch {
-    setStatus("Storage corrupt!", true);
-    return;
+    return setStatus("Storage corrupt!", true);
   }
 
   const p = {
@@ -340,17 +321,16 @@ function savePlanet(e) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
     setStatus("Saved ✔");
-  } catch (err) {
+  } catch {
     p.images = [];
-    list[list.length - 1] = p;
+    list[list.length-1] = p;
 
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
       setStatus("Saved WITHOUT images");
     } catch {
       list.pop();
-      setStatus("SAVE ERROR!", true);
-      return;
+      return setStatus("SAVE ERROR!", true);
     }
   }
 
