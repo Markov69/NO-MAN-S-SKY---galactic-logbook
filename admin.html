@@ -1,714 +1,159 @@
-<!DOCTYPE html>
-<html lang="bg">
-<head>
-  <meta charset="UTF-8">
-  <title>NMS Logbook • Planet Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+box-shadow: 0 0 34px rgba(0, 200, 255, 0.45);
+padding: 26px 26px 22px;
+position: relative;
+      margin-top: 40px;
+      margin-top: 70px;
+}
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+.panel::before {
+@@ -55,8 +55,41 @@
+pointer-events: none;
+}
 
-  <style>
-    :root {
-      --bg: #020513;
-      --panel: rgba(4, 10, 30, 0.88);
-      --panel-inner: rgba(8, 18, 50, 0.95);
-      --border: rgba(0, 200, 255, 0.9);
-      --accent: #4cd8ff;
-      --accent-2: #ff4df2;
-      --accent-3: #9bff9b;
-      --text: #e5f8ff;
-      --danger: #ff8080;
-      --success: #9effc0;
-      --scan: rgba(0,255,200,0.45);
+    /* *************** CAPTAIN FIX – НОВ КОД *************** */
+
+    .captain-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      position: absolute;
+      top: -70px;
+      left: 0;
+      z-index: 10;
     }
 
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Orbitron", system-ui, sans-serif;
-      color: var(--text);
+    .captain-frame {
+      width: 120px;
+      height: 120px;
+      border-radius: 14px;
+      border: 2px solid rgba(0,200,255,0.9);
+      box-shadow: 0 0 22px rgba(0,200,255,0.8);
+      background: black;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 10px;
-      background:
-        radial-gradient(circle at 10% 0%, #1b315a 0, transparent 55%),
-        radial-gradient(circle at 90% 100%, #210b2f 0, transparent 55%),
-        radial-gradient(circle at 50% 120%, #0c1630 0, transparent 65%),
-        #020513;
       overflow: hidden;
-    }
-
-    /* Движещ се кибер фон */
-    .bg-grid {
-      position: fixed;
-      inset: -40px;
-      background-image:
-        linear-gradient(rgba(0,255,255,0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,255,255,0.09) 1px, transparent 1px);
-      background-size: 40px 40px;
-      opacity: 0.5;
-      animation: grid-move 40s linear infinite;
-      z-index: -3;
-    }
-
-    .bg-noise {
-      position: fixed;
-      inset: 0;
-      background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.06) 0, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(255,0,180,0.12) 0, transparent 55%);
-      mix-blend-mode: screen;
-      opacity: 0.7;
-      z-index: -2;
-      animation: glow-pulse 9s ease-in-out infinite alternate;
-    }
-
-    .vignette {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle, transparent 55%, rgba(0,0,0,0.85) 100%);
-      z-index: -1;
-    }
-
-    @keyframes grid-move {
-      from { transform: translate(0,0); }
-      to   { transform: translate(-80px,-120px); }
-    }
-
-    @keyframes glow-pulse {
-      0% { opacity: 0.4; }
-      50% { opacity: 0.8; }
-      100% { opacity: 0.5; }
-    }
-
-    /* ПАНЕЛ */
-    .panel {
-      width: min(1120px, 100%);
-      background: linear-gradient(145deg,
-                   rgba(8,18,40,0.96),
-                   rgba(3,8,22,0.98));
-      border-radius: 26px;
-      border: 1px solid rgba(0,230,255,0.7);
-      box-shadow:
-        0 0 32px rgba(0, 200, 255, 0.4),
-        0 0 120px rgba(255, 0, 200, 0.35);
-      padding: 26px 26px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 14px;
-      border-radius: 18px;
-      border: 1px dashed rgba(0,220,255,0.35);
-      pointer-events: none;
-    }
-
-    .panel::after {
-      content: "";
-      position: absolute;
-      inset: -60%;
-      background:
-        conic-gradient(from 0deg,
-          rgba(0,255,255,0.0),
-          rgba(0,255,255,0.35),
-          rgba(255,0,180,0.0),
-          rgba(0,255,255,0.0));
-      opacity: 0.25;
-      animation: sweep 10s linear infinite;
-      pointer-events: none;
-      mix-blend-mode: screen;
-    }
-
-    @keyframes sweep {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
-    /* LOGOUT */
-    .logout-btn {
-      position: absolute;
-      top: 12px;
-      right: 16px;
-      padding: 6px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,120,120,0.9);
-      background: radial-gradient(circle at 20% 0, rgba(80,0,0,0.9), rgba(10,0,0,0.9));
-      color: #ffc9c9;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      cursor: pointer;
-      z-index: 5;
-      box-shadow:
-        0 0 14px rgba(255,60,60,0.6),
-        inset 0 0 10px rgba(150,0,0,0.7);
-    }
-
-    .logout-btn:hover {
-      box-shadow:
-        0 0 20px rgba(255,100,100,0.9),
-        inset 0 0 14px rgba(200,0,0,0.9);
-      transform: translateY(-1px);
-    }
-
-    /* ЗАГЛАВИЯ */
-    h1 {
-      margin: 6px 0 4px;
-      font-size: 22px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-align: center;
-      text-shadow:
-        0 0 18px rgba(80,220,255,0.9),
-        0 0 32px rgba(255,0,200,0.8);
-    }
-
-    .subtitle {
-      text-align: center;
-      font-size: 11px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(200,220,255,0.78);
-      margin-bottom: 10px;
-    }
-
-    /* АВАТАР – ХОЛОГРАМЕН ПАНЕЛ */
-    .captain-wrap {
-      display: flex;
-      justify-content: center;
-      margin: 10px 0 18px;
-    }
-
-    .captain-panel {
-      position: relative;
-      width: 150px;
-      height: 150px;
-      border-radius: 22px;
-      padding: 4px;
-      background:
-        linear-gradient(135deg,
-          rgba(0,255,255,0.8),
-          rgba(255,0,200,0.8),
-          rgba(0,255,180,0.8));
-      box-shadow:
-        0 0 26px rgba(0,255,255,0.7),
-        0 0 55px rgba(255,0,200,0.65);
-      overflow: hidden;
-    }
-
-    .captain-panel::before {
-      content: "";
-      position: absolute;
-      inset: 2px;
-      border-radius: 18px;
-      background: radial-gradient(circle at 30% 0%, rgba(0,255,255,0.2), transparent 60%),
-                  radial-gradient(circle at 80% 110%, rgba(255,0,200,0.25), transparent 60%),
-                  rgba(3,10,30,0.95);
-      z-index: 0;
-    }
-
-    .captain-panel::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg,
-                  transparent 0,
-                  rgba(255,255,255,0.2) 40%,
-                  transparent 70%);
-      mix-blend-mode: screen;
-      opacity: 0.0;
-      animation: holo-swipe 5.5s ease-in-out infinite;
-      z-index: 2;
-    }
-
-    @keyframes holo-swipe {
-      0%   { transform: translateX(-120%); opacity: 0; }
-      35%  { transform: translateX(0);     opacity: 0.8; }
-      70%  { transform: translateX(120%);  opacity: 0; }
-      100% { transform: translateX(120%);  opacity: 0; }
     }
 
     .captain-avatar {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      height: 100%;
-      border-radius: 16px;
-      object-fit: cover;
-      filter: saturate(1.1) contrast(1.05);
-    }
-
-    /* ГРИД ЗА ПОЛЕТАТА */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px 18px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .full {
-      grid-column: 1 / -1;
-    }
-
-    label {
-      display: block;
-      font-size: 9px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      margin-bottom: 4px;
-      color: rgba(190,215,255,0.88);
-    }
-
-    .field {
-      position: relative;
-    }
-
-    /* БАЗОВИ INPUT-и */
-    input[type="text"],
-    textarea {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 11px;
-      border: 1px solid rgba(71,194,255,0.6);
-      background: rgba(3,10,30,0.92);
-      color: var(--text);
-      outline: none;
-      font-family: inherit;
-      font-size: 12px;
-      transition: 0.18s ease-out;
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    input::placeholder,
-    textarea::placeholder {
-      color: rgba(160,190,230,0.6);
-      font-size: 11px;
-    }
-
-    /* ---------- СТИЛ 1: ХОЛОГРАМНО ПОЛЕ ---------- */
-    .field--holo input {
-      background: radial-gradient(circle at 0 0, rgba(0,255,255,0.18), transparent 58%),
-                  rgba(3,10,30,0.9);
-      border-color: rgba(0,230,255,0.9);
-      box-shadow: 0 0 12px rgba(0,230,255,0.45);
-    }
-
-    .field--holo::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 11px;
-      border: 1px solid rgba(0,255,255,0.18);
-      pointer-events: none;
-    }
-
-    .field--holo input:focus {
-      box-shadow:
-        0 0 17px rgba(0,255,255,0.8),
-        0 0 30px rgba(0,150,255,0.8);
-      transform: translateY(-1px);
-    }
-
-    /* ---------- СТИЛ 2: НЕОНОВО ДЕБЕЛА РАМКА ---------- */
-    .field--neon input {
-      border-width: 2px;
-      border-color: rgba(255,0,200,0.8);
-      background:
-        linear-gradient(135deg, rgba(12,0,18,0.95), rgba(5,10,30,0.95));
-      box-shadow:
-        0 0 18px rgba(255,0,200,0.7),
-        inset 0 0 8px rgba(255,0,200,0.35);
-    }
-
-    .field--neon input:focus {
-      border-color: #ffffff;
-      box-shadow:
-        0 0 26px rgba(255,0,200,1),
-        inset 0 0 14px rgba(255,0,200,0.9);
-    }
-
-    /* ---------- СТИЛ 3: СКАНИРАЩО ПОЛЕ ---------- */
-    .field--scan {
-      overflow: hidden;
-    }
-
-    .field--scan::before {
-      content: "";
-      position: absolute;
-      left: -120%;
-      top: 0;
-      width: 80%;
-      height: 2px;
-      background: linear-gradient(90deg,
-                  transparent,
-                  var(--scan),
-                  transparent);
-      animation: scan-line 2.4s linear infinite;
-      pointer-events: none;
-    }
-
-    .field--scan input {
-      border-color: rgba(0,255,200,0.6);
-      box-shadow:
-        0 0 10px rgba(0,255,200,0.6),
-        inset 0 0 5px rgba(0,255,150,0.3);
-    }
-
-    .field--scan input:focus {
-      box-shadow:
-        0 0 18px rgba(0,255,200,0.9),
-        0 0 32px rgba(0,255,150,0.9);
-    }
-
-    @keyframes scan-line {
-      from { transform: translateX(0); }
-      to   { transform: translateX(260%); }
-    }
-
-    /* ---------- СТИЛ 4: HOLO-LIST (ПРОЗРАЧНО) ---------- */
-    .field--ghost input,
-    .field--ghost textarea {
-      background: rgba(3,10,30,0.35);
-      border-color: rgba(200,220,255,0.55);
-      box-shadow:
-        0 0 10px rgba(180,200,255,0.4),
-        inset 0 0 10px rgba(0,0,0,0.85);
-      backdrop-filter: blur(6px);
-    }
-
-    .field--ghost input:focus,
-    .field--ghost textarea:focus {
-      border-color: #ffffff;
-      box-shadow:
-        0 0 20px rgba(200,220,255,0.9),
-        inset 0 0 16px rgba(0,0,0,0.9);
-    }
-
-    /* ФОТО ПРЕГЛЕД */
-    .photo-preview-wrap {
-      grid-column: 1 / -1;
-      display: flex;
-      gap: 10px;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-
-    .photo-thumb {
-      width: 90px;
-      height: 68px;
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(0,255,255,0.9);
-      box-shadow:
-        0 0 12px rgba(0,255,255,0.8),
-        0 0 26px rgba(255,0,200,0.8);
-      position: relative;
-    }
-
-    .photo-thumb::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg,
-                  rgba(255,255,255,0.08),
-                  transparent 60%);
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    .photo-thumb img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    /* SAVE BUTTON & STATUS */
-    .btn-row {
-      grid-column: 1 / -1;
+    /* ******************************************************* */
+
+h1 {
+      margin: 0 0 6px;
+      margin: 40px 0 6px;
+font-size: 22px;
+letter-spacing: 0.26em;
+text-transform: uppercase;
+@@ -104,10 +137,8 @@
+}
+
+textarea { min-height: 80px; resize: vertical; }
+
+.full { grid-column: 1 / -1; }
+
+    /* LOGOUT */
+.logout-btn {
+position: absolute;
+top: 14px;
+@@ -121,27 +152,7 @@
+letter-spacing: 0.18em;
+text-transform: uppercase;
+cursor: pointer;
+      z-index: 4;
+    }
+
+    /* CAPTAIN PORTRAIT */
+    .captain-box {
+      position: absolute;
+      top: 60px;
+      right: 22px;
+      width: 120px;
       text-align: center;
-      margin-top: 12px;
+      z-index: 3;
     }
 
-    .btn-primary {
-      padding: 14px 46px;
-      border-radius: 999px;
-      border: 2px solid rgba(71,194,255,0.85);
-      background:
-        radial-gradient(circle at 0 0, rgba(0,255,255,0.35), transparent 60%),
-        linear-gradient(135deg, #050c1a, #0c284c);
-      color: #34d2ff;
-      text-transform: uppercase;
-      letter-spacing: 0.25em;
-      font-size: 11px;
-      cursor: pointer;
-      box-shadow:
-        0 0 20px rgba(71,194,255,0.9),
-        0 0 40px rgba(255,0,200,0.7);
-      transition: 0.18s ease-out;
-    }
+    .captain-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      border: 2px solid rgba(0,200,255,0.9);
+      box-shadow: 0 0 18px rgba(0,200,255,0.8);
+      object-fit: cover;
+      background: black;
+      z-index: 15;
+}
 
-    .btn-primary:hover {
-      color: #ffffff;
-      border-color: #ffffff;
-      box-shadow:
-        0 0 28px rgba(71,194,255,1),
-        0 0 55px rgba(255,0,200,1);
-      transform: translateY(-1px);
-    }
+.btn-row { grid-column: 1 / -1; text-align: center; margin-top: 14px; }
+@@ -166,7 +177,6 @@
+min-height: 18px;
+}
 
-    .status {
-      margin-top: 10px;
-      grid-column: 1 / -1;
-      text-align: center;
-      font-size: 12px;
-      min-height: 18px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
+    /* PREVIEW */
+.photo-preview-wrap { grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; }
+.photo-thumb {
+width: 80px; height: 60px;
+@@ -176,20 +186,22 @@
+box-shadow: 0 0 10px cyan;
+}
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-    @media (max-width: 800px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 540px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+</style>
 </head>
 
 <body>
-
-<div class="bg-grid"></div>
-<div class="bg-noise"></div>
-<div class="vignette"></div>
-
 <div class="panel">
 
   <button class="logout-btn" onclick="logout()">LOG OUT</button>
 
-  <h1>PLANET ADMIN</h1>
-  <div class="subtitle">NO MEAN'S SKY • SHIP LOG • PERSONAL DIARY</div>
-
-  <!-- ХОЛОГРАМЕН ПОРТРЕТ НА КАПИТАНА -->
-  <div class="captain-wrap">
-    <div class="captain-panel">
-      <img class="captain-avatar" src="media/captain.png" alt="captain">
+  <div class="captain-box">
+    <img class="captain-avatar" id="captainImg"
+         src="media/captain.png"
+         alt="captain">
+  <!-- NEW CAPTAIN SYSTEM -->
+  <div class="captain-wrapper">
+    <div class="captain-frame">
+      <img class="captain-avatar" id="captainImg" src="media/captain.png" alt="captain">
     </div>
-  </div>
+</div>
 
-  <form id="planetForm" class="grid" onsubmit="savePlanet(event)">
+  <button class="logout-btn" onclick="logout()">LOG OUT</button>
 
-    <!-- Първи ред – 3 различни стила -->
-    <div class="field field--holo">
-      <label>Planet</label>
-      <input id="name" type="text" placeholder="Ex: Elysian Haven">
-    </div>
+<h1>PLANET ADMIN</h1>
+<div class="subtitle">NO MAN'S SKY • SHIP LOG • RECORD</div>
 
-    <div class="field field--neon">
-      <label>Galaxy</label>
-      <input id="galaxy" type="text" placeholder="Euclid / Hilbert...">
-    </div>
+@@ -211,10 +223,7 @@ <h1>PLANET ADMIN</h1>
 
-    <div class="field field--scan">
-      <label>System</label>
-      <input id="system" type="text" placeholder="System Name">
-    </div>
+<div class="full"><label>Description</label><textarea id="desc"></textarea></div>
 
-    <!-- Втори ред -->
-    <div class="field field--ghost">
-      <label>Biome</label>
-      <input id="biome" type="text" placeholder="Lush / Toxic / Frozen...">
-    </div>
-
-    <div class="field field--holo">
-      <label>Weather</label>
-      <input id="weather" type="text" placeholder="Weather pattern">
-    </div>
-
-    <div class="field field--neon">
-      <label>Temperature</label>
-      <input id="temp" type="text" placeholder="°C / °F">
-    </div>
-
-    <!-- Трети ред -->
-    <div class="field field--scan">
-      <label>Hazards</label>
-      <input id="hazard" type="text" placeholder="Storms, radiation...">
-    </div>
-
-    <div class="field field--ghost">
-      <label>Sentinels</label>
-      <input id="sentinels" type="text" placeholder="Low / High / Aggressive">
-    </div>
-
-    <div class="field field--holo">
-      <label>Fauna</label>
-      <input id="fauna" type="text" placeholder="Rich / Sparse / None">
-    </div>
-
-    <!-- Flora -->
-    <div class="field field--neon full">
-      <label>Flora</label>
-      <input id="flora" type="text" placeholder="Rich / Sparse / Exotic">
-    </div>
-
-    <!-- Resources -->
-    <div class="field field--scan full">
-      <label>Resources</label>
-      <input id="resources" type="text" placeholder="Copper • Paraffinium • Activated Indium...">
-    </div>
-
-    <!-- Description -->
-    <div class="field field--ghost full">
-      <label>Description</label>
-      <textarea id="desc" placeholder="Лични бележки, истории с децата, координати, спомени..."></textarea>
-    </div>
-
-    <!-- Photos -->
-    <div class="field field--holo full">
+    <div class="full">
       <label>Photos</label>
       <input type="file" id="photos" accept="image/*" multiple>
     </div>
+    <div class="full"><label>Photos</label><input type="file" id="photos" accept="image/*" multiple></div>
 
-    <div id="photoPreview" class="photo-preview-wrap"></div>
+<div id="photoPreview" class="photo-preview-wrap"></div>
 
-    <div class="btn-row">
-      <button type="submit" class="btn-primary">SAVE ENTRY</button>
-    </div>
-
-    <div id="status" class="status"></div>
-
-  </form>
-</div>
-
-<script>
-  // само капитански достъп
-  if (localStorage.getItem("isAdmin") !== "true") {
-    window.location.href = "login.html";
-  }
-
-  function logout() {
-    localStorage.removeItem("isAdmin");
-    window.location.href = "login.html";
-  }
-
-  const STORAGE_KEY = "nms_planets_archive_v1";
-  let currentImages = [];
-  const statusEl = document.getElementById("status");
-  const photoPreview = document.getElementById("photoPreview");
-  const planetForm = document.getElementById("planetForm");
-
-  function setStatus(msg, err = false) {
-    statusEl.style.color = err ? "var(--danger)" : "var(--success)";
-    statusEl.textContent = msg;
-  }
-
-  document.getElementById("photos").addEventListener("change", async function () {
-    currentImages = [];
-    photoPreview.innerHTML = "";
-
-    for (let file of this.files) {
-      const compressed = await compressImage(file, 900, 0.75);
-      currentImages.push(compressed);
-
-      const div = document.createElement("div");
-      div.className = "photo-thumb";
-      div.innerHTML = `<img src="${compressed}" alt="">`;
-      photoPreview.appendChild(div);
-    }
-  });
-
-  function compressImage(file, maxW, quality = 0.8) {
-    return new Promise(resolve => {
-      const img = new Image();
-      const reader = new FileReader();
-
-      reader.onload = e => {
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const scale = maxW / img.width;
-        canvas.width = maxW;
-        canvas.height = img.height * scale;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL("image/jpeg", quality));
-      };
-    });
-  }
-
-  function savePlanet(e) {
-    e.preventDefault();
-
-    let list;
-    try {
-      list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    } catch {
-      return setStatus("Storage corrupt!", true);
-    }
-
-    const p = {
-      id: Date.now(),
-      name: name.value.trim(),
-      galaxy: galaxy.value.trim(),
-      system: system.value.trim(),
-      biome: biome.value.trim(),
-      weather: weather.value.trim(),
-      temp: temp.value.trim(),
-      hazard: hazard.value.trim(),
-      sentinels: sentinels.value.trim(),
-      fauna: fauna.value.trim(),
-      flora: flora.value.trim(),
-      resources: resources.value.trim(),
-      desc: desc.value.trim(),
-      images: currentImages.slice(),
-      createdAt: new Date().toISOString()
+@@ -266,9 +275,7 @@ <h1>PLANET ADMIN</h1>
+return new Promise(resolve => {
+const img = new Image();
+const reader = new FileReader();
+    reader.onload = e => {
+      img.src = e.target.result;
     };
-
-    if (!p.name) return setStatus("Missing planet name!", true);
-
-    list.push(p);
-
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-      setStatus("Saved ✔");
-    } catch (err) {
-      // ако снимките са твърде много – записваме без тях
-      p.images = [];
-      list[list.length - 1] = p;
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-        setStatus("Saved WITHOUT images");
-      } catch {
-        list.pop();
-        return setStatus("SAVE ERROR!", true);
-      }
-    }
-
-    planetForm.reset();
-    currentImages = [];
-    photoPreview.innerHTML = "";
-  }
-</script>
-
-</body>
-</html>
+    reader.onload = e => { img.src = e.target.result; };
+img.onload = () => {
+const canvas = document.createElement("canvas");
+let scale = maxW / img.width;
+@@ -319,7 +326,7 @@ <h1>PLANET ADMIN</h1>
+try {
+localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+setStatus("Saved ✔");
+  } catch (err) {
+  } catch {
+p.images = [];
+list[list.length - 1] = p;
