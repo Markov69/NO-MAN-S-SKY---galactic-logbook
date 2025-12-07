@@ -2,42 +2,40 @@
 <html lang="bg">
 <head>
     <meta charset="UTF-8">
-    <title>NMS Logbook • Planet Admin</title>
+    <title>No Mean's Sky – Holographic System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg: #080406;
-            --panel: rgba(22, 9, 3, 0.94);
-            --border: rgba(255, 150, 60, 0.8);
-            --accent: #ffb347;
-            --text: #ffe7c9;
-            --danger: #ff8080;
-            --success: #9effc0;
-            --chip-bg: rgba(40, 15, 4, 0.95);
-        }
-
         * {
             box-sizing: border-box;
         }
 
+        :root {
+            --bg: #070309;
+            --amber: #ffb347;
+            --amber-strong: #ff9a34;
+            --amber-soft: #ffd29a;
+            --panel: rgba(10, 4, 2, 0.94);
+            --border: rgba(255, 160, 60, 0.7);
+            --text: #ffe8c7;
+        }
+
         body {
             margin: 0;
-            min-height: 100vh;
-            font-family: "Orbitron", system-ui, sans-serif;
-            background: radial-gradient(circle at 0 0, #3a1406 0, transparent 60%), radial-gradient(circle at 100% 100%, #210904 0, transparent 55%), var(--bg);
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Orbitron", sans-serif;
+            background: radial-gradient(circle at 15% 0, #34110b 0, transparent 55%), radial-gradient(circle at 85% 100%, #19060b 0, transparent 55%), var(--bg);
             color: var(--text);
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            padding: 24px 8px;
+            align-items: center;
             position: relative;
-            overflow-x: hidden;
         }
 
-        /* LEFT SIDE IMAGE */
+        /* LEFT IMAGE */
         .left-image {
             position: fixed;
             top: 0;
@@ -47,11 +45,11 @@
             z-index: -1;
             opacity: 0.95;
             object-fit: cover;
-            filter: drop-shadow(0 0 18px rgba(255, 150, 40, 0.85)) saturate(1.05);
+            filter: drop-shadow(0 0 18px rgba(255, 150, 40, 0.85)) saturate(1.1);
             pointer-events: none;
         }
 
-        /* RIGHT SIDE IMAGE */
+        /* RIGHT IMAGE */
         .right-image {
             position: fixed;
             top: 0;
@@ -61,894 +59,285 @@
             z-index: -1;
             opacity: 0.95;
             object-fit: cover;
-            filter: drop-shadow(0 0 18px rgba(255, 150, 40, 0.85)) saturate(1.05);
+            filter: drop-shadow(0 0 18px rgba(255, 150, 40, 0.85)) saturate(1.1);
             pointer-events: none;
         }
 
+
+        /* RADAR CANVAS */
+        #radarCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 40%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%);
+            z-index: -2;
+        }
+
+        /* PANEL */
         .panel {
-            width: min(1080px, 100%);
-            background: radial-gradient(circle at 10% 0, rgba(255, 180, 90, 0.10), transparent 60%), radial-gradient(circle at 90% 100%, rgba(255, 120, 40, 0.12), transparent 65%), var(--panel);
-            border-radius: 26px;
-            border: 1px solid var(--border);
-            box-shadow: 0 0 40px rgba(255, 150, 60, 0.55), 0 0 120px rgba(255, 90, 20, 0.55);
-            padding: 26px 26px 26px;
+            text-align: center;
+            padding: 42px 30px 60px;
+            width: min(720px, 100%);
+            border-radius: 32px;
+            background: radial-gradient(circle at 10% 0, rgba(255,170,80,0.08), transparent 60%), radial-gradient(circle at 90% 100%, rgba(255,110,30,0.12), transparent 65%), var(--panel);
+            border: 1px solid rgba(255, 160, 60, 0.7);
+            box-shadow: 0 0 55px rgba(255, 150, 40, 0.55), 0 0 140px rgba(255, 90, 0, 0.55);
             position: relative;
-            margin-top: 40px;
             z-index: 10;
         }
 
             .panel::before {
                 content: "";
                 position: absolute;
-                inset: 12px;
-                border-radius: 18px;
-                border: 1px dashed rgba(255, 200, 140, 0.5);
-                box-shadow: 0 0 26px rgba(255, 170, 100, 0.25) inset;
+                inset: 10px;
+                border-radius: 24px;
+                border: 1px solid rgba(255,200,120,0.4);
+                box-shadow: 0 0 20px rgba(255,160,60,0.3) inset, 0 0 35px rgba(255,110,40,0.35);
                 pointer-events: none;
             }
 
-        h1 {
-            margin: 18px 0 6px;
-            font-size: 22px;
-            letter-spacing: 0.26em;
-            text-transform: uppercase;
-            color: #ffd8b0;
-            text-align: center;
-            text-shadow: 0 0 14px rgba(255, 180, 110, 0.9), 0 0 32px rgba(255, 120, 40, 0.85);
+        .logo {
+            width: 170px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(255,200,140,0.9)) drop-shadow(0 0 26px rgba(255,150,40,0.9));
         }
 
-        .subtitle {
-            text-align: center;
+        .title {
+            font-size: 34px;
+            letter-spacing: 0.36em;
+            text-transform: uppercase;
+            color: var(--amber-soft);
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255,160,70,1), 0 0 28px rgba(255,130,40,0.9), 0 0 70px rgba(255,80,0,0.95);
+            font-weight: 700;
+        }
+
+        .subtitle-main {
+            margin-top: 6px;
             font-size: 11px;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.24em;
             text-transform: uppercase;
-            color: rgba(255, 220, 190, 0.8);
-            margin-bottom: 10px;
+            color: rgba(255,220,180,0.85);
         }
 
-        /* TOP NAV – LEFT + RIGHT */
-        .top-nav-left {
-            position: absolute;
-            top: 14px;
-            left: 24px;
-            display: flex;
-            align-items: center;
-        }
-
-        .top-nav-right {
-            position: absolute;
-            top: 14px;
-            right: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* BACK LINK */
-        .back-link {
-            display: inline-block;
-            font-size: 10px;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: #ffdfb6;
-            text-decoration: none;
-        }
-
-            .back-link:hover {
-                color: #ffffff;
-            }
-
-        /* EDIT ARCHIVE BUTTON */
-        .edit-link {
-            padding: 6px 16px;
-            font-size: 10px;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 190, 120, 0.9);
-            background: rgba(40, 15, 4, 0.9);
-            color: #ffe3bf;
-            text-decoration: none;
-            box-shadow: 0 0 10px rgba(255, 170, 100, 0.7);
-        }
-
-            .edit-link:hover {
-                border-color: #fff;
-                color: #fffaf0;
-            }
-
-        /* LOGOUT BUTTON */
-        .logout-btn {
-            padding: 6px 16px;
-            font-size: 10px;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 80, 80, 0.9);
-            background: rgba(70, 0, 0, 0.85);
-            color: #ffb0b0;
-            cursor: pointer;
-            box-shadow: 0 0 14px rgba(255, 80, 80, 0.7);
-        }
-
-            .logout-btn:hover {
-                border-color: #fff;
-                color: #fff;
-                box-shadow: 0 0 22px rgba(255, 120, 120, 1);
-            }
-
-        /* CAPTAIN */
-        .captain-box {
-            width: 150px;
-            margin: 6px auto 18px auto;
-            text-align: center;
-        }
-
-        .captain-frame {
-            width: 130px;
-            height: 130px;
-            border-radius: 14px;
-            border: 2px solid rgba(255, 170, 90, 0.95);
-            box-shadow: 0 0 20px rgba(255, 170, 90, 0.9), 0 0 40px rgba(255, 110, 20, 0.8);
-            overflow: hidden;
-            background: #000;
-            margin: 0 auto 10px auto;
-        }
-
-            .captain-frame img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                display: block;
-            }
-
-        .btn-captain,
-        .btn-remove-captain {
+        .subtitle-small {
             margin-top: 4px;
-            padding: 6px 10px;
-            font-size: 9px;
-            letter-spacing: 0.15em;
+            font-size: 10px;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
+            color: rgba(255,210,165,0.7);
+        }
+
+        .btn-row {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 44px;
+            min-width: 240px;
+            font-size: 13px;
+            letter-spacing: 0.24em;
+            text-transform: uppercase;
+            color: #ffe6c0;
+            text-decoration: none;
             border-radius: 999px;
-            cursor: pointer;
-            width: 100%;
-            border: 1px solid rgba(255, 190, 120, 0.9);
-            background: rgba(40, 15, 4, 0.9);
-            color: #ffdcb4;
-            box-shadow: 0 0 10px rgba(255, 160, 80, 0.65);
+            border: 2px solid rgba(255,190,120,0.9);
+            background: radial-gradient(circle at 0 0, rgba(255,210,140,0.35), transparent 55%), linear-gradient(135deg, #3a1404, #8b3a0a);
+            box-shadow: 0 0 20px rgba(255,150,70,0.65), 0 0 55px rgba(255,110,20,0.6), inset 0 0 18px rgba(255,210,150,0.35);
+            transition: 0.18s ease-in-out;
         }
 
-        .btn-remove-captain {
-            border-color: rgba(255, 80, 80, 0.95);
-            background: rgba(70, 0, 0, 0.85);
-            color: #ffb0b0;
-            box-shadow: 0 0 12px rgba(255, 80, 80, 0.85);
-        }
+            .btn:hover {
+                color: #fffaf0;
+                border-color: #ffffff;
+                box-shadow: 0 0 26px rgba(255,190,120,1), 0 0 80px rgba(255,130,40,0.95), inset 0 0 22px rgba(255,240,200,0.7);
+                transform: translateY(-2px);
+            }
 
-        /* CAPTAIN INFO FIELDS */
-        .captain-info {
-            margin: 0 auto 18px auto;
-            max-width: 100%;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 150, 80, 0.65);
-            padding: 12px 18px 14px;
-            background: radial-gradient(circle at 0 0, rgba(255, 150, 70, 0.20), transparent 60%), radial-gradient(circle at 100% 100%, rgba(120, 50, 10, 0.75), transparent 60%), rgba(25, 8, 3, 0.98);
-        }
-
-        .captain-info-title {
-            font-size: 11px;
+        .footer-note {
+            margin-top: 26px;
+            font-size: 9px;
             letter-spacing: 0.2em;
             text-transform: uppercase;
-            color: rgba(255, 220, 185, 0.95);
-            margin-bottom: 8px;
-        }
-
-        .captain-info-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        /* GRID FORM */
-        .grid-top {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px 18px;
-            margin-bottom: 14px;
-        }
-
-        .full-row {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            display: block;
-            font-size: 9px;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-            color: rgba(255, 220, 180, 0.9);
-        }
-
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 7px 9px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 180, 110, 0.9);
-            background: rgba(40, 15, 4, 0.9);
-            color: var(--text);
-            outline: none;
-            font-family: inherit;
-            font-size: 11px;
-        }
-
-        textarea {
-            border-radius: 12px;
-            min-height: 80px;
-            resize: vertical;
-        }
-
-            input[type="text"]:focus,
-            textarea:focus {
-                border-color: #ffffff;
-                box-shadow: 0 0 16px rgba(255, 210, 140, 0.9);
-            }
-
-        /* SECTION HEADERS */
-        .section-block {
-            margin-top: 12px;
-            border-radius: 18px;
-            border: 1px solid rgba(255, 150, 80, 0.6);
-            background: radial-gradient(circle at 0 0, rgba(255, 150, 70, 0.30), transparent 60%), radial-gradient(circle at 100% 100%, rgba(120, 50, 10, 0.80), transparent 60%), rgba(25, 8, 3, 0.96);
-            padding: 12px 14px 10px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .section-title {
-            font-size: 11px;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: rgba(255, 220, 180, 0.95);
-        }
-
-        .section-caption {
-            font-size: 9px;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(255, 210, 170, 0.7);
-            margin-top: 2px;
-        }
-
-        .btn-chip {
-            padding: 6px 14px;
-            font-size: 9px;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 190, 130, 0.9);
-            background: var(--chip-bg);
-            color: #ffe3bf;
-            cursor: pointer;
-            box-shadow: 0 0 12px rgba(255, 170, 100, 0.7);
-        }
-
-            .btn-chip:hover {
-                border-color: #fff;
-                color: #fff8ef;
-            }
-
-        .cards-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .entry-card {
-            display: grid;
-            grid-template-columns: 130px minmax(0, 1fr) 86px;
-            gap: 10px;
-            padding: 10px 10px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 160, 80, 0.7);
-            background: rgba(25, 8, 3, 0.96);
-            align-items: center;
-            box-shadow: 0 0 14px rgba(255, 140, 60, 0.4);
-        }
-
-        .entry-thumb {
-            width: 120px;
-            height: 120px;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 170, 90, 0.95);
-            box-shadow: 0 0 14px rgba(255, 170, 90, 0.85);
-            cursor: pointer;
-            background: #000;
-            position: relative;
-        }
-
-            .entry-thumb img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-        .entry-main textarea {
-            min-height: 48px;
-            font-size: 10px;
-            border-radius: 10px;
-        }
-
-        .entry-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            align-items: stretch;
-            justify-content: flex-start;
-        }
-
-        .btn-entry-upload,
-        .btn-entry-remove {
-            padding: 6px 8px;
-            font-size: 9px;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 190, 120, 0.9);
-            background: rgba(40, 15, 4, 0.95);
-            color: #ffe2c3;
-            cursor: pointer;
-            box-shadow: 0 0 12px rgba(255, 170, 100, 0.7);
-        }
-
-        .btn-entry-remove {
-            border-color: rgba(255, 90, 90, 0.95);
-            background: rgba(80, 0, 0, 0.95);
-            color: #ffc3c3;
-            box-shadow: 0 0 14px rgba(255, 80, 80, 0.9);
-        }
-
-        /* PLANET PHOTOS */
-        .planet-photos-label {
-            font-size: 9px;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            margin-top: 12px;
-            margin-bottom: 4px;
-            color: rgba(255, 220, 190, 0.9);
-        }
-
-        .photo-preview-wrap {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 6px;
-        }
-
-        .photo-thumb {
-            width: 80px;
-            height: 60px;
-            overflow: hidden;
-            border-radius: 9px;
-            border: 1px solid rgba(255, 170, 90, 0.95);
-            box-shadow: 0 0 10px rgba(255, 170, 90, 0.9);
-        }
-
-            .photo-thumb img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-
-        /* SAVE BUTTON */
-        .btn-save-row {
-            text-align: center;
-            margin-top: 18px;
-        }
-
-        .btn-primary {
-            padding: 14px 46px;
-            border-radius: 999px;
-            border: 2px solid rgba(255, 190, 120, 0.95);
-            background: radial-gradient(circle at 0 0, rgba(255, 210, 140, 0.4), transparent 55%), linear-gradient(135deg, #3a1404, #8b3a0a);
-            color: #ffe6c0;
-            text-transform: uppercase;
-            letter-spacing: 0.25em;
-            font-size: 11px;
-            cursor: pointer;
-            box-shadow: 0 0 22px rgba(255, 160, 70, 0.8), 0 0 60px rgba(255, 110, 20, 0.75), inset 0 0 18px rgba(255, 220, 160, 0.4);
-        }
-
-            .btn-primary:hover {
-                color: #fffaf0;
-                border-color: #ffffff;
-                box-shadow: 0 0 30px rgba(255, 190, 120, 1), 0 0 90px rgba(255, 130, 40, 0.95), inset 0 0 22px rgba(255, 240, 200, 0.8);
-                transform: translateY(-1px);
-            }
-
-        .status {
-            margin-top: 12px;
-            text-align: center;
-            font-size: 12px;
-            min-height: 18px;
-        }
-
-        /* LIGHTBOX */
-        .lightbox {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.88);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-        }
-
-            .lightbox img {
-                max-width: 90vw;
-                max-height: 90vh;
-                border-radius: 12px;
-                border: 2px solid rgba(255, 170, 90, 0.95);
-                box-shadow: 0 0 30px rgba(255, 160, 80, 0.95), 0 0 100px rgba(255, 110, 20, 0.9);
-            }
-
-        @media (max-width: 768px) {
-            .grid-top {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 560px) {
-            .grid-top {
-                grid-template-columns: 1fr;
-            }
-
-            .entry-card {
-                grid-template-columns: 1fr;
-            }
+            color: rgba(255,215,170,0.7);
         }
     </style>
 </head>
 
 <body>
 
-    <!-- LEFT & RIGHT PANELS -->
+    <!-- SIDE PANELS -->
     <img class="left-image" src="media/LEFT.png" alt="">
     <img class="right-image" src="media/RIGHT.png" alt="">
 
+    <!-- RADAR -->
+    <canvas id="radarCanvas"></canvas>
+    <div class="vignette"></div>
+
+    <!-- MAIN PANEL -->
     <div class="panel">
+        <img class="logo" src="media/LOGO.png" alt="logo">
 
-        <!-- TOP NAV BUTTONS -->
-        <div class="top-nav-left">
-            <a class="back-link" href="login.html">← BACK TO ACCESS CODE</a>
+        <div class="title">NO MEAN'S SKY</div>
+
+        <div class="subtitle-main">PERSONAL EXPLORER DIARY</div>
+        <div class="subtitle-small">SHIP LOG • PLANET ENTRIES • FAMILY JOURNAL</div>
+
+        <div class="btn-row">
+            <a class="btn" href="login.html">ENTER LOG</a>
+            <a class="btn" href="archive.html">PLANET ARCHIVE</a>
         </div>
 
-        <div class="top-nav-right">
-            <a class="edit-link" href="archive.html">EDIT PLANET ARCHIVE</a>
-            <button class="logout-btn" type="button" onclick="logout()">LOG OUT</button>
+        <div class="footer-note">
+            LOCAL SAVE • SAFE FOR KIDS • ENCRYPTED MEMORY CORE
         </div>
-
-        <h1>PLANET ADMIN</h1>
-        <div class="subtitle">NO MAN'S SKY • PERSONAL SHIP LOG • FULL PLANET RECORD</div>
-
-        <!-- CAPTAIN PHOTO -->
-        <div class="captain-box">
-            <div class="captain-frame">
-                <img src="media/captain.png" alt="captain" id="captainImg">
-            </div>
-
-            <input type="file" id="captainUpload" accept="image/*" style="display:none;">
-
-            <button class="btn-captain" type="button" onclick="document.getElementById('captainUpload').click()">
-                CHANGE CAPTAIN PHOTO
-            </button>
-
-            <button class="btn-remove-captain" type="button" onclick="removeCaptainPhoto()">
-                REMOVE
-            </button>
-        </div>
-
-        <!-- CAPTAIN INFO FIELDS -->
-        <div class="captain-info">
-            <div class="captain-info-title">CAPTAIN PROTOCOL</div>
-            <div class="captain-info-grid">
-                <div>
-                    <label for="captainName">Captain Name</label>
-                    <input id="captainName" type="text">
-                </div>
-                <div>
-                    <label for="captainAge">Captain Age</label>
-                    <input id="captainAge" type="text">
-                </div>
-                <div>
-                    <label for="captainOrigin">Origin Planet</label>
-                    <input id="captainOrigin" type="text">
-                </div>
-                <div>
-                    <label for="protocolTimestamp">Protocol Timestamp</label>
-                    <input id="protocolTimestamp" type="text" readonly>
-                </div>
-            </div>
-        </div>
-
-        <form id="planetForm" onsubmit="savePlanet(event)">
-
-            <!-- TOP GRID -->
-            <div class="grid-top">
-                <div>
-                    <label>Planet</label>
-                    <input id="name" type="text">
-                </div>
-
-                <div>
-                    <label>Galaxy</label>
-                    <input id="galaxy" type="text">
-                </div>
-
-                <div>
-                    <label>System</label>
-                    <input id="system" type="text">
-                </div>
-
-                <div>
-                    <label>Biome</label>
-                    <input id="biome" type="text">
-                </div>
-
-                <div>
-                    <label>Weather</label>
-                    <input id="weather" type="text">
-                </div>
-
-                <div>
-                    <label>Temperature</label>
-                    <input id="temp" type="text">
-                </div>
-
-                <div>
-                    <label>Hazards (short)</label>
-                    <input id="hazard" type="text">
-                </div>
-
-                <div>
-                    <label>Flora Count</label>
-                    <input id="floraCount" type="text">
-                </div>
-
-                <div>
-                    <label>Fauna Count</label>
-                    <input id="faunaCount" type="text">
-                </div>
-
-                <div class="full-row">
-                    <label>Resources (summary)</label>
-                    <input id="resourcesSummary" type="text">
-                </div>
-
-                <div class="full-row">
-                    <label>Description / Story</label>
-                    <textarea id="desc" placeholder="Какво намери, как мина мисията, бази, ресурси..."></textarea>
-                </div>
-            </div>
-
-            <!-- ANIMALS -->
-            <div class="section-block" id="animalsSection">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">ANIMALS</div>
-                        <div class="section-caption">CREATURES YOU DISCOVERED • NAME • BEHAVIOUR • SPECIAL NOTES</div>
-                    </div>
-                    <button type="button" class="btn-chip" onclick="addEntryCard('animalsList')">+ ADD ANIMAL</button>
-                </div>
-
-                <div class="cards-wrap" id="animalsList"></div>
-            </div>
-
-            <!-- PLANTS -->
-            <div class="section-block" id="plantsSection">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">PLANTS</div>
-                        <div class="section-caption">FLORA • HAZARDOUS, RARE, BEAUTIFUL • WHERE YOU SAW IT</div>
-                    </div>
-                    <button type="button" class="btn-chip" onclick="addEntryCard('plantsList')">+ ADD PLANT</button>
-                </div>
-
-                <div class="cards-wrap" id="plantsList"></div>
-            </div>
-
-            <!-- RESOURCES -->
-            <div class="section-block" id="resourcesSection">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">RESOURCES</div>
-                        <div class="section-caption">MINERALS • GASES • TRADE GOODS WITH EXAMPLE PHOTO</div>
-                    </div>
-                    <button type="button" class="btn-chip" onclick="addEntryCard('resourcesList')">+ ADD RESOURCE</button>
-                </div>
-
-                <div class="cards-wrap" id="resourcesList"></div>
-            </div>
-
-            <!-- HAZARDS -->
-            <div class="section-block" id="hazardsSection">
-                <div class="section-header">
-                    <div>
-                        <div class="section-title">HAZARDS</div>
-                        <div class="section-caption">STORMS • TOXIC RAIN • SENTINEL THREATS • ANY DANGER</div>
-                    </div>
-                    <button type="button" class="btn-chip" onclick="addEntryCard('hazardsList')">+ ADD HAZARD</button>
-                </div>
-
-                <div class="cards-wrap" id="hazardsList"></div>
-            </div>
-
-            <!-- PLANET PHOTOS -->
-            <div class="planet-photos-label">PLANET JOURNAL PHOTOS (CLICK TO CHOOSE JPG/PNG)</div>
-            <input type="file" id="photos" accept="image/*" multiple>
-
-            <div id="photoPreview" class="photo-preview-wrap"></div>
-
-            <div class="btn-save-row">
-                <button type="submit" class="btn-primary">SAVE ENTRY</button>
-            </div>
-
-            <div id="status" class="status"></div>
-        </form>
     </div>
 
-    <!-- LIGHTBOX -->
-    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-        <img id="lightboxImg" src="" alt="">
-    </div>
-
+    <!-- RADAR SCRIPT -->
     <script>
-        // ПРОВЕРКА – АКО НЯМА АДМИН СЕССИЯ, ВРЪЩА КЪМ LOGIN
         (function () {
-            if (localStorage.getItem("isAdmin") !== "true") {
-                window.location.href = "login.html";
+            const canvas = document.getElementById("radarCanvas");
+            const ctx = canvas.getContext("2d");
+            let w, h, cx, cy, radius;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+                cx = w / 2;
+                cy = h / 2;
+                radius = Math.min(w, h) * 0.40;
             }
+            window.addEventListener("resize", resize);
+            resize();
+
+            const targets = [];
+            for (let i = 0; i < 9; i++) {
+                targets.push({
+                    r: Math.random() * radius * 0.9,
+                    angle: Math.random() * Math.PI * 2,
+                    lastPing: 0
+                });
+            }
+
+            let sweep = 0;
+
+            function loop() {
+                requestAnimationFrame(loop);
+                ctx.clearRect(0, 0, w, h);
+
+                sweep += 0.02;
+                if (sweep > Math.PI * 2) sweep = 0;
+
+                ctx.save();
+                ctx.translate(cx, cy);
+
+                ctx.beginPath();
+                ctx.arc(0, 0, radius * 1.02, 0, Math.PI * 2);
+                const baseGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, radius * 1.02);
+                baseGrad.addColorStop(0, "#2b0e04");
+                baseGrad.addColorStop(1, "#050103");
+                ctx.fillStyle = baseGrad;
+                ctx.fill();
+
+                ctx.lineWidth = 1.2;
+                for (let i = 1; i <= 9; i++) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = "rgba(255,150,70," + (0.10 + i * 0.05) + ")";
+                    ctx.arc(0, 0, (radius / 9) * i, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                ctx.save();
+                ctx.strokeStyle = "rgba(255,120,40,0.35)";
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 12; i++) {
+                    const a = (Math.PI * 2 / 12) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(Math.cos(a) * radius * 0.18, Math.sin(a) * radius * 0.18);
+                    ctx.lineTo(Math.cos(a) * radius, Math.sin(a) * radius);
+                    ctx.stroke();
+                }
+                ctx.restore();
+
+                const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, radius * 1.05);
+                grd.addColorStop(0, "rgba(255,255,210,0.0)");
+                grd.addColorStop(0.10, "rgba(255,230,170,0.9)");
+                grd.addColorStop(1, "rgba(255,150,60,0.0)");
+
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.arc(0, 0, radius * 1.05, sweep - 0.35, sweep + 0.03);
+                ctx.closePath();
+                ctx.fillStyle = grd;
+                ctx.globalCompositeOperation = "lighter";
+                ctx.fill();
+                ctx.globalCompositeOperation = "source-over";
+
+                ctx.beginPath();
+                ctx.arc(0, 0, 4, 0, Math.PI * 2);
+                ctx.fillStyle = "#ffe8b0";
+                ctx.fill();
+
+                const now = performance.now();
+                targets.forEach(tg => {
+                    const x = Math.cos(tg.angle) * tg.r;
+                    const y = Math.sin(tg.angle) * tg.r;
+
+                    let diff = tg.angle - sweep;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    diff = Math.abs(diff);
+
+                    const ping = diff < 0.28;
+                    if (ping) tg.lastPing = now;
+
+                    let pulse = 0;
+                    const dt = now - tg.lastPing;
+                    if (dt >= 0 && dt < 600) {
+                        pulse = 1 - dt / 600;
+                    }
+
+                    const baseAlpha = 0.45 + 0.5 * pulse;
+                    const size = 5 + pulse * 5;
+
+                    ctx.fillStyle = "rgba(255,210,150," + baseAlpha + ")";
+                    ctx.beginPath();
+                    ctx.rect(x - size / 2, y - size / 2, size, size);
+                    ctx.fill();
+
+                    if (pulse > 0.01) {
+                        ctx.beginPath();
+                        ctx.arc(x, y, size + 5, 0, Math.PI * 2);
+                        ctx.strokeStyle = "rgba(255,200,140," + (0.45 * pulse) + ")";
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    }
+
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(Math.cos(tg.angle) * radius, Math.sin(tg.angle) * radius);
+                    ctx.strokeStyle = "rgba(255,150,80," + (0.18 + 0.4 * pulse) + ")";
+                    ctx.lineWidth = 1.2;
+                    ctx.stroke();
+                });
+
+                ctx.restore();
+            }
+
+            requestAnimationFrame(loop);
         })();
-
-        const STORAGE_KEY = "nms_planets_archive_v1";
-        const statusEl = document.getElementById("status");
-        const photoPreview = document.getElementById("photoPreview");
-        const planetForm = document.getElementById("planetForm");
-
-        let planetImages = [];
-
-        function setStatus(msg, err = false) {
-            statusEl.style.color = err ? "var(--danger)" : "var(--success)";
-            statusEl.textContent = msg;
-        }
-
-        // LOG OUT
-        function logout() {
-            localStorage.removeItem("isAdmin");
-            window.location.href = "index.html";
-        }
-
-        // CAPTAIN PHOTO
-        const captainImg = document.getElementById("captainImg");
-        const captainUpload = document.getElementById("captainUpload");
-
-        const savedCaptain = localStorage.getItem("captainPhoto");
-        if (savedCaptain) {
-            captainImg.src = savedCaptain;
-        }
-
-        captainUpload.addEventListener("change", function () {
-            const file = this.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                captainImg.src = e.target.result;
-                localStorage.setItem("captainPhoto", e.target.result);
-            };
-            reader.readAsDataURL(file);
-        });
-
-        function removeCaptainPhoto() {
-            localStorage.removeItem("captainPhoto");
-            captainImg.src = "media/captain.png";
-        }
-
-        // FILL PROTOCOL TIMESTAMP (BG FORMAT)
-        function updateProtocolTimestamp() {
-            const tsInput = document.getElementById("protocolTimestamp");
-            const now = new Date();
-            const formatted = new Intl.DateTimeFormat("bg-BG", {
-                dateStyle: "short",
-                timeStyle: "medium"
-            }).format(now);
-            tsInput.value = formatted;
-        }
-        updateProtocolTimestamp();
-
-        // COMPRESS IMAGE
-        function compressImage(file, maxW, quality = 0.8) {
-            return new Promise(resolve => {
-                const img = new Image();
-                const reader = new FileReader();
-
-                reader.onload = e => { img.src = e.target.result; };
-                reader.readAsDataURL(file);
-
-                img.onload = () => {
-                    const canvas = document.createElement("canvas");
-                    const scale = maxW / img.width;
-                    canvas.width = maxW;
-                    canvas.height = img.height * scale;
-
-                    const ctx = canvas.getContext("2d");
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    resolve(canvas.toDataURL("image/jpeg", quality));
-                };
-            });
-        }
-
-        // PHOTOS PREVIEW
-        document.getElementById("photos").addEventListener("change", async function () {
-            photoPreview.innerHTML = "";
-            planetImages = [];
-
-            for (let file of this.files) {
-                const dataUrl = await compressImage(file, 700, 0.7);
-                planetImages.push(dataUrl);
-
-                const div = document.createElement("div");
-                div.className = "photo-thumb";
-                div.innerHTML = '<img src="' + dataUrl + '" alt="">';
-                photoPreview.appendChild(div);
-            }
-        });
-
-        // ADD ENTRY CARD
-        function addEntryCard(listId) {
-            const list = document.getElementById(listId);
-
-            const card = document.createElement("div");
-            card.className = "entry-card";
-            card.dataset.img = "";
-
-            const imgId = "img_" + Math.random().toString(36).slice(2);
-            const fileId = "file_" + Math.random().toString(36).slice(2);
-
-            card.innerHTML =
-                '<div class="entry-thumb" onclick="openLightboxFromThumb(\'' + imgId + '\')">' +
-                '<img id="' + imgId + '" src="media/captain.png" alt="">' +
-                '</div>' +
-                '<div class="entry-main">' +
-                '<input type="text" class="entry-name" placeholder="Name / Type">' +
-                '<textarea class="entry-desc" placeholder="Short description, behaviour, where you saw it..."></textarea>' +
-                '</div>' +
-                '<div class="entry-actions">' +
-                '<input type="file" id="' + fileId + '" accept="image/*" style="display:none;">' +
-                '<button type="button" class="btn-entry-upload" onclick="document.getElementById(\'' + fileId + '\').click()">Upload</button>' +
-                '<button type="button" class="btn-entry-remove" onclick="this.closest(\'.entry-card\').remove()">Remove</button>' +
-                '</div>';
-
-            list.appendChild(card);
-
-            const fileInput = card.querySelector("#" + fileId);
-            const imgEl = card.querySelector("#" + imgId);
-
-            fileInput.addEventListener("change", async function () {
-                const file = this.files[0];
-                if (!file) return;
-                const dataUrl = await compressImage(file, 700, 0.7);
-                imgEl.src = dataUrl;
-                card.dataset.img = dataUrl;
-            });
-        }
-
-        // LIGHTBOX
-        const lightbox = document.getElementById("lightbox");
-        const lightboxImg = document.getElementById("lightboxImg");
-
-        function openLightboxFromThumb(imgId) {
-            const img = document.getElementById(imgId);
-            if (!img) return;
-            lightboxImg.src = img.src;
-            lightbox.style.display = "flex";
-        }
-
-        function closeLightbox() {
-            lightbox.style.display = "none";
-            lightboxImg.src = "";
-        }
-
-        // SAVE ENTRY
-        function collectEntries(listId) {
-            const list = document.getElementById(listId);
-            const cards = list.querySelectorAll(".entry-card");
-            const result = [];
-            cards.forEach(function (card) {
-                const name = card.querySelector(".entry-name").value.trim();
-                const desc = card.querySelector(".entry-desc").value.trim();
-                const img = card.dataset.img || card.querySelector(".entry-thumb img").src || "";
-                if (!name && !desc && !img) return;
-                result.push({ name: name, desc: desc, img: img });
-            });
-            return result;
-        }
-
-        function savePlanet(e) {
-            e.preventDefault();
-
-            // обнови timestamp при запис
-            updateProtocolTimestamp();
-
-            let list = [];
-            try {
-                list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            } catch (err) {
-                setStatus("Storage corrupt!", true);
-                return;
-            }
-
-            const p = {
-                id: Date.now(),
-
-                captainName: document.getElementById("captainName").value.trim(),
-                captainAge: document.getElementById("captainAge").value.trim(),
-                captainOrigin: document.getElementById("captainOrigin").value.trim(),
-                protocolTimestamp: document.getElementById("protocolTimestamp").value.trim(),
-
-                name: document.getElementById("name").value.trim(),
-                galaxy: document.getElementById("galaxy").value.trim(),
-                system: document.getElementById("system").value.trim(),
-                biome: document.getElementById("biome").value.trim(),
-                weather: document.getElementById("weather").value.trim(),
-                temp: document.getElementById("temp").value.trim(),
-                hazard: document.getElementById("hazard").value.trim(),
-                floraCount: document.getElementById("floraCount").value.trim(),
-                faunaCount: document.getElementById("faunaCount").value.trim(),
-                resourcesSummary: document.getElementById("resourcesSummary").value.trim(),
-                desc: document.getElementById("desc").value.trim(),
-
-                animals: collectEntries("animalsList"),
-                plants: collectEntries("plantsList"),
-                resourcesDetailed: collectEntries("resourcesList"),
-                hazardsDetailed: collectEntries("hazardsList"),
-
-                images: planetImages.slice(),
-                createdAt: new Date().toISOString()
-            };
-
-            if (!p.name) {
-                setStatus("Missing planet name!", true);
-                return;
-            }
-
-            list.push(p);
-
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-                setStatus("Saved ✔");
-            } catch (err2) {
-                setStatus("SAVE ERROR!", true);
-                return;
-            }
-
-            planetForm.reset();
-            planetImages = [];
-            photoPreview.innerHTML = "";
-            document.getElementById("animalsList").innerHTML = "";
-            document.getElementById("plantsList").innerHTML = "";
-            document.getElementById("resourcesList").innerHTML = "";
-            document.getElementById("hazardsList").innerHTML = "";
-            updateProtocolTimestamp();
-        }
     </script>
 
 </body>
