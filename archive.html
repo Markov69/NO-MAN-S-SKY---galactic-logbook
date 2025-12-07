@@ -1,389 +1,863 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8">
-<title>NMS Logbook • Planet Archive</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>No Mean's Sky • Planet Archive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-<style>
-:root {
-  --bg: #020513;
-  --panel: rgba(4,12,25,0.96);
-  --border: rgba(0,200,255,0.55);
-  --text: #e5f8ff;
-  --accent: #4cd8ff;
-}
+    <style>
+        /* === БАЗА / ФОН НА СТРАНИЦАТА === */
+        body {
+            margin: 0;
+            padding: 30px 0;
+            font-family: "Orbitron", system-ui, sans-serif;
+            background: #080406;
+            color: #ffe7c9;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-* { box-sizing: border-box; }
+        .left-image,
+        .right-image {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: auto;
+            opacity: .92;
+            z-index: -1;
+            pointer-events: none;
+        }
 
-body {
-  margin: 0;
-  padding: 30px 16px;
-  font-family: "Orbitron", system-ui, sans-serif;
-  background: radial-gradient(circle at 15% 0, #15233e, transparent 55%),
-              radial-gradient(circle at 85% 100%, #091326, transparent 55%),
-              var(--bg);
-  color: var(--text);
-  display: flex;
-  justify-content: center;
-}
+        .left-image {
+            left: 0;
+        }
 
-.shell { width: min(1180px, 100%); }
+        .right-image {
+            right: 0;
+        }
 
-.back-link {
-  display:inline-block;
-  margin-bottom:10px;
-  font-size:11px;
-  letter-spacing:0.16em;
-  text-transform:uppercase;
-  color:#7fdcff;
-  text-decoration:none;
-  border-bottom:1px dashed rgba(127,220,255,0.7);
-  padding-bottom:2px;
-}
-.back-link:hover {
-  color:#fff;
-  border-color:#fff;
-}
+        /* === ЦЕНТРАЛНА ЗОНА === */
+        .shell {
+            width: 690px;
+            padding: 0 10px 30px 10px;
+            position: relative;
+            z-index: 20;
+        }
 
-.title {
-  text-align:center;
-  font-size:26px;
-  letter-spacing:0.22em;
-  margin-bottom:6px;
-  text-shadow:0 0 12px rgba(80,220,255,0.9);
-}
+        .back-link {
+            display: inline-block;
+            margin-bottom: 14px;
+            font-size: 11px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            color: #ffe3c4;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(255, 180, 120, .7);
+            padding-bottom: 2px;
+        }
 
-.subtitle {
-  text-align:center;
-  font-size:12px;
-  letter-spacing:0.18em;
-  margin-bottom:20px;
-  opacity:0.75;
-}
+            .back-link:hover {
+                color: #fff;
+                border-color: #fff;
+            }
 
-.cards {
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(300px,1fr));
-  gap:22px;
-}
+        .title {
+            text-align: center;
+            font-size: 30px;
+            letter-spacing: .28em;
+            margin-bottom: 4px;
+            color: #ffdcb0;
+            text-shadow: 0 0 16px #ffae60, 0 0 32px rgba(255, 120, 40, .85);
+        }
 
-.card {
-  background:var(--panel);
-  border-radius:20px;
-  border:1px solid var(--border);
-  padding:16px;
-  cursor:pointer;
-  transition:0.25s;
-  box-shadow:0 0 20px rgba(0,200,255,0.15);
-}
-.card:hover {
-  box-shadow:0 0 28px rgba(0,200,255,0.35);
-  transform:translateY(-3px);
-}
+        .subtitle {
+            text-align: center;
+            font-size: 12px;
+            letter-spacing: .18em;
+            margin-bottom: 18px;
+            color: rgba(255, 220, 180, .75);
+        }
 
-.planet-name {
-  font-size:15px;
-  text-transform:uppercase;
-  margin-bottom:6px;
-  color:var(--accent);
-}
+        .cards-scroll {
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+            padding-right: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: #ffb066 rgba(50, 20, 5, 0.6);
+        }
 
-.badge-line {
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:8px;
-  font-size:11px;
-  opacity:0.85;
-}
+            .cards-scroll::-webkit-scrollbar {
+                width: 8px;
+            }
 
-.badge {
-  border:1px solid #ffb388;
-  padding:2px 8px;
-  border-radius:999px;
-  font-size:10px;
-}
+            .cards-scroll::-webkit-scrollbar-track {
+                background: rgba(50, 20, 5, 0.6);
+            }
 
-.thumb {
-  margin-top:10px;
-  width:100%;
-  height:160px;
-  border-radius:12px;
-  overflow:hidden;
-  border:1px solid #00c8ff;
-  box-shadow:0 0 10px #0088aa;
-}
-.thumb img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
+            .cards-scroll::-webkit-scrollbar-thumb {
+                background: #ffb066;
+                border-radius: 10px;
+            }
 
-/* FULL VIEW POPUP */
-#fullView {
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,0.85);
-  z-index:9999;
-}
+        .cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
 
-.full-box {
-  background:var(--panel);
-  padding:20px;
-  width:min(900px,90%);
-  max-height:90vh;
-  overflow-y:auto;
-  border-radius:16px;
-  border:1px solid var(--border);
-  box-shadow:0 0 30px rgba(0,200,255,0.4);
-}
+        .card {
+            background: rgba(22, 9, 3, .92);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 160, 60, .7);
+            padding: 12px;
+            cursor: pointer;
+            transition: .25s;
+            box-shadow: 0 0 20px rgba(255, 140, 40, .22);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
 
-.full-title {
-  font-size:22px;
-  text-align:center;
-  color:var(--accent);
-  margin-bottom:6px;
-}
+            .card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 0 26px rgba(255, 160, 80, .55), 0 0 60px rgba(255, 90, 20, .4);
+            }
 
-.full-sub { text-align:center; font-size:11px; opacity:0.8; margin-bottom:16px; }
+        .card-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 160, 80, .9);
+            box-shadow: 0 0 10px rgba(255, 160, 80, .8);
+            flex-shrink: 0;
+        }
 
-.captain {
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  object-fit:cover;
-  margin:10px auto;
-  display:block;
-  border:2px solid #4cd8ff;
-  box-shadow:0 0 16px rgba(80,220,255,0.6);
-}
+            .card-img img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
 
-.sec-title {
-  font-size:13px;
-  margin-top:14px;
-  margin-bottom:6px;
-  text-transform:uppercase;
-  letter-spacing:0.15em;
-  color:#7fdcff;
-}
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 4px;
+        }
 
-.entry {
-  padding:8px;
-  border-radius:10px;
-  border:1px solid rgba(0,150,255,0.3);
-  margin-bottom:8px;
-}
+        .card-name {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: #ffe2bf;
+            margin-bottom: 6px;
+        }
 
-.entry img {
-  width:90px;
-  height:90px;
-  border-radius:10px;
-  object-fit:cover;
-  border:1px solid #00c8ff;
-  margin-right:10px;
-}
+        .card-line {
+            font-size: 11px;
+            opacity: .85;
+            margin-bottom: 4px;
+        }
 
-.entry-flex {
-  display:flex;
-  gap:12px;
-}
+            .card-line strong {
+                color: #ffd6a0;
+                font-weight: 700;
+            }
 
-.bigphotos {
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:10px;
-}
+        /* === POPUP === */
+        .planet-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .85);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9000;
+            overflow: hidden;
+        }
 
-.bigphotos img {
-  width:140px;
-  height:100px;
-  object-fit:cover;
-  border-radius:12px;
-  border:1px solid #00c8ff;
-  box-shadow:0 0 12px rgba(0,200,255,0.5);
-  cursor:pointer;
-}
+        #radarCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
 
-#zoomLayer {
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:99999;
-}
-#zoomLayer img {
-  max-width:90vw;
-  max-height:90vh;
-  border-radius:12px;
-  border:2px solid #00c8ff;
-}
+        .popup-card {
+            background: rgba(20, 8, 2, .96);
+            border: 1px solid rgba(255, 150, 60, .7);
+            width: min(900px, 92%);
+            max-height: 92vh;
+            overflow-y: auto;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(255, 150, 60, .5), 0 0 120px rgba(255, 90, 20, .6);
+            position: relative;
+            color: #ffe7c9;
+        }
 
-.close-btn {
-  text-align:center;
-  margin-top:12px;
-  padding:8px 18px;
-  border-radius:999px;
-  border:1px solid rgba(255,80,80,0.8);
-  background:rgba(70,0,0,0.9);
-  color:#ffb3b3;
-  cursor:pointer;
-  width:120px;
-  margin-left:auto;
-  margin-right:auto;
-}
-</style>
+        .popup-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(70, 0, 0, .8);
+            border: 1px solid rgba(255, 90, 90, .9);
+            padding: 6px 12px;
+            border-radius: 999px;
+            color: #ffb0b0;
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+        }
+
+        /* === капитан горе вляво === */
+        .popup-captain {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            width: 110px;
+            height: 110px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #ffb347;
+            box-shadow: 0 0 18px rgba(255, 160, 80, .7);
+            margin: 0;
+        }
+
+        /* === текстов блок до капитана === */
+        .captain-info-box {
+            position: absolute;
+            top: 24px;
+            left: 140px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 180, 120, .55);
+            background: radial-gradient(circle at 0 0, rgba(255, 200, 140, 0.18), transparent 65%);
+            font-size: 11px;
+            max-width: 420px;
+        }
+
+        .captain-info-row {
+            display: flex;
+            justify-content: flex-start;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .captain-info-label {
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            opacity: .8;
+            min-width: 130px;
+        }
+
+        .captain-info-value {
+            font-weight: 700;
+            color: #ffe9c9;
+        }
+
+        .popup-title {
+            text-align: center;
+            font-size: 26px;
+            letter-spacing: .25em;
+            margin-top: 140px; /* заради капитанската снимка */
+            color: #ffdcb4;
+            text-transform: uppercase;
+        }
+
+        .popup-sub {
+            text-align: center;
+            font-size: 12px;
+            opacity: .7;
+            margin-bottom: 20px;
+        }
+
+        .popup-section {
+            margin-bottom: 18px;
+        }
+
+        .popup-section-title {
+            font-size: 13px;
+            letter-spacing: .16em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            color: #ffdcb4;
+        }
+
+        /* OVERVIEW GRID */
+        .info-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 150, 80, .35);
+            background: radial-gradient(circle at 0 0, rgba(255, 180, 100, .18), transparent 55%);
+            font-size: 12px;
+            transition: .18s;
+        }
+
+            .info-row:hover {
+                border-color: #fff;
+                box-shadow: 0 0 14px rgba(255, 200, 140, .9), 0 0 30px rgba(255, 140, 60, .75);
+                background: radial-gradient(circle at 50% 50%, rgba(255, 230, 180, .16), rgba(60, 20, 4, .95));
+            }
+
+        .info-label {
+            opacity: .85;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+        }
+
+        .info-value {
+            font-weight: 700;
+            color: #ffe9c9;
+        }
+
+        .popup-desc {
+            background: rgba(255, 160, 80, .06);
+            padding: 10px 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 150, 80, .4);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        /* ACCORDION */
+        .acc-section {
+            margin-bottom: 18px;
+        }
+
+        .acc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(255, 160, 80, .08);
+            border: 1px solid rgba(255, 160, 80, .4);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+            .acc-header:hover {
+                background: rgba(255, 160, 80, .16);
+                border-color: #fff;
+            }
+
+        .acc-title {
+            font-size: 13px;
+            letter-spacing: .16em;
+            color: #ffdcb4;
+            text-transform: uppercase;
+        }
+
+        .acc-arrow {
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .acc-body {
+            display: none;
+            padding: 10px 4px 4px 4px;
+        }
+
+        .entry-holo {
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 150, 60, .06);
+            border: 1px solid rgba(255, 150, 80, .4);
+            padding: 8px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+            .entry-holo img {
+                width: 90px;
+                height: 90px;
+                border-radius: 10px;
+                object-fit: cover;
+                border: 1px solid #ffb347;
+                cursor: pointer;
+                box-shadow: 0 0 12px rgba(255, 160, 80, .7);
+            }
+
+        /* Gallery */
+        .gallery img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #ffb347;
+            box-shadow: 0 0 12px rgba(255, 60, 80, .5);
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-delete {
+            background: rgba(80, 0, 0, .9);
+            border: 1px solid rgba(255, 80, 80, .9);
+            color: #ffb0b0;
+            padding: 10px 24px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            box-shadow: 0 0 16px rgba(255, 60, 60, .9);
+        }
+
+            .btn-delete:hover {
+                background: rgba(150, 0, 0, 1);
+                border-color: #ffdddd;
+                color: #fff;
+            }
+
+        .btn-close {
+            background: rgba(40, 15, 4, .8);
+            border: 1px solid #ffb347;
+            color: #ffdcb4;
+            padding: 10px 24px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 11px;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        .zoom-layer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
+
+            .zoom-layer img {
+                max-width: 90vw;
+                max-height: 90vh;
+                border-radius: 12px;
+                border: 2px solid #ffb347;
+            }
+    </style>
 </head>
-
 <body>
-<div class="shell">
 
-<a href="index.html" class="back-link">⟵ BACK</a>
+    <img class="left-image" src="media/LEFT.png">
+    <img class="right-image" src="media/RIGHT.png">
 
-<div class="title">PLANET ARCHIVE</div>
-<div class="subtitle">Personal Explorer Diary</div>
+    <div class="shell">
+        <a href="index.html" class="back-link">⟵ BACK</a>
+        <div class="title">PLANET ARCHIVE</div>
+        <div class="subtitle">PERSONAL EXPLORER DIARY</div>
 
-<div id="cards" class="cards"></div>
-<div id="empty" style="display:none;text-align:center;margin-top:40px;font-size:13px;">Няма записи.</div>
+        <div class="cards-scroll">
+            <div id="cards" class="cards"></div>
+            <div id="empty" style="display:none;text-align:center;margin-top:40px;font-size:13px;">
+                Няма записи.
+            </div>
+        </div>
+    </div>
 
-</div>
+    <div id="fullView" class="planet-popup">
+        <canvas id="radarCanvas"></canvas>
 
-<div id="fullView" onclick="closeFull(event)">
-  <div class="full-box" id="fullBox"></div>
-</div>
+        <div class="popup-card">
 
-<div id="zoomLayer" onclick="closeZoom()">
-  <img id="zoomImg">
-</div>
+            <div class="popup-close" onclick="closeFull()">CLOSE</div>
 
-<script>
-const KEY = "nms_planets_archive_v1";
+            <!-- СНИМКА НА КАПИТАНА -->
+            <img id="popupCaptain" class="popup-captain">
 
-function loadPlanets() {
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    return [];
-  }
-}
+            <!-- ИНФО ЗА КАПИТАНА ДО СНИМКАТА -->
+            <div class="captain-info-box">
+                <div class="captain-info-row">
+                    <div class="captain-info-label">CAPTAIN NAME</div>
+                    <div class="captain-info-value" id="capName"></div>
+                </div>
+                <div class="captain-info-row">
+                    <div class="captain-info-label">CAPTAIN AGE</div>
+                    <div class="captain-info-value" id="capAge"></div>
+                </div>
+                <div class="captain-info-row">
+                    <div class="captain-info-label">ORIGIN PLANET</div>
+                    <div class="captain-info-value" id="capOrigin"></div>
+                </div>
+                <div class="captain-info-row">
+                    <div class="captain-info-label">PROTOCOL TIME</div>
+                    <div class="captain-info-value" id="capProtocol"></div>
+                </div>
+            </div>
 
-const planets = loadPlanets();
-const cards = document.getElementById("cards");
-const empty = document.getElementById("empty");
+            <!-- НАДПИСИТЕ — ПОД СНИМКАТА, ПРЕДИ PHOTOS -->
+            <div class="popup-title" id="popupName"></div>
+            <div class="popup-sub" id="popupSub"></div>
 
-if (!planets.length) {
-  empty.style.display = "block";
-}
+            <!-- PHOTOS -->
+            <div class="popup-section">
+                <div class="popup-section-title">PLANET PHOTOS</div>
+                <div class="gallery" id="popupGallery"></div>
+            </div>
 
-planets
-  .slice()
-  .sort(function(a,b){ return (b.id || 0) - (a.id || 0); })
-  .forEach(function(p) {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.onclick = function(){ openFull(p); };
+            <!-- OVERVIEW -->
+            <div class="popup-section">
+                <div class="popup-section-title">OVERVIEW</div>
+                <div class="info-grid">
+                    <div class="info-row"><div class="info-label">🌍 BIOME</div><div class="info-value" id="infoBiome"></div></div>
+                    <div class="info-row"><div class="info-label">🌡 TEMP</div><div class="info-value" id="infoTemp"></div></div>
+                    <div class="info-row"><div class="info-label">☣ HAZARDS</div><div class="info-value" id="infoHazards"></div></div>
+                    <div class="info-row"><div class="info-label">🌱 FLORA</div><div class="info-value" id="infoFlora"></div></div>
+                    <div class="info-row"><div class="info-label">🐾 FAUNA</div><div class="info-value" id="infoFauna"></div></div>
+                    <div class="info-row"><div class="info-label">⛏ RESOURCES</div><div class="info-value" id="infoResources"></div></div>
+                </div>
+            </div>
 
-    var thumbSrc = "media/captain.png";
-    if (p.images && p.images.length) {
-      thumbSrc = p.images[0];
-    } else if (p.animals && p.animals.length && p.animals[0].img) {
-      thumbSrc = p.animals[0].img;
-    }
+            <!-- DESCRIPTION -->
+            <div class="popup-section">
+                <div class="popup-section-title">DESCRIPTION</div>
+                <div class="popup-desc" id="infoDesc"></div>
+            </div>
 
-    card.innerHTML =
-      '<div class="planet-name">' + (p.name || "UNDEFINED") + '</div>' +
-      '<div class="badge-line">' +
-        '<span>' + (p.galaxy || "-") + ' • ' + (p.system || "-") + '</span>' +
-        '<span class="badge">' + (p.biome || "-") + '</span>' +
-      '</div>' +
-      '<div style="font-size:11px;">' + (p.weather || "-") + ' • ' + (p.temp || "-") + '</div>' +
-      '<div class="thumb"><img src="' + thumbSrc + '"></div>';
+            <!-- ACCORDION -->
+            <div class="acc-section">
+                <div class="acc-header" onclick="toggleAcc('accAnimals')">
+                    <div class="acc-title">🐾 ANIMALS</div>
+                    <div class="acc-arrow" id="arrowAccAnimals">▾</div>
+                </div>
+                <div class="acc-body" id="accAnimals" style="display:block;"></div>
+            </div>
 
-    cards.appendChild(card);
-  });
+            <div class="acc-section">
+                <div class="acc-header" onclick="toggleAcc('accPlants')">
+                    <div class="acc-title">🌿 PLANTS</div>
+                    <div class="acc-arrow" id="arrowAccPlants">▸</div>
+                </div>
+                <div class="acc-body" id="accPlants"></div>
+            </div>
 
-function entrySection(title, list) {
-  if (!list || !list.length) return "";
-  var html = '<div class="sec-title">' + title + '</div>';
-  list.forEach(function(e){
-    html +=
-      '<div class="entry entry-flex">' +
-        '<img src="' + (e.img || "media/captain.png") + '">' +
-        '<div>' +
-          '<div><b>' + (e.name || "") + '</b></div>' +
-          '<div style="font-size:11px;opacity:0.8;">' + (e.desc || "") + '</div>' +
-        '</div>' +
-      '</div>';
-  });
-  return html;
-}
+            <div class="acc-section">
+                <div class="acc-header" onclick="toggleAcc('accResources')">
+                    <div class="acc-title">⛏ RESOURCES</div>
+                    <div class="acc-arrow" id="arrowAccResources">▸</div>
+                </div>
+                <div class="acc-body" id="accResources"></div>
+            </div>
 
-function openFull(p) {
-  const box = document.getElementById("fullBox");
+            <div class="acc-section">
+                <div class="acc-header" onclick="toggleAcc('accHazards')">
+                    <div class="acc-title">⚠ HAZARDS</div>
+                    <div class="acc-arrow" id="arrowAccHazards">▸</div>
+                </div>
+                <div class="acc-body" id="accHazards"></div>
+            </div>
 
-  const captain = localStorage.getItem("captainPhoto") || "media/captain.png";
+            <div style="text-align:center; margin-top:20px;">
+                <button class="btn-delete" id="deleteBtn">DELETE</button>
+                <button class="btn-close" onclick="closeFull()">CLOSE</button>
+            </div>
 
-  const infoHtml =
-    '<div class="sec-title">Planet Info</div>' +
-    '<div class="entry">' +
-      'Biome: ' + (p.biome || "-") + '<br>' +
-      'Weather: ' + (p.weather || "-") + '<br>' +
-      'Temperature: ' + (p.temp || "-") + '<br>' +
-      'Hazards: ' + (p.hazard || "-") + '<br>' +
-      'Flora Count: ' + (p.floraCount || "-") + '<br>' +
-      'Fauna Count: ' + (p.faunaCount || "-") + '<br>' +
-      'Resources: ' + (p.resourcesSummary || "-") + '<br><br>' +
-      '<i>' + (p.desc ? p.desc.replace(/\n/g,"<br>") : "") + '</i>' +
-    '</div>';
+        </div>
+    </div>
 
-  var photosHtml = "";
-  if (p.images && p.images.length) {
-    photosHtml =
-      '<div class="sec-title">Planet Photos</div>' +
-      '<div class="bigphotos">' +
-        p.images.map(function(img){
-          return '<img src="' + img + '" onclick="zoom(\'' + img + '\')">';
-        }).join("") +
-      '</div>';
-  }
+    <!-- ZOOM -->
+    <div id="zoomLayer" class="zoom-layer" onclick="closeZoom()">
+        <img id="zoomImg">
+    </div>
 
-  box.innerHTML =
-    '<div class="full-title">' + (p.name || "UNDEFINED") + '</div>' +
-    '<div class="full-sub">' + (p.galaxy || "-") + ' • ' + (p.system || "-") + '</div>' +
-    '<img class="captain" src="' + captain + '">' +
-    infoHtml +
-    entrySection("Animals", p.animals) +
-    entrySection("Plants", p.plants) +
-    entrySection("Resources", p.resourcesDetailed) +
-    entrySection("Hazards", p.hazardsDetailed) +
-    photosHtml +
-    '<div class="close-btn" onclick="closeFull()">Close</div>';
+    <script>
+        const KEY = "nms_planets_archive_v1";
+        let planets = loadPlanets();
+        const isAdmin = localStorage.getItem("isAdmin") === "true";
 
-  document.getElementById("fullView").style.display = "flex";
-}
+        function loadPlanets() {
+            try {
+                const raw = localStorage.getItem(KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch { return []; }
+        }
 
-function closeFull(e) {
-  if (!e || e.target.id === "fullView") {
-    document.getElementById("fullView").style.display = "none";
-  }
-}
+        const cards = document.getElementById("cards");
+        const empty = document.getElementById("empty");
+        if (!planets.length) empty.style.display = "block";
 
-function zoom(src){
-  document.getElementById("zoomImg").src = src;
-  document.getElementById("zoomLayer").style.display = "flex";
-}
-function closeZoom(){
-  document.getElementById("zoomLayer").style.display = "none";
-}
-</script>
+        planets.slice().sort((a, b) => b.id - a.id).forEach(p => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.onclick = () => openFull(p);
+            const img = (p.images && p.images.length > 0) ? p.images[0] : "media/captain.png";
+            card.innerHTML = `
+                    <div class="card-img"><img src="${img}"></div>
+                    <div class="card-info">
+                        <div class="card-name">${p.name || "UNDEFINED"}</div>
+                        <div class="card-line"><strong>Galaxy:</strong> ${p.galaxy || "-"}</div>
+                        <div class="card-line"><strong>System:</strong> ${p.system || "-"}</div>
+                        <div class="card-line"><strong>Weather:</strong> ${p.weather || "-"}</div>
+                        <div class="card-line"><strong>Temp:</strong> ${p.temp || "-"}</div>
+                        <div class="card-line"><strong>Hazard:</strong> ${p.hazard || "-"}</div>
+                    </div>`;
+            cards.appendChild(card);
+        });
+
+        function renderList(list, box) {
+            box.innerHTML = "";
+            if (!list || !list.length) return;
+            list.forEach(e => {
+                const img = e.img || "media/captain.png";
+                box.innerHTML += `
+                        <div class="entry-holo">
+                            <img src="${img}" onclick="zoom('${img}')">
+                            <div>
+                                <div><b>${e.name || ""}</b></div>
+                                <div style="opacity:.8;font-size:11px;">${e.desc || ""}</div>
+                            </div>
+                        </div>`;
+            });
+        }
+
+        /* ======================
+             RADAR ENGINE
+           ====================== */
+
+        let radarInitialized = false;
+        let rCanvas, rCtx, rW, rH, rCX, rCY, rRadius, rSweep = 0, rTargets = [];
+
+        function initRadar() {
+            if (radarInitialized) return;
+            rCanvas = document.getElementById("radarCanvas");
+            if (!rCanvas) return;
+            rCtx = rCanvas.getContext("2d");
+
+            function resizeRadar() {
+                const popup = document.getElementById("fullView");
+                rCanvas.width = popup.clientWidth;
+                rCanvas.height = popup.clientHeight;
+                rW = rCanvas.width;
+                rH = rCanvas.height;
+                rCX = rW / 2;
+                rCY = rH / 2;
+                rRadius = Math.min(rW, rH) * 0.35;
+            }
+
+            resizeRadar();
+            window.addEventListener("resize", resizeRadar);
+
+            rTargets = [];
+            for (let i = 0; i < 9; i++) {
+                rTargets.push({ r: Math.random() * rRadius * 0.9, angle: Math.random() * Math.PI * 2, lastPing: 0 });
+            }
+
+            function loop() {
+                requestAnimationFrame(loop);
+                if (!rCtx) return;
+                rCtx.clearRect(0, 0, rW, rH);
+                rSweep += 0.02; if (rSweep > Math.PI * 2) rSweep = 0;
+
+                rCtx.save();
+                rCtx.translate(rCX, rCY);
+
+                rCtx.beginPath();
+                rCtx.arc(0, 0, rRadius * 1.05, 0, Math.PI * 2);
+                const baseGrad = rCtx.createRadialGradient(0, 0, 0, 0, 0, rRadius * 1.05);
+                baseGrad.addColorStop(0, "#2b0e04");
+                baseGrad.addColorStop(1, "#050103");
+                rCtx.fillStyle = baseGrad;
+                rCtx.fill();
+
+                rCtx.lineWidth = 1;
+                for (let i = 1; i <= 7; i++) {
+                    rCtx.beginPath();
+                    rCtx.strokeStyle = "rgba(255,150,70," + (0.10 + i * 0.05) + ")";
+                    rCtx.arc(0, 0, (rRadius / 7) * i, 0, Math.PI * 2);
+                    rCtx.stroke();
+                }
+
+                rCtx.save();
+                rCtx.strokeStyle = "rgba(255,120,40,0.35)";
+                rCtx.lineWidth = 1;
+                for (let i = 0; i < 12; i++) {
+                    const a = (Math.PI * 2 / 12) * i;
+                    rCtx.beginPath();
+                    rCtx.moveTo(Math.cos(a) * rRadius * 0.18, Math.sin(a) * rRadius * 0.18);
+                    rCtx.lineTo(Math.cos(a) * rRadius, Math.sin(a) * rRadius);
+                    rCtx.stroke();
+                }
+                rCtx.restore();
+
+                const grd = rCtx.createRadialGradient(0, 0, 0, 0, 0, rRadius * 1.05);
+                grd.addColorStop(0, "rgba(255,255,210,0.0)");
+                grd.addColorStop(0.10, "rgba(255,230,170,0.9)");
+                grd.addColorStop(1, "rgba(255,150,60,0.0)");
+
+                rCtx.beginPath();
+                rCtx.moveTo(0, 0);
+                rCtx.arc(0, 0, rRadius * 1.05, rSweep - 0.35, rSweep + 0.03);
+                rCtx.closePath();
+                rCtx.fillStyle = grd;
+                rCtx.globalCompositeOperation = "lighter";
+                rCtx.fill();
+                rCtx.globalCompositeOperation = "source-over";
+
+                rCtx.beginPath();
+                rCtx.arc(0, 0, 4, 0, Math.PI * 2);
+                rCtx.fillStyle = "#ffe8b0";
+                rCtx.fill();
+
+                const now = performance.now();
+                rTargets.forEach(tg => {
+                    const x = Math.cos(tg.angle) * tg.r;
+                    const y = Math.sin(tg.angle) * tg.r;
+
+                    let diff = tg.angle - rSweep;
+                    while (diff > Math.PI) diff -= Math.PI * 2;
+                    while (diff < -Math.PI) diff += Math.PI * 2;
+                    diff = Math.abs(diff);
+
+                    const ping = diff < 0.28;
+                    if (ping) tg.lastPing = now;
+
+                    let pulse = 0;
+                    const dt = now - tg.lastPing;
+                    if (dt >= 0 && dt < 600) pulse = 1 - dt / 600;
+
+                    const baseAlpha = 0.45 + 0.5 * pulse;
+                    const size = 5 + pulse * 5;
+
+                    rCtx.fillStyle = "rgba(255,210,150," + baseAlpha + ")";
+                    rCtx.beginPath();
+                    rCtx.rect(x - size / 2, y - size / 2, size, size);
+                    rCtx.fill();
+                });
+
+                rCtx.restore();
+            }
+
+            radarInitialized = true;
+            requestAnimationFrame(loop);
+        }
+
+        /* ======================================
+                OPEN FULL PLANET VIEW
+           ====================================== */
+
+        function openFull(p) {
+            document.getElementById("fullView").style.display = "flex";
+            if (!radarInitialized) initRadar();
+
+            document.getElementById("popupName").textContent = p.name;
+            document.getElementById("popupSub").textContent = `${p.galaxy} • ${p.system}`;
+
+            // CAPTAIN PHOTO
+            document.getElementById("popupCaptain").src =
+                localStorage.getItem("captainPhoto") || "media/captain.png";
+
+            // CAPTAIN INFO – първо от планетата, после от localStorage, после "-"
+            document.getElementById("capName").textContent =
+                p.captainName || localStorage.getItem("captainName") || "-";
+
+            document.getElementById("capAge").textContent =
+                p.captainAge || localStorage.getItem("captainAge") || "-";
+
+            document.getElementById("capOrigin").textContent =
+                p.captainOrigin || localStorage.getItem("captainOrigin") || "-";
+
+            // PROTOCOL TIME – ако има p.captainProtocol, ползвай го, иначе createdAt
+            let protocolText = "";
+            if (p.captainProtocol) {
+                protocolText = p.captainProtocol;
+            } else if (p.createdAt) {
+                const dt = new Date(p.createdAt);
+                protocolText = dt.toLocaleDateString("bg-BG") + " / " +
+                    dt.toLocaleTimeString("bg-BG", { hour: "2-digit", minute: "2-digit" });
+            } else {
+                protocolText = "-";
+            }
+            document.getElementById("capProtocol").textContent = protocolText;
+
+            document.getElementById("infoBiome").textContent = p.biome || "-";
+            document.getElementById("infoTemp").textContent = p.temp || "-";
+            document.getElementById("infoHazards").textContent = p.hazard || "-";
+            document.getElementById("infoFlora").textContent = p.floraCount || "-";
+            document.getElementById("infoFauna").textContent = p.faunaCount || "-";
+            document.getElementById("infoResources").textContent = p.resourcesSummary || "-";
+
+            document.getElementById("infoDesc").innerHTML = (p.desc || "").replace(/\n/g, "<br>");
+
+            renderList(p.animals, document.getElementById("accAnimals"));
+            renderList(p.plants, document.getElementById("accPlants"));
+            renderList(p.resourcesDetailed, document.getElementById("accResources"));
+            renderList(p.hazardsDetailed, document.getElementById("accHazards"));
+
+            const gal = document.getElementById("popupGallery");
+            gal.innerHTML = "";
+            if (p.images) p.images.forEach(img => {
+                gal.innerHTML += `<img src="${img}" onclick="zoom('${img}')">`;
+            });
+
+            const del = document.getElementById("deleteBtn");
+            if (isAdmin) {
+                del.style.display = "inline-block";
+                del.onclick = () => deletePlanet(p.id);
+            } else {
+                del.style.display = "none";
+            }
+        }
+
+        function closeFull() {
+            document.getElementById("fullView").style.display = "none";
+        }
+
+        function zoom(src) {
+            document.getElementById("zoomImg").src = src;
+            document.getElementById("zoomLayer").style.display = "flex";
+        }
+
+        function closeZoom() {
+            document.getElementById("zoomLayer").style.display = "none";
+        }
+
+        function deletePlanet(id) {
+            if (!confirm("Delete planet?")) return;
+            planets = planets.filter(p => p.id !== id);
+            localStorage.setItem(KEY, JSON.stringify(planets));
+            closeFull();
+            setTimeout(() => location.reload(), 200);
+        }
+
+        function toggleAcc(id) {
+            const body = document.getElementById(id);
+            const arrow = document.getElementById("arrow" + id.charAt(0).toUpperCase() + id.slice(1));
+            if (body.style.display === "block") {
+                body.style.display = "none";
+                arrow.textContent = "▸";
+            } else {
+                body.style.display = "block";
+                arrow.textContent = "▾";
+            }
+        }
+    </script>
 
 </body>
 </html>
