@@ -1,248 +1,271 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <title>NMS Radar Demo</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <style>
-    html,body{
-      margin:0;
-      padding:0;
-      height:100%;
-      background:#050308;
-      overflow:hidden;
-      font-family:system-ui,Arial,sans-serif;
-    }
-    .wrap{
-      width:100%;
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:radial-gradient(circle at 50% 0%,#3a1a01 0,#050308 60%);
-    }
-    canvas{
-      max-width:90vmin;
-      max-height:90vmin;
-      width:90vmin;
-      height:90vmin;
-      display:block;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>No Mean's Sky � Holographic System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Orbitron", sans-serif;
+            background: #020513;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* === LEFT DECORATION IMAGE === */
+        .left-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: auto;
+            z-index: -1;
+            opacity: 0.85;
+            object-fit: cover;
+            filter: drop-shadow(0 0 12px rgba(0,200,255,0.55));
+        }
+
+        /* === RIGHT DECORATION IMAGE === */
+        .right-image {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            width: auto;
+            z-index: -1;
+            opacity: 0.85;
+            object-fit: cover;
+            filter: drop-shadow(0 0 12px rgba(0,200,255,0.55));
+        }
+
+        /* === RADAR FULLSCREEN BACKGROUND === */
+        #radarCanvas {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -3;
+        }
+
+        /* LIGHT VIGNETTE OVER CANVAS */
+        .vignette {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
+            z-index: -2;
+        }
+
+        /* UI PANEL */
+        .panel {
+            text-align: center;
+            padding: 40px 30px 60px;
+            width: min(720px, 100%);
+            border-radius: 30px;
+            border: 1px solid rgba(0,200,255,0.55);
+            background: rgba(0,10,30,0.55);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 45px rgba(0,200,255,0.45);
+            z-index: 10;
+        }
+
+        /* NEON LOGO */
+        .logo {
+            width: 160px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 14px #4cd8ff) drop-shadow(0 0 32px #4cd8ff);
+        }
+
+        /* TITLE */
+        .title {
+            font-size: 38px;
+            letter-spacing: 0.30em;
+            text-transform: uppercase;
+            color: #79e8ff;
+            margin-bottom: 8px;
+            text-shadow: 0 0 14px #4cd8ff, 0 0 26px #4cd8ff, 0 0 60px rgba(0, 180,255,0.9);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: rgba(200,230,255,0.75);
+            margin-bottom: 30px;
+        }
+
+        /* BUTTONS */
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 14px 42px;
+            border-radius: 60px;
+            border: 2px solid #4cd8ff;
+            background: rgba(0,30,60,0.65);
+            color: #aef7ff;
+            font-size: 13px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            text-decoration: none;
+            box-shadow: 0 0 14px rgba(0,200,255,0.55), inset 0 0 16px rgba(0,180,255,0.35);
+            transition: 0.2s ease;
+        }
+
+            .btn:hover {
+                color: white;
+                border-color: white;
+                box-shadow: 0 0 25px rgba(0,220,255,0.95), inset 0 0 22px rgba(0,220,255,0.65);
+                transform: translateY(-2px);
+            }
+
+        .footer-note {
+            margin-top: 26px;
+            font-size: 9px;
+            color: rgba(170,210,255,0.55);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
+
 <body>
-<div class="wrap">
-  <canvas id="radar"></canvas>
-</div>
 
-<script>
-(function() {
-  const canvas = document.getElementById('radar');
-  const dpr = window.devicePixelRatio || 1;
-  let ctx, size, center, radius;
+    <!-- LEFT SIDE DECORATIVE PANEL IMAGE -->
+    <img class="left-image" src="media/LEFT.png" alt="left deco">
 
-  function resize() {
-    const minSide = Math.min(window.innerWidth, window.innerHeight) * 0.8;
-    size = minSide;
-    canvas.style.width = size + "px";
-    canvas.style.height = size + "px";
-    canvas.width = size * dpr;
-    canvas.height = size * dpr;
-    ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    center = { x: size/2, y: size/2 };
-    radius = size * 0.4;
-  }
-  window.addEventListener('resize', resize);
-  resize();
+    <!-- RIGHT SIDE DECORATIVE PANEL IMAGE -->
+    <img class="right-image" src="media/RIGHT.png" alt="right deco">
 
-  // --- RADAR STATE ---
-  let sweepAngle = 0; // radians
-  const sweepSpeed = Math.PI * 0.25; // radians per second
-  const sweepWidth = Math.PI / 10;   // width of cone
+    <!-- FULLSCREEN RADAR BACKGROUND -->
+    <canvas id="radarCanvas"></canvas>
+    <div class="vignette"></div>
 
-  const targets = [];
-  const maxTargets = 7;
+    <!-- UI PANEL FRONT -->
+    <div class="panel">
+        <img class="logo" src="media/LOGO.png" alt="logo">
 
-  function randomTargets() {
-    targets.length = 0;
-    for (let i = 0; i < maxTargets; i++) {
-      const r = Math.random() * 0.85 + 0.1; // 0.1..0.95 of radius
-      const a = Math.random() * Math.PI * 2;
-      targets.push({
-        rNorm: r,
-        angle: a,
-        lastPing: 0
-      });
-    }
-  }
-  randomTargets();
+        <div class="title">NO MEAN'S SKY</div>
+        <div class="subtitle">PERSONAL EXPLORER DIARY � HOLOGRAPHIC SYSTEM</div>
 
-  function angleDiff(a,b){
-    let d = a-b;
-    while (d > Math.PI) d -= Math.PI*2;
-    while (d < -Math.PI) d += Math.PI*2;
-    return Math.abs(d);
-  }
+        <div class="btn-row">
+            <a class="btn" href="login.html">ENTER LOG</a>
+            <a class="btn" href="archive.html">PLANET ARCHIVE</a>
+        </div>
 
-  function draw(timestamp) {
-    if (!ctx) return;
-    requestAnimationFrame(draw);
+        <div class="footer-note">
+            LOCAL SAVE � SAFE FOR KIDS � ENCRYPTED MEMORY CORE
+        </div>
+    </div>
 
-    const t = timestamp / 1000; // seconds
-    const dt = 1/60;
+    <!-- HOLOGRAPHIC RADAR SCRIPT -->
+    <script>
+        (function () {
+            const canvas = document.getElementById("radarCanvas");
+            const ctx = canvas.getContext("2d");
+            let w, h, cx, cy, radius;
 
-    sweepAngle += sweepSpeed * dt;
-    if (sweepAngle > Math.PI * 2) sweepAngle -= Math.PI * 2;
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+                cx = w / 2;
+                cy = h / 2;
+                radius = Math.min(w, h) * 0.38;
+            }
+            window.addEventListener("resize", resize);
+            resize();
 
-    // background clear
-    ctx.clearRect(0,0,size,size);
+            const targets = [];
+            for (let i = 0; i < 9; i++) {
+                targets.push({
+                    r: Math.random() * radius * 0.9,
+                    angle: Math.random() * Math.PI * 2,
+                    lastPing: 0
+                });
+            }
 
-    // slight vignette / panel
-    ctx.save();
-    ctx.translate(center.x, center.y);
+            let sweep = 0;
 
-    // panel base
-    const grdBg = ctx.createRadialGradient(0,0,0,0,0,radius*1.3);
-    grdBg.addColorStop(0,"#2a1000");
-    grdBg.addColorStop(0.6,"#0f0500");
-    grdBg.addColorStop(1,"#000000");
-    ctx.fillStyle = grdBg;
-    ctx.fillRect(-radius*1.4,-radius*1.1,radius*2.8,radius*2.0);
+            function loop(t) {
+                requestAnimationFrame(loop);
+                ctx.clearRect(0, 0, w, h);
 
-    // outer glow circle
-    ctx.beginPath();
-    ctx.arc(0,0,radius*1.02,0,Math.PI*2);
-    const gOuter = ctx.createRadialGradient(0,0,radius*0.2,0,0,radius*1.05);
-    gOuter.addColorStop(0,"rgba(255,196,120,0.05)");
-    gOuter.addColorStop(0.7,"rgba(255,160,40,0.5)");
-    gOuter.addColorStop(1,"rgba(0,0,0,0)");
-    ctx.fillStyle = gOuter;
-    ctx.fill();
+                sweep += 0.02;
+                if (sweep > Math.PI * 2) sweep = 0;
 
-    // radar base circle
-    ctx.beginPath();
-    ctx.arc(0,0,radius,0,Math.PI*2);
-    ctx.fillStyle = "#210902";
-    ctx.fill();
+                ctx.save();
+                ctx.translate(cx, cy);
 
-    // concentric rings
-    ctx.lineWidth = 1;
-    for(let i=1;i<=7;i++){
-      ctx.beginPath();
-      ctx.arc(0,0,radius*(i/7),0,Math.PI*2);
-      ctx.strokeStyle = "rgba(255,160,40,"+(0.12+0.06*i)+")";
-      ctx.stroke();
-    }
+                // rings
+                ctx.lineWidth = 1.2;
+                for (let i = 1; i <= 8; i++) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(255,160,60,${0.12 + i * 0.04})`;
+                    ctx.arc(0, 0, (radius / 8) * i, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
 
-    // radial ticks
-    ctx.save();
-    ctx.strokeStyle = "rgba(255,180,80,0.25)";
-    ctx.lineWidth = 1;
-    for(let i=0;i<8;i++){
-      const ang = (Math.PI*2/8)*i;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(ang)*radius*0.15, Math.sin(ang)*radius*0.15);
-      ctx.lineTo(Math.cos(ang)*radius,      Math.sin(ang)*radius);
-      ctx.stroke();
-    }
-    ctx.restore();
+                // sweep glow
+                const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, radius);
+                grd.addColorStop(0, "rgba(255,255,180,0)");
+                grd.addColorStop(0.15, "rgba(255,220,120,0.9)");
+                grd.addColorStop(1, "rgba(255,140,0,0)");
 
-    // dome arc (3D half sphere)
-    ctx.save();
-    ctx.globalCompositeOperation = "lighter";
-    ctx.lineWidth = 3;
-    const domeR = radius*1.03;
-    const domeGrad = ctx.createLinearGradient(0,-domeR,0,domeR);
-    domeGrad.addColorStop(0,"rgba(255,200,120,0.0)");
-    domeGrad.addColorStop(0.5,"rgba(255,180,80,0.5)");
-    domeGrad.addColorStop(1,"rgba(255,120,0,0.0)");
-    ctx.strokeStyle = domeGrad;
-    ctx.beginPath();
-    ctx.arc(0,0,domeR,-Math.PI*0.9,Math.PI*0.9);
-    ctx.stroke();
-    ctx.restore();
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.arc(0, 0, radius, sweep - 0.3, sweep + 0.01);
+                ctx.closePath();
+                ctx.fillStyle = grd;
+                ctx.fill();
 
-    // sweep cone
-    ctx.save();
-    ctx.globalCompositeOperation = "lighter";
-    const start = sweepAngle - sweepWidth;
-    const end   = sweepAngle;
-    const sweepR = radius*1.02;
+                // targets
+                targets.forEach(tg => {
+                    const x = Math.cos(tg.angle) * tg.r;
+                    const y = Math.sin(tg.angle) * tg.r;
 
-    const gSweep = ctx.createRadialGradient(0,0,0,0,0,sweepR);
-    gSweep.addColorStop(0,"rgba(255,230,180,0.0)");
-    gSweep.addColorStop(0.1,"rgba(255,220,150,0.7)");
-    gSweep.addColorStop(1,"rgba(255,150,0,0.0)");
+                    const diff = Math.abs(((tg.angle - sweep + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+                    const ping = diff < 0.22;
 
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.arc(0,0,sweepR,start,end,false);
-    ctx.closePath();
-    ctx.fillStyle = gSweep;
-    ctx.fill();
-    ctx.restore();
+                    if (ping) tg.lastPing = performance.now();
 
-    // center marker
-    ctx.beginPath();
-    ctx.arc(0,0,4,0,Math.PI*2);
-    ctx.fillStyle = "#ffe6b0";
-    ctx.fill();
+                    let pulse = 0;
+                    const dt = performance.now() - tg.lastPing;
+                    if (dt < 500) pulse = 1 - dt / 500;
 
-    // targets
-    ctx.save();
-    ctx.globalCompositeOperation = "lighter";
-    for(const target of targets){
-      const r = radius * target.rNorm;
-      const a = target.angle;
+                    ctx.fillStyle = `rgba(255,200,120,${0.5 + pulse})`;
+                    const s = 6 + pulse * 6;
+                    ctx.fillRect(x - s / 2, y - s / 2, s, s);
 
-      const x = Math.cos(a)*r;
-      const y = Math.sin(a)*r;
+                    if (pulse > 0.01) {
+                        ctx.beginPath();
+                        ctx.arc(x, y, s + 5, 0, Math.PI * 2);
+                        ctx.strokeStyle = `rgba(255,200,120,${0.4 * pulse})`;
+                        ctx.lineWidth = 1.5;
+                        ctx.stroke();
+                    }
+                });
 
-      const diff = angleDiff(a, sweepAngle);
-      const isPing = diff < sweepWidth*0.8;
-
-      if (isPing) target.lastPing = t;
-
-      const timeSincePing = t - target.lastPing;
-      let pulse = 0;
-      if (timeSincePing >= 0 && timeSincePing < 0.5) {
-        pulse = 1 - (timeSincePing/0.5);
-      }
-
-      // trail line to edge
-      ctx.strokeStyle = "rgba(255,180,60,"+(0.25+0.4*pulse)+")";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(x,y);
-      ctx.lineTo(Math.cos(a)*radius, Math.sin(a)*radius);
-      ctx.stroke();
-
-      // target marker
-      const baseAlpha = 0.5 + 0.5*pulse;
-      ctx.fillStyle = "rgba(255,200,140,"+baseAlpha+")";
-      const sz = 6 + pulse*4;
-      ctx.beginPath();
-      ctx.rect(x-sz/2,y-sz/2,sz,sz);
-      ctx.fill();
-
-      // ping halo
-      if (pulse>0.01){
-        ctx.beginPath();
-        ctx.arc(x,y,sz+6,0,Math.PI*2);
-        ctx.strokeStyle = "rgba(255,200,120,"+(0.4*pulse)+")";
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
-      }
-    }
-    ctx.restore();
-
-    ctx.restore();
-  }
-
-  requestAnimationFrame(draw);
-})();
-</script>
+                ctx.restore();
+            }
+            requestAnimationFrame(loop);
+        })();
+    </script>
 
 </body>
 </html>
