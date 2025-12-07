@@ -1,212 +1,164 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <title>NO MEAN'S SKY – Access Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Access Code – No Mean's Sky</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- 💥 ЗАБРАНА НА КЕША ЗА LOGIN -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-  <style>
-    :root {
-      --bg: #020513;
-      --panel: rgba(4, 12, 30, 0.96);
-      --border: rgba(0, 200, 255, 0.8);
-      --accent: #4cd8ff;
-      --text: #e5f8ff;
-      --error: #ff7b7b;
-    }
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Orbitron", sans-serif;
+            background: url("media/ENTER ACCESS CODE.png") center/cover no-repeat fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
 
-    * { box-sizing: border-box; }
+        .left-image, .right-image {
+            position: fixed;
+            top: 0;
+            height: 100vh;
+            width: auto;
+            opacity: 0.9;
+            z-index: -1;
+            pointer-events: none;
+        }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Orbitron", system-ui, sans-serif;
-      background:
-        radial-gradient(circle at 0 0, #172747, transparent 60%),
-        radial-gradient(circle at 100% 100%, #061024, transparent 55%),
-        var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px 8px;
-    }
+        .left-image {
+            left: 0;
+        }
 
-    .panel {
-      width: min(420px, 100%);
-      background: var(--panel);
-      border-radius: 26px;
-      border: 1px solid var(--border);
-      box-shadow: 0 0 36px rgba(0, 200, 255, 0.55);
-      padding: 26px 28px 22px;
-      position: relative;
-    }
+        .right-image {
+            right: 0;
+        }
 
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: 12px;
-      border-radius: 18px;
-      border: 1px dashed rgba(0,200,255,0.3);
-      pointer-events: none;
-    }
+        .panel {
+            padding: 40px 30px 50px;
+            width: min(500px, 90%);
+            border-radius: 28px;
+            background: rgba(20, 8, 2, 0.92);
+            border: 1px solid rgba(255,180,80,0.7);
+            box-shadow: 0 0 35px rgba(255,120,40,0.55), 0 0 120px rgba(255,90,0,0.5);
+            text-align: center;
+        }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: 20px;
-      text-align: center;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--accent);
-      text-shadow: 0 0 16px rgba(80,220,255,0.9);
-    }
+        .panel-title {
+            color: #ffd8b0;
+            font-size: 28px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            text-shadow: 0 0 14px #ffae60, 0 0 40px #ff7b22;
+        }
 
-    .subtitle {
-      text-align: center;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(200,220,255,0.7);
-      margin-bottom: 20px;
-    }
+        .input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: 2px solid rgba(255,180,80,0.9);
+            font-size: 16px;
+            background: rgba(50,20,5,0.6);
+            color: #ffe7c9;
+            margin-bottom: 18px;
+            text-align: center;
+            outline: none;
+        }
 
-    label {
-      display: block;
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      color: rgba(185,210,255,0.9);
-    }
+            .input:focus {
+                box-shadow: 0 0 18px rgba(255,180,90,0.9);
+                border-color: white;
+            }
 
-    input[type="password"] {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(71,194,255,0.8);
-      background: rgba(3,10,30,0.95);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 13px;
-      outline: none;
-    }
+        .btn {
+            display: inline-block;
+            padding: 12px 40px;
+            font-size: 14px;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #ffe6c0;
+            border-radius: 999px;
+            border: 2px solid rgba(255,190,120,0.9);
+            text-decoration: none;
+            background: linear-gradient(135deg, #3a1404, #8b3a0a);
+            box-shadow: 0 0 18px rgba(255,150,70,0.55);
+            transition: 0.2s;
+            cursor: pointer;
+        }
 
-    input[type="password"]:focus {
-      box-shadow: 0 0 18px rgba(0,200,255,0.6);
-    }
+            .btn:hover {
+                color: white;
+                border-color: white;
+                box-shadow: 0 0 30px #ffb669, 0 0 80px #ff7b22;
+                transform: translateY(-2px);
+            }
 
-    .btn {
-      width: 100%;
-      margin-top: 14px;
-      padding: 10px 0;
-      border-radius: 999px;
-      border: 2px solid rgba(71,194,255,0.9);
-      background: linear-gradient(135deg, #050c1a, #0c284c);
-      color: #34d2ff;
-      font-size: 11px;
-      letter-spacing: 0.24em;
-      text-transform: uppercase;
-      cursor: pointer;
-    }
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            color: #ffdfb6;
+            text-decoration: none;
+        }
 
-    .btn:hover {
-      color: #ffffff;
-      box-shadow: 0 0 22px rgba(71,194,255,0.95);
-    }
+            .back-link:hover {
+                color: white;
+            }
 
-    .status {
-      margin-top: 10px;
-      min-height: 14px;
-      text-align: center;
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--error);
-    }
-
-    .back-link {
-      display:inline-block;
-      margin-top:14px;
-      font-size:10px;
-      letter-spacing:0.16em;
-      text-transform:uppercase;
-      color:#7fdcff;
-      text-decoration:none;
-      border-bottom:1px dashed rgba(127,220,255,0.7);
-      padding-bottom:2px;
-    }
-    .back-link:hover {
-      color:#ffffff;
-      border-color:#ffffff;
-    }
-  </style>
+        .error {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #ff7f7f;
+            min-height: 16px;
+        }
+    </style>
 </head>
 
 <body>
-  <div class="panel">
-    <h1>ENTER ACCESS CODE</h1>
-    <div class="subtitle">NO MEAN'S SKY • CAPTAIN ONLY</div>
 
-    <form id="loginForm">
-      <label for="accessCode">ACCESS CODE</label>
-      <input type="password" id="accessCode" autocomplete="off" />
+    <img class="left-image" src="media/LEFT.png">
+    <img class="right-image" src="media/RIGHT.png">
 
-      <button type="submit" class="btn">ENTER</button>
+    <div class="panel">
+        <div class="panel-title">ENTER ACCESS CODE</div>
 
-      <div id="status" class="status"></div>
-    </form>
+        <input id="codeInput" class="input" type="password" placeholder="ACCESS CODE">
 
-    <a href="index.html" class="back-link">⟵ BACK TO SHIP LOG</a>
-  </div>
+        <button class="btn" type="button" onclick="login()">ENTER</button>
 
-<script>
-  // 🔐 ТОВА Е ТВОЯТ КОД – ТУК СМЕНЯШ, АКО НЯКОГА ИСКАШ ДРУГ
-  const ACCESS_CODE = "8108246982Sk8#$%";
+        <div id="error" class="error"></div>
 
-  const form   = document.getElementById("loginForm");
-  const input  = document.getElementById("accessCode");
-  const status = document.getElementById("status");
+        <a class="back-link" href="index.html">← BACK TO SHIP LOG</a>
+    </div>
 
-  function setStatus(msg) {
-    status.textContent = msg || "";
-  }
+    <script>
+        // ЕДИНСТВЕНА ПАРОЛА
+        const PASSWORD = "8108246982Sk8#$%";
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
+        function login() {
+            const entered = document.getElementById("codeInput").value.trim();
+            const error = document.getElementById("error");
 
-    const value = (input.value || "").trim();
-
-    if (!value) {
-      setStatus("Въведи код за достъп.");
-      return;
-    }
-
-    if (value === ACCESS_CODE) {
-      // успешно логване
-      localStorage.setItem("isAdmin", "true");
-      setStatus("");
-      window.location.href = "admin.html";
-    } else {
-      setStatus("Грешна парола!");
-      input.value = "";
-      input.focus();
-      localStorage.removeItem("isAdmin");
-    }
-  });
-
-  // ако има стар флаг, го чистим при зареждане (по-сигурно)
-  window.addEventListener("load", () => {
-    // НЕ трия паролата, само флага за сесия
-    localStorage.removeItem("isAdmin");
-  });
-</script>
+            if (entered === PASSWORD) {
+                localStorage.setItem("isAdmin", "true");
+                error.textContent = "";
+                window.location.href = "admin.html";
+            } else {
+                localStorage.removeItem("isAdmin");
+                error.textContent = "ACCESS DENIED – WRONG CODE";
+            }
+        }
+    </script>
 
 </body>
 </html>
